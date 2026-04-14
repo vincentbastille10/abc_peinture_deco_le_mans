@@ -2,91 +2,89 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Chat Betty</title>
+<title>Betty Chat</title>
 
 <style>
 body {
-  margin:0;
+  margin: 0;
   font-family: Arial, sans-serif;
   background: transparent;
 }
 
-.chat-container {
-  display:flex;
-  flex-direction:column;
-  height:100vh;
+.chat {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
 }
 
 .messages {
-  flex:1;
-  padding:15px;
-  overflow-y:auto;
+  flex: 1;
+  padding: 15px;
+  overflow-y: auto;
 }
 
 .msg {
-  margin-bottom:12px;
-  padding:10px 14px;
-  border-radius:10px;
-  max-width:80%;
-  line-height:1.4;
+  margin-bottom: 12px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  max-width: 80%;
+  line-height: 1.4;
 }
 
 .bot {
-  background:#111827;
-  color:white;
+  background: #111827;
+  color: white;
 }
 
 .user {
-  background:#2d5bff;
-  color:white;
-  margin-left:auto;
+  background: #2d5bff;
+  color: white;
+  margin-left: auto;
 }
 
 .input-box {
-  display:flex;
-  padding:10px;
-  border-top:1px solid #ddd;
-  background:white;
+  display: flex;
+  padding: 10px;
+  border-top: 1px solid #ddd;
+  background: white;
 }
 
 input {
-  flex:1;
-  padding:10px;
-  border-radius:6px;
-  border:1px solid #ccc;
-  font-size:14px;
+  flex: 1;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
 }
 
 button {
-  margin-left:10px;
-  padding:10px 14px;
-  border:none;
-  background:#2d5bff;
-  color:white;
-  border-radius:6px;
-  cursor:pointer;
+  margin-left: 10px;
+  padding: 10px 14px;
+  border: none;
+  background: #2d5bff;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
 }
 </style>
 </head>
 
 <body>
 
-<div class="chat-container">
-
+<div class="chat">
   <div id="messages" class="messages"></div>
 
   <div class="input-box">
     <input id="input" placeholder="Ex : repeindre salon 30m²">
     <button onclick="sendMessage()">Envoyer</button>
   </div>
-
 </div>
 
 <script>
 const messages = document.getElementById("messages");
 const input = document.getElementById("input");
 
-function addMessage(text, type){
+function addMessage(text, type) {
   const div = document.createElement("div");
   div.className = "msg " + type;
   div.innerText = text;
@@ -94,38 +92,43 @@ function addMessage(text, type){
   messages.scrollTop = messages.scrollHeight;
 }
 
-async function sendMessage(){
-  const msg = input.value.trim();
-  if(!msg) return;
+async function sendMessage() {
+  const message = input.value.trim();
+  if (!message) return;
 
-  addMessage(msg,"user");
+  addMessage(message, "user");
   input.value = "";
 
-  try{
-    const res = await fetch("/api/chat",{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({message:msg})
+  try {
+    const res = await fetch("/api/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ message })
     });
 
     const data = await res.json();
-    addMessage(data.response || "Pas de réponse","bot");
 
-  }catch(e){
-    addMessage("Erreur technique","bot");
+    addMessage(data.response || "Pas de réponse", "bot");
+
+  } catch (e) {
+    addMessage("Erreur technique", "bot");
   }
 }
 
 // ENTER
-input.addEventListener("keydown", function(e){
-  if(e.key === "Enter"){
+input.addEventListener("keydown", function(e) {
+  if (e.key === "Enter") {
     sendMessage();
   }
 });
 
-// message initial
-addMessage("Bonjour, je peux vous aider à préparer votre devis peinture. Quelle pièce souhaitez-vous refaire ?","bot");
-
+// Message initial
+addMessage(
+  "Bonjour, je peux vous aider à préparer votre devis peinture. Quelle pièce souhaitez-vous refaire ?",
+  "bot"
+);
 </script>
 
 </body>
