@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{{ title or "Betty — Chat" }}</title>
+
+  <style>
+    :root{--bg:#0b0f1e;--card:#0f1724;--ink:#e8ecff}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,Segoe UI,Roboto,Arial}
+
+    .wrap{
+      max-width:920px;margin:32px auto;padding:24px;background:var(--card);
+      border-radius:12px;border:1px solid rgba(255,255,255,.08);
+      display:flex;flex-direction:column;
+      height:80vh;max-height:80vh;
+      overflow:hidden;
+    }
+
+    .header{display:flex;align-items:center;gap:16px}
+    .avatar{width:64px;height:64px;border-radius:12px;object-fit:cover;background:#0b1222}
+    .title{font-size:18px;margin:0}
+    .greet{
+      color:#b8c2d6;
+      margin-top:6px;
+      white-space: pre-line;
+    }
+
+    #messages{
+      margin-top:18px;background:#071020;padding:14px;border-radius:8px;
+      flex:1;min-height:0;
+      overflow-y:auto;
+    }
+
+    .msg{padding:8px 10px;border-radius:8px;margin-bottom:8px;line-height:1.4}
+    .user{background:#1f2937;text-align:right}
+    .bot{background:#0b1222;text-align:left}
+
+    .footer{display:flex;gap:8px;margin-top:12px}
+
+    input{
+      flex:1;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,.06);
+      background:#07101b;color:var(--ink)
+    }
+
+    button{
+      padding:10px 14px;border-radius:8px;border:0;background:{{ color or '#4F46E5' }};
+      color:white;cursor:pointer
+    }
+
+    .bb-powered{
+      margin-top:10px;
+      padding-top:10px;
+      border-top:1px solid rgba(255,255,255,.08);
+      text-align:center;
+      font-size:12px;
+      color:#9aa7c7;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="header">
+      <img class="avatar" src="{{ avatar_url }}" onerror="this.style.display='none'">
+      <div>
+        <h1 class="title">{{ full_name }}</h1>
+
+        {% if not embed %}
+          <div class="greet">{{ greeting }}</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div id="messages"></div>
+
+    <div class="footer">
+      <input id="input" placeholder="Écrivez votre message ici..." />
+      <button id="send">Envoyer</button>
+    </div>
+
+    {% if embed %}
+      <div class="bb-powered">
+        Activez-la sur votre site <a href="https://spectramedia.online" target="_blank">Spectra Media AI</a>
+      </div>
+    {% endif %}
+  </div>
+
+<script>
+const publicId   = "{{ public_id }}";
+const buyerEmail = "{{ buyer_email }}";
+const apiUrl     = "/api/bettybot"; // ✅ BON ENDPOINT
+const embedMode  = {{ 'true' if embed else 'false' }};
+
+const convId = sessionStorage.getItem("convId_" + publicId) || crypto.randomUUID();
+sessionStorage.setItem("convId_" + publicId, convId);
+
+const box = document.getElementById("messages");
+
+function addMsg(text, cls="bot") {
+  const m = document.createElement("div");
+  m.className = "msg " + cls;
+
+  // ✅ transforme les URLs en liens cliquables
+  m.innerHTML = text
+    .replace(/\n/g, "<br>")
+    .replace(/https?:\/\/[^\s]+/g, url => `<a href="${url}" target="_blank" style="color:#8ab4ff">${url}</a>`);
+
+  box.appendChild(m);
+  box.scrollTop = box.scrollHeight;
+}
+
+async function send(){
+  const el = document.getElementById("input");
+  const text = el.value.trim();
+  if(!text) return;
+
+  addMsg(text, "user");
+  el.value = "";
+
+  const lower = text.toLowerCase();
+
+  // ✅ RÉPONSE PROPRE + LIEN VERS /inscription3
+  
+
+  const thinking = document.createElement("div");
+  thinking.className = "msg bot";
+  thinking.textContent = "Betty réfléchit…";
+  box.appendChild(thinking);
+
+  try{
+    const resp = await fetch(apiUrl, {
+      method:"POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({
+        message: text,
+        public_id: publicId,
+        conv_id: convId,
+        buyer_email: buyerEmail
+      })
+    });
+
+    let data = {};
+    try {
+      data = await resp.json();
+    } catch {}
+
+    thinking.remove();
+
+    if (data.response) {
+      addMsg(data.response, "bot");
+    } else {
+      addMsg("Betty est disponible 🙂", "bot");
+    }
+
+  }catch(e){
+    thinking.remove();
+    addMsg("Petit souci serveur 😅 mais Betty reste disponible.", "bot");
+    console.error(e);
+  }
+}
+
+document.getElementById("send").onclick = send;
+document.getElementById("input").onkeydown = e => { if(e.key==="Enter") send(); };
+
+if (embedMode) {
+  addMsg({{ (greeting or "Bonjour, que puis-je faire pour vous ?")|tojson }});
+}
+</script>
+
+</body>
+</html>
