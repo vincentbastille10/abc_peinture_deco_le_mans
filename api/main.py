@@ -1,15 +1,20 @@
-import os
 import json
+import os
+import re
 from http.server import BaseHTTPRequestHandler
 
 import requests
 import yaml
 
 
+FALLBACK_REPLY = (
+    "Merci pour votre message. Je peux vous aider à préparer votre devis peinture. "
+    "Pouvez-vous préciser le type de travaux, la surface approximative et votre ville ?"
+)
+
+
 def load_bot_config():
-    """
-    Charge la config YAML de Betty.
-    """
+    """Charge la configuration YAML de Betty."""
     base_dir = os.path.dirname(__file__)
     yaml_path = os.path.join(base_dir, "..", "betty_btp_abc.yaml")
 
@@ -23,16 +28,11 @@ def load_bot_config():
         }
 
     with open(yaml_path, "r", encoding="utf-8") as f:
-        data = yaml.safe_load(f) or {}
-
-    return data
+        return yaml.safe_load(f) or {}
 
 
 def extract_prompt(config):
-    """
-    Récupère le prompt depuis le YAML.
-    On tolère plusieurs noms de clés pour éviter les bugs.
-    """
+    """Récupère le prompt depuis le YAML, avec tolérance sur les clés."""
     for key in ["prompt", "system_prompt", "system", "instructions"]:
         value = config.get(key)
         if isinstance(value, str) and value.strip():
@@ -47,29 +47,66 @@ def extract_prompt(config):
 
 
 def build_messages(system_prompt, user_message):
-    """
-    Prépare les messages envoyés au LLM.
-    """
+    """Prépare les messages envoyés au LLM."""
     return [
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": user_message},
     ]
 
 
+def extract_phone(text):
+    if not isinstance(text, str):
+        return None
+    match = re.search(r"(\+33|0)[0-9\s\.-]{8,}", text)
+    return match.group(0).strip() if match else None
+
+
+def send_lead(phone, message):
+    """Envoie un lead via Mailjet. Ne lève pas d'exception bloquante."""
+    mj_api_key = os.environ.get("MJ_API_KEY", "").strip()
+    mj_api_secret = os.environ.get("MJ_API_SECRET", "").strip()
+    to_email = os.environ.get("DEFAULT_LEAD_EMAIL", "").strip()
+    from_email = os.environ.get("MJ_FROM_EMAIL", "").strip()
+    from_name = os.environ.get("MJ_FROM_NAME", "ABC Peinture Déco").strip() or "ABC Peinture Déco"
+
+    if not (mj_api_key and mj_api_secret and to_email and from_email):
+        return False, "Mailjet non configuré"
+
+    payload = {
+        "Messages": [
+            {
+                "From": {"Email": from_email, "Name": from_name},
+                "To": [{"Email": to_email, "Name": "Client"}],
+                "Subject": "🔥 Nouveau lead peinture",
+                "TextPart": f"Téléphone: {phone}\n\nMessage: {message}",
+            }
+        ]
+    }
+
+    try:
+        res = requests.post(
+            "https://api.mailjet.com/v3.1/send",
+            auth=(mj_api_key, mj_api_secret),
+            json=payload,
+            timeout=15,
+        )
+        res.raise_for_status()
+        return True, "Lead envoyé"
+    except Exception:
+        return False, "Échec envoi lead"
+
+
 def call_together_api(messages):
-    """
-    Appelle Together AI et renvoie le texte de réponse.
-    """
+    """Appelle Together AI et renvoie une réponse fiable avec fallback."""
     api_key = os.environ.get("TOGETHER_API_KEY", "").strip()
     if not api_key:
         return (
-            "La clé Together API n'est pas configurée sur Vercel. "
-            "Ajoutez TOGETHER_API_KEY dans les variables d'environnement."
+            "Service IA temporairement indisponible. "
+            "Merci de laisser votre téléphone pour être rappelé sous 48h."
         )
 
     model = os.environ.get(
-        "TOGETHER_MODEL",
-        "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo"
+        "TOGETHER_MODEL", "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo"
     ).strip()
 
     payload = {
@@ -84,35 +121,35 @@ def call_together_api(messages):
         "Content-Type": "application/json",
     }
 
-    response = requests.post(
-        "https://api.together.xyz/v1/chat/completions",
-        headers=headers,
-        json=payload,
-        timeout=45
-    )
+    try:
+        response = requests.post(
+            "https://api.together.xyz/v1/chat/completions",
+            headers=headers,
+            json=payload,
+            timeout=45,
+        )
+        response.raise_for_status()
+        result = response.json() if response.content else {}
 
-    response.raise_for_status()
-    result = response.json()
+        choices = result.get("choices", []) if isinstance(result, dict) else []
+        if not choices:
+            return FALLBACK_REPLY
 
-    choices = result.get("choices", [])
-    if not choices:
-        return "Je n’ai pas pu générer de réponse pour le moment. Pouvez-vous reformuler ?"
+        message = choices[0].get("message", {}) if isinstance(choices[0], dict) else {}
+        content = message.get("content", "").strip() if isinstance(message, dict) else ""
+        return content or FALLBACK_REPLY
 
-    message = choices[0].get("message", {})
-    content = message.get("content", "").strip()
-
-    if not content:
-        return "Je n’ai pas pu générer de réponse pour le moment. Pouvez-vous reformuler ?"
-
-    return content
+    except Exception:
+        return FALLBACK_REPLY
 
 
-def json_response(handler, status_code, payload):
-    """
-    Envoie une réponse JSON propre.
-    """
+def json_response(handler, status_code, response_text, extra=None):
+    """Envoie une réponse JSON standardisée avec clé 'response' systématique."""
+    payload = {"response": response_text}
+    if isinstance(extra, dict):
+        payload.update(extra)
+
     body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
-
     handler.send_response(status_code)
     handler.send_header("Content-Type", "application/json; charset=utf-8")
     handler.send_header("Access-Control-Allow-Origin", "*")
@@ -123,91 +160,72 @@ def json_response(handler, status_code, payload):
     handler.wfile.write(body)
 
 
+def parse_json_body(handler):
+    """Parsing JSON robuste pour éviter les erreurs serveur."""
+    content_length_raw = handler.headers.get("Content-Length", "0")
+    try:
+        content_length = int(content_length_raw)
+    except (TypeError, ValueError):
+        content_length = 0
+
+    raw_body = handler.rfile.read(content_length) if content_length > 0 else b"{}"
+
+    if not raw_body:
+        return {}
+
+    try:
+        parsed = json.loads(raw_body.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError):
+        return None
+
+    return parsed if isinstance(parsed, dict) else None
+
+
 class handler(BaseHTTPRequestHandler):
-    """
-    Handler Vercel serverless.
-    """
+    """Handler Vercel serverless."""
 
     def do_OPTIONS(self):
-        json_response(self, 200, {"ok": True})
+        json_response(self, 200, "OK", {"ok": True})
 
     def do_GET(self):
         json_response(
             self,
             200,
-            {
-                "ok": True,
-                "message": "API Betty opérationnelle. Utilisez POST sur /api/chat."
-            }
+            "API Betty opérationnelle. Utilisez POST sur /api/chat.",
+            {"ok": True},
         )
 
     def do_POST(self):
+        """Endpoint principal : reçoit un message utilisateur et répond toujours en JSON."""
         try:
-            content_length = int(self.headers.get("Content-Length", "0"))
-            raw_body = self.rfile.read(content_length) if content_length > 0 else b"{}"
-
-            try:
-                data = json.loads(raw_body.decode("utf-8"))
-            except json.JSONDecodeError:
+            data = parse_json_body(self)
+            if data is None:
                 return json_response(
                     self,
                     400,
-                    {"response": "Requête invalide : JSON incorrect."}
+                    "Requête invalide : JSON incorrect.",
+                    {"ok": False},
                 )
 
             user_message = str(data.get("message", "")).strip()
             if not user_message:
-                return json_response(
-                    self,
-                    400,
-                    {"response": "Votre message est vide."}
-                )
+                return json_response(self, 400, "Votre message est vide.", {"ok": False})
+
+            phone = extract_phone(user_message)
+            if phone:
+                send_lead(phone, user_message)
 
             config = load_bot_config()
             system_prompt = extract_prompt(config)
             messages = build_messages(system_prompt, user_message)
             reply = call_together_api(messages)
 
-            return json_response(
-                self,
-                200,
-                {"response": reply}
-            )
+            return json_response(self, 200, reply, {"ok": True})
 
-        except requests.exceptions.Timeout:
-            return json_response(
-                self,
-                504,
-                {"response": "Le service met trop de temps à répondre. Réessayez dans un instant."}
-            )
-
-        except requests.exceptions.HTTPError as e:
-            status = 500
-            details = ""
-
-            if hasattr(e, "response") and e.response is not None:
-                status = e.response.status_code
-                try:
-                    details = e.response.text[:500]
-                except Exception:
-                    details = ""
-
+        except Exception:
             return json_response(
                 self,
                 500,
-                {
-                    "response": "Erreur lors de l'appel au modèle IA.",
-                    "details": details,
-                    "upstream_status": status
-                }
-            )
-
-        except Exception as e:
-            return json_response(
-                self,
-                500,
-                {
-                    "response": "Erreur interne du serveur.",
-                    "details": str(e)
-                }
+                "Erreur interne du serveur. Merci de réessayer dans un instant.",
+                {"ok": False},
             )
