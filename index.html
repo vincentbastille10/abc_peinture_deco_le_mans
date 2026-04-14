@@ -40,6 +40,7 @@
       --radius-lg: 20px;
       --radius-md: 12px;
       --max: 1280px;
+      --topbar-offset: 76px;
       --font-display: 'Syne', sans-serif;
       --font-body: 'DM Sans', sans-serif;
     }
@@ -57,6 +58,8 @@
 
     a { color: inherit; text-decoration: none; }
     img { max-width: 100%; display: block; }
+
+    main { padding-top: var(--topbar-offset); }
 
     .container {
       width: min(var(--max), calc(100% - 48px));
@@ -78,9 +81,11 @@
 
     /* ─── TOPBAR ─── */
     .topbar {
-      position: sticky;
+      position: fixed;
       top: 0;
-      z-index: 100;
+      left: 0;
+      width: 100%;
+      z-index: 500;
       background: rgba(9,17,31,.88);
       backdrop-filter: blur(18px) saturate(1.4);
       -webkit-backdrop-filter: blur(18px) saturate(1.4);
@@ -244,14 +249,18 @@
     /* ─── HERO ─── */
     .hero {
       height: 100vh;
-      background-image: url('/static/abc_gris2.webp');
-      background-repeat: no-repeat;
-      background-position: center;
-      background-size: contain;
-      background-attachment: fixed;
+      width: 100%;
+      background-color: #0b1220;
       display: flex;
       align-items: center;
       justify-content: center;
+      overflow: hidden;
+    }
+
+    .hero-img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
     }
 
     .hero-content-section {
@@ -1129,6 +1138,7 @@
     }
 
     @media (max-width: 768px) {
+      :root { --topbar-offset: 126px; }
       .topbar-nav { display: none; }
       .topbar-inner { height: auto; padding: 14px 0; flex-wrap: wrap; }
       .topbar-actions { flex-wrap: wrap; gap: 8px; }
@@ -1237,7 +1247,9 @@
   <main>
 
     <!-- ════════════════ HERO ════════════════ -->
-    <section class="hero" aria-label="Logo ABC Peinture Déco en plein écran"></section>
+    <section class="hero" aria-label="Logo ABC Peinture Déco en plein écran">
+      <img src="/static/abc_gris2.webp" alt="ABC Peinture Déco" class="hero-img">
+    </section>
 
     <section class="hero-content-section" aria-labelledby="hero-headline">
       <div class="hero-content-inner">
