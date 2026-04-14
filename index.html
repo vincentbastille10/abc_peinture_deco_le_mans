@@ -1,215 +1,854 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Peintre professionnel au Mans & Sarthe | ABC Peinture Déco</title>
-  <meta name="description" content="ABC Peinture Déco : peintre professionnel au Mans & Sarthe. Devis rapide 48h pour peinture intérieure, rénovation et peinture extérieure.">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>ABC Peinture Déco | Peintre professionnel au Mans, La Chapelle-Saint-Aubin & Sarthe</title>
+  <meta name="description" content="ABC Peinture Déco intervient au Mans et en Sarthe pour vos travaux de peinture intérieure et extérieure, revêtements sols et murs, plâtrerie et vitrerie. Devis rapide, assurance décennale GAN." />
+
+  <meta property="og:title" content="ABC Peinture Déco | Peintre professionnel au Mans & Sarthe" />
+  <meta property="og:description" content="Peinture intérieure, extérieure, revêtements sols et murs, plâtrerie, vitrerie. Contactez ABC Peinture Déco à La Chapelle-Saint-Aubin." />
+  <meta property="og:type" content="website" />
+
   <style>
-    :root {
-      --bg: #f8fafc;
-      --surface: #ffffff;
-      --text: #0f172a;
-      --muted: #475569;
-      --primary: #0ea5e9;
-      --primary-dark: #0284c7;
-      --border: #e2e8f0;
+    :root{
+      --bg:#0c1322;
+      --bg-2:#10192c;
+      --panel:#111b30;
+      --panel-2:#16233c;
+      --line:rgba(255,255,255,.10);
+      --text:#f4f1ea;
+      --muted:#b8c1d1;
+      --accent:#d2a86f;
+      --accent-2:#8fa7c7;
+      --white:#ffffff;
+      --shadow:0 20px 60px rgba(0,0,0,.28);
+      --radius:24px;
+      --max:1320px;
     }
 
-    * { box-sizing: border-box; }
-
-    html, body { margin: 0; padding: 0; }
-
-    body {
-      font-family: Inter, Arial, sans-serif;
-      color: var(--text);
-      background: var(--bg);
-      line-height: 1.5;
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(210,168,111,.10), transparent 28%),
+        radial-gradient(circle at 85% 12%, rgba(143,167,199,.14), transparent 22%),
+        linear-gradient(180deg, #0b1220 0%, #101827 45%, #0a1120 100%);
+      line-height:1.5;
     }
 
-    .container {
-      width: min(1100px, 92%);
-      margin: 0 auto;
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+
+    .container{
+      width:min(var(--max), calc(100% - 40px));
+      margin:0 auto;
     }
 
-    .hero {
-      padding: 52px 0 28px;
-      text-align: center;
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:20;
+      backdrop-filter: blur(14px);
+      background:rgba(10,17,32,.72);
+      border-bottom:1px solid rgba(255,255,255,.08);
     }
 
-    .logo {
-      max-width: 230px;
-      width: 100%;
-      height: auto;
-      display: block;
-      margin: 0 auto 24px;
+    .topbar-inner{
+      width:min(var(--max), calc(100% - 40px));
+      margin:0 auto;
+      min-height:74px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:24px;
     }
 
-    h1 {
-      margin: 0;
-      font-size: clamp(1.8rem, 4vw, 3rem);
-      line-height: 1.15;
+    .topbar-left{
+      display:flex;
+      align-items:center;
+      gap:16px;
+      min-width:0;
     }
 
-    .subtitle {
-      margin: 14px auto 0;
-      font-size: clamp(1.05rem, 2.1vw, 1.35rem);
-      color: var(--muted);
-      max-width: 720px;
+    .mini-brand{
+      width:58px;
+      flex:0 0 58px;
+      opacity:.98;
     }
 
-    .cta {
-      margin-top: 28px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 12px;
+    .topbar-title{
+      display:flex;
+      flex-direction:column;
+      min-width:0;
     }
 
-    .btn {
-      text-decoration: none;
-      border-radius: 10px;
-      padding: 12px 18px;
-      font-weight: 700;
-      border: 1px solid transparent;
-      transition: 0.2s ease;
+    .topbar-title strong{
+      font-size:16px;
+      letter-spacing:.01em;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
     }
 
-    .btn-primary {
-      background: var(--primary);
-      color: #fff;
+    .topbar-title span{
+      color:var(--muted);
+      font-size:13px;
     }
 
-    .btn-primary:hover { background: var(--primary-dark); }
-
-    .btn-outline {
-      background: #fff;
-      color: var(--text);
-      border-color: var(--border);
+    .topbar-actions{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
     }
 
-    .btn-outline:hover { border-color: var(--primary); color: var(--primary-dark); }
-
-    .info {
-      margin-top: 18px;
-      color: var(--muted);
-      font-size: 1rem;
+    .tel-link{
+      color:var(--white);
+      font-weight:700;
+      font-size:15px;
+      white-space:nowrap;
     }
 
-    .cards {
-      padding: 24px 0 40px;
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      min-height:52px;
+      padding:0 22px;
+      border-radius:999px;
+      font-weight:700;
+      letter-spacing:.01em;
+      transition:.22s ease;
+      border:1px solid transparent;
+      cursor:pointer;
     }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 14px;
+    .btn-primary{
+      background:linear-gradient(135deg, #d7af7a 0%, #b88b57 100%);
+      color:#1a1410;
+      box-shadow:0 10px 30px rgba(184,139,87,.22);
     }
 
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px;
+    .btn-primary:hover{
+      transform:translateY(-1px);
+      box-shadow:0 14px 34px rgba(184,139,87,.30);
     }
 
-    .card h2 {
-      margin: 0 0 6px;
-      font-size: 1.1rem;
+    .btn-secondary{
+      background:rgba(255,255,255,.04);
+      border-color:rgba(255,255,255,.13);
+      color:var(--white);
     }
 
-    .card p {
-      margin: 0;
-      color: var(--muted);
+    .btn-secondary:hover{
+      background:rgba(255,255,255,.07);
     }
 
-    .contact {
-      margin: 4px 0 86px;
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 20px;
+    .hero{
+      padding:54px 0 34px;
     }
 
-    .contact h3 { margin-top: 0; }
-    .contact p { margin: 6px 0; color: var(--muted); }
-
-    .chat-widget {
-      position: fixed;
-      right: 18px;
-      bottom: 18px;
-      width: min(370px, calc(100vw - 20px));
-      height: min(560px, calc(100vh - 32px));
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      overflow: hidden;
-      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.18);
-      background: #fff;
-      z-index: 999;
+    .hero-shell{
+      position:relative;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:32px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,.02)),
+        linear-gradient(180deg, rgba(20,31,53,.92), rgba(11,19,35,.96));
+      box-shadow:var(--shadow);
     }
 
-    .chat-widget iframe {
-      width: 100%;
-      height: 100%;
-      border: 0;
-      display: block;
+    .hero-shell::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:
+        linear-gradient(90deg, rgba(210,168,111,.16), transparent 24%, transparent 76%, rgba(143,167,199,.12)),
+        radial-gradient(circle at 50% 0%, rgba(255,255,255,.06), transparent 40%);
+      mix-blend-mode:screen;
+      opacity:.85;
     }
 
-    @media (max-width: 760px) {
-      .chat-widget {
-        width: calc(100vw - 14px);
-        right: 7px;
-        bottom: 7px;
-        height: 68vh;
+    .hero-inner{
+      position:relative;
+      z-index:1;
+      padding:58px 56px 52px;
+    }
+
+    .logo-wrap{
+      width:min(100%, 1120px);
+      margin:0 auto 26px;
+    }
+
+    .logo-hero{
+      width:100%;
+      max-height:280px;
+      object-fit:contain;
+      margin:0 auto;
+      filter:drop-shadow(0 14px 30px rgba(0,0,0,.16));
+    }
+
+    .eyebrow{
+      text-align:center;
+      color:var(--accent);
+      text-transform:uppercase;
+      letter-spacing:.18em;
+      font-size:12px;
+      font-weight:800;
+      margin-bottom:14px;
+    }
+
+    h1{
+      margin:0 auto 18px;
+      text-align:center;
+      max-width:1060px;
+      font-size:clamp(42px, 6.2vw, 84px);
+      line-height:.98;
+      letter-spacing:-.04em;
+      font-weight:900;
+      text-wrap:balance;
+    }
+
+    .hero-sub{
+      margin:0 auto;
+      max-width:960px;
+      text-align:center;
+      color:#d8dfeb;
+      font-size:clamp(18px, 2vw, 26px);
+      line-height:1.45;
+      text-wrap:balance;
+    }
+
+    .hero-ctas{
+      margin-top:30px;
+      display:flex;
+      gap:16px;
+      justify-content:center;
+      flex-wrap:wrap;
+    }
+
+    .trust-row{
+      margin-top:34px;
+      display:grid;
+      grid-template-columns:repeat(4, minmax(0,1fr));
+      gap:16px;
+    }
+
+    .trust-card{
+      padding:18px 18px 16px;
+      border-radius:20px;
+      background:rgba(255,255,255,.045);
+      border:1px solid rgba(255,255,255,.08);
+      min-height:118px;
+    }
+
+    .trust-card .label{
+      color:var(--accent);
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:.14em;
+      font-weight:800;
+      margin-bottom:10px;
+    }
+
+    .trust-card strong{
+      display:block;
+      font-size:20px;
+      line-height:1.2;
+      margin-bottom:6px;
+    }
+
+    .trust-card span{
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    section{
+      padding:26px 0 0;
+    }
+
+    .section-title{
+      font-size:clamp(28px, 3.2vw, 44px);
+      line-height:1.05;
+      letter-spacing:-.03em;
+      margin:0 0 10px;
+    }
+
+    .section-sub{
+      color:var(--muted);
+      margin:0 0 24px;
+      font-size:17px;
+    }
+
+    .services-grid{
+      display:grid;
+      grid-template-columns:repeat(4, minmax(0,1fr));
+      gap:18px;
+    }
+
+    .service{
+      min-height:240px;
+      padding:28px 24px;
+      border-radius:24px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.03));
+      border:1px solid rgba(255,255,255,.09);
+      box-shadow:var(--shadow);
+    }
+
+    .service-number{
+      color:var(--accent);
+      font-size:13px;
+      font-weight:800;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      margin-bottom:14px;
+    }
+
+    .service h3{
+      margin:0 0 12px;
+      font-size:25px;
+      letter-spacing:-.03em;
+      line-height:1.05;
+    }
+
+    .service p{
+      margin:0;
+      color:var(--muted);
+      font-size:16px;
+    }
+
+    .split{
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:22px;
+      align-items:stretch;
+    }
+
+    .panel{
+      border-radius:28px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.028));
+      border:1px solid rgba(255,255,255,.09);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .panel-inner{
+      padding:30px 28px;
+    }
+
+    .bullet-list{
+      display:grid;
+      gap:14px;
+      margin-top:14px;
+    }
+
+    .bullet{
+      display:flex;
+      gap:14px;
+      align-items:flex-start;
+      padding:14px 0;
+      border-top:1px solid rgba(255,255,255,.08);
+    }
+
+    .bullet:first-child{border-top:0;padding-top:0}
+    .bullet-dot{
+      width:11px;
+      height:11px;
+      border-radius:50%;
+      background:linear-gradient(135deg, #d7af7a, #9e7449);
+      margin-top:7px;
+      flex:0 0 11px;
+    }
+
+    .bullet strong{
+      display:block;
+      font-size:18px;
+      margin-bottom:3px;
+    }
+
+    .bullet span{
+      color:var(--muted);
+      font-size:15px;
+    }
+
+    .hours{
+      display:grid;
+      gap:10px;
+      margin-top:12px;
+    }
+
+    .hour-row{
+      display:grid;
+      grid-template-columns:160px 1fr;
+      gap:18px;
+      align-items:center;
+      padding:12px 0;
+      border-top:1px solid rgba(255,255,255,.08);
+    }
+
+    .hour-row:first-child{border-top:0;padding-top:0}
+    .day{
+      font-weight:700;
+      color:#f1ecdf;
+    }
+
+    .time{
+      color:var(--muted);
+    }
+
+    .map-wrap{
+      overflow:hidden;
+      border-radius:24px;
+      border:1px solid rgba(255,255,255,.08);
+      min-height:460px;
+      background:#0b1220;
+    }
+
+    .map-wrap iframe{
+      width:100%;
+      height:100%;
+      min-height:460px;
+      border:0;
+      display:block;
+      filter:grayscale(.15) contrast(1.03) saturate(.9);
+    }
+
+    .contact-grid{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0,1fr));
+      gap:18px;
+    }
+
+    .contact-card{
+      border-radius:22px;
+      padding:24px;
+      background:rgba(255,255,255,.042);
+      border:1px solid rgba(255,255,255,.08);
+      min-height:180px;
+    }
+
+    .contact-card .small{
+      color:var(--accent);
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:.16em;
+      font-weight:800;
+      margin-bottom:12px;
+    }
+
+    .contact-card h3{
+      margin:0 0 10px;
+      font-size:24px;
+      letter-spacing:-.03em;
+    }
+
+    .contact-card p{
+      margin:0;
+      color:var(--muted);
+      font-size:16px;
+    }
+
+    .contact-card a{
+      color:#f1ecdf;
+      text-decoration:underline;
+      text-underline-offset:3px;
+    }
+
+    .footer{
+      padding:30px 0 44px;
+    }
+
+    .footer-inner{
+      border-top:1px solid rgba(255,255,255,.09);
+      padding-top:24px;
+      display:grid;
+      grid-template-columns:1.2fr .8fr;
+      gap:24px;
+    }
+
+    .legal{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.7;
+    }
+
+    .legal strong{
+      color:var(--text);
+    }
+
+    .footer-note{
+      display:flex;
+      justify-content:flex-end;
+      align-items:flex-start;
+      color:var(--muted);
+      font-size:14px;
+      text-align:right;
+    }
+
+    @media (max-width: 1180px){
+      .trust-row,
+      .services-grid{
+        grid-template-columns:repeat(2, minmax(0,1fr));
+      }
+
+      .split,
+      .footer-inner{
+        grid-template-columns:1fr;
+      }
+
+      .contact-grid{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media (max-width: 760px){
+      .topbar-inner{
+        min-height:auto;
+        padding:12px 0;
+        align-items:flex-start;
+        flex-direction:column;
+      }
+
+      .topbar-actions{
+        width:100%;
+        justify-content:flex-start;
+      }
+
+      .hero-inner{
+        padding:32px 20px 28px;
+      }
+
+      .trust-row,
+      .services-grid{
+        grid-template-columns:1fr;
+      }
+
+      .hour-row{
+        grid-template-columns:1fr;
+        gap:4px;
+      }
+
+      .logo-hero{
+        max-height:180px;
+      }
+
+      .mini-brand{
+        width:48px;
+        flex-basis:48px;
       }
     }
   </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"LocalBusiness",
+    "name":"ABC Peinture Déco",
+    "image":"/static/ABC.png",
+    "telephone":"+33 2 43 75 98 18",
+    "address":{
+      "@type":"PostalAddress",
+      "streetAddress":"13-15 Rue Albert Einstein",
+      "postalCode":"72650",
+      "addressLocality":"La Chapelle-Saint-Aubin",
+      "addressCountry":"FR"
+    },
+    "areaServed":["Le Mans","La Chapelle-Saint-Aubin","Sarthe"],
+    "description":"Travaux de peinture et vitrerie, peinture intérieure et extérieure, revêtements sols et murs, plâtrerie.",
+    "openingHoursSpecification":[
+      {"@type":"OpeningHoursSpecification","dayOfWeek":"Monday","opens":"09:00","closes":"12:00"},
+      {"@type":"OpeningHoursSpecification","dayOfWeek":"Monday","opens":"13:00","closes":"16:00"},
+      {"@type":"OpeningHoursSpecification","dayOfWeek":"Tuesday","opens":"09:00","closes":"12:00"},
+      {"@type":"OpeningHoursSpecification","dayOfWeek":"Tuesday","opens":"13:00","closes":"16:00"},
+      {"@type":"OpeningHoursSpecification","dayOfWeek":"Wednesday","opens":"09:00","closes":"12:00"},
+      {"@type":"OpeningHoursSpecification","dayOfWeek":"Thursday","opens":"09:00","closes":"12:00"},
+      {"@type":"OpeningHoursSpecification","dayOfWeek":"Thursday","opens":"13:00","closes":"16:00"},
+      {"@type":"OpeningHoursSpecification","dayOfWeek":"Friday","opens":"09:00","closes":"12:00"},
+      {"@type":"OpeningHoursSpecification","dayOfWeek":"Friday","opens":"13:00","closes":"16:00"}
+    ]
+  }
+  </script>
 </head>
 <body>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-left">
+        <img class="mini-brand" src="/static/ABC.png" alt="ABC Peinture Déco">
+        <div class="topbar-title">
+          <strong>ABC Peinture Déco</strong>
+          <span>Peinture intérieure, extérieure, revêtements, plâtrerie, vitrerie</span>
+        </div>
+      </div>
+
+      <div class="topbar-actions">
+        <a class="tel-link" href="tel:0243759818">02 43 75 98 18</a>
+        <a class="btn btn-secondary" href="#horaires">Voir les horaires</a>
+        <a class="btn btn-primary" href="#contact">Demander un devis</a>
+      </div>
+    </div>
+  </header>
+
   <main>
     <section class="hero">
       <div class="container">
-        <img src="/static/ABC.png" alt="Logo ABC Peinture Déco" class="logo">
-        <h1>Peintre professionnel au Mans &amp; Sarthe</h1>
-        <p class="subtitle">devis rapide 48h</p>
+        <div class="hero-shell">
+          <div class="hero-inner">
+            <div class="logo-wrap">
+              <img class="logo-hero" src="/static/ABC.png" alt="Logo ABC Peinture Déco">
+            </div>
 
-        <div class="cta">
-          <a href="#contact" class="btn btn-primary">Demander un devis gratuit</a>
-          <a href="tel:+33600000000" class="btn btn-outline">Nous appeler</a>
+            <div class="eyebrow">Le Mans • La Chapelle-Saint-Aubin • Sarthe</div>
+
+            <h1>Peinture & rénovation avec une présence locale solide et une image haut de gamme.</h1>
+
+            <p class="hero-sub">
+              ABC Peinture Déco accompagne les projets de peinture intérieure et extérieure,
+              revêtements sols et murs, plâtrerie et vitrerie, avec un point de contact à
+              La Chapelle-Saint-Aubin et une activité établie depuis 2013.
+            </p>
+
+            <div class="hero-ctas">
+              <a class="btn btn-primary" href="tel:0243759818">Appeler maintenant</a>
+              <a class="btn btn-secondary" href="#contact">Voir les informations de contact</a>
+            </div>
+
+            <div class="trust-row">
+              <div class="trust-card">
+                <div class="label">Téléphone</div>
+                <strong>02 43 75 98 18</strong>
+                <span>Contact direct affiché sur la fiche PagesJaunes.</span>
+              </div>
+
+              <div class="trust-card">
+                <div class="label">Adresse de contact</div>
+                <strong>13-15 Rue Albert Einstein</strong>
+                <span>72650 La Chapelle-Saint-Aubin</span>
+              </div>
+
+              <div class="trust-card">
+                <div class="label">Réassurance</div>
+                <strong>Assurance décennale GAN</strong>
+                <span>Mentionnée sur la fiche Travaux.com.</span>
+              </div>
+
+              <div class="trust-card">
+                <div class="label">Expérience</div>
+                <strong>+ de 20 ans</strong>
+                <span>Expérience métier mise en avant sur la fiche Travaux.com.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="services">
+      <div class="container">
+        <h2 id="services" class="section-title">Prestations mises en avant</h2>
+        <p class="section-sub">
+          Les activités décrites dans les annuaires consultés couvrent la peinture intérieure et extérieure,
+          les revêtements de sols et murs, la plâtrerie et la vitrerie.
+        </p>
+
+        <div class="services-grid">
+          <article class="service">
+            <div class="service-number">Service 01</div>
+            <h3>Peinture intérieure</h3>
+            <p>Travaux de peinture en bâtiment pour les espaces de vie, les surfaces murales, les plafonds et les finitions intérieures.</p>
+          </article>
+
+          <article class="service">
+            <div class="service-number">Service 02</div>
+            <h3>Peinture extérieure</h3>
+            <p>Interventions extérieures en cohérence avec l’activité déclarée de peinture en bâtiment et les spécialités mentionnées sur les fiches métier.</p>
+          </article>
+
+          <article class="service">
+            <div class="service-number">Service 03</div>
+            <h3>Revêtements sols et murs</h3>
+            <p>Pose de revêtements de sols et murs, explicitement signalée dans plusieurs fiches de l’entreprise.</p>
+          </article>
+
+          <article class="service">
+            <div class="service-number">Service 04</div>
+            <h3>Plâtrerie & vitrerie</h3>
+            <p>La plâtrerie est mentionnée sur Travaux.com, tandis que la vitrerie apparaît dans la description métier et le code NAF 43.34Z.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="entreprise">
+      <div class="container">
+        <div class="split">
+          <div class="panel">
+            <div class="panel-inner">
+              <h2 id="entreprise" class="section-title">Entreprise & réassurance</h2>
+              <p class="section-sub">
+                Une présentation fondée sur les données professionnelles et administratives accessibles publiquement.
+              </p>
+
+              <div class="bullet-list">
+                <div class="bullet">
+                  <div class="bullet-dot"></div>
+                  <div>
+                    <strong>SARL créée en juin 2013</strong>
+                    <span>La société ABC Peinture Déco a été créée en juin 2013 sous la forme juridique SARL.</span>
+                  </div>
+                </div>
+
+                <div class="bullet">
+                  <div class="bullet-dot"></div>
+                  <div>
+                    <strong>SIREN 793 751 249</strong>
+                    <span>Identifiant de société affiché sur les fiches annuaires et sur e-pro.</span>
+                  </div>
+                </div>
+
+                <div class="bullet">
+                  <div class="bullet-dot"></div>
+                  <div>
+                    <strong>Gérant : Antony Berge</strong>
+                    <span>Le représentant légal indiqué sur la fiche e-pro est Antony Berge.</span>
+                  </div>
+                </div>
+
+                <div class="bullet">
+                  <div class="bullet-dot"></div>
+                  <div>
+                    <strong>Activité principale : travaux de peinture et vitrerie</strong>
+                    <span>Code NAF 43.34Z, avec un positionnement métier cohérent entre peinture, revêtements, plâtrerie et vitrerie.</span>
+                  </div>
+                </div>
+
+                <div class="bullet">
+                  <div class="bullet-dot"></div>
+                  <div>
+                    <strong>Présence au Mans & à La Chapelle-Saint-Aubin</strong>
+                    <span>Le siège social est indiqué 53 avenue Bollée au Mans, avec un établissement actif Rue Albert Einstein à La Chapelle-Saint-Aubin.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel" id="horaires">
+            <div class="panel-inner">
+              <h2 class="section-title">Horaires d’ouverture</h2>
+              <p class="section-sub">
+                Horaires visibles dans les résultats et fiches locales consultés.
+              </p>
+
+              <div class="hours">
+                <div class="hour-row">
+                  <div class="day">Lundi</div>
+                  <div class="time">09:00–12:00 / 13:00–16:00</div>
+                </div>
+                <div class="hour-row">
+                  <div class="day">Mardi</div>
+                  <div class="time">09:00–12:00 / 13:00–16:00</div>
+                </div>
+                <div class="hour-row">
+                  <div class="day">Mercredi</div>
+                  <div class="time">09:00–12:00</div>
+                </div>
+                <div class="hour-row">
+                  <div class="day">Jeudi</div>
+                  <div class="time">09:00–12:00 / 13:00–16:00</div>
+                </div>
+                <div class="hour-row">
+                  <div class="day">Vendredi</div>
+                  <div class="time">09:00–12:00 / 13:00–16:00</div>
+                </div>
+                <div class="hour-row">
+                  <div class="day">Samedi</div>
+                  <div class="time">Fermé</div>
+                </div>
+                <div class="hour-row">
+                  <div class="day">Dimanche</div>
+                  <div class="time">Fermé</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="contact">
+      <div class="container">
+        <h2 id="contact" class="section-title">Contact & localisation</h2>
+        <p class="section-sub">
+          Adresse de contact affichée au public à La Chapelle-Saint-Aubin, avec numéro de téléphone direct et carte d’accès.
+        </p>
+
+        <div class="contact-grid">
+          <article class="contact-card">
+            <div class="small">Téléphone</div>
+            <h3>02 43 75 98 18</h3>
+            <p>
+              <a href="tel:0243759818">Appeler ABC Peinture Déco</a>
+            </p>
+          </article>
+
+          <article class="contact-card">
+            <div class="small">Adresse</div>
+            <h3>13-15 Rue Albert Einstein</h3>
+            <p>72650 La Chapelle-Saint-Aubin</p>
+          </article>
+
+          <article class="contact-card">
+            <div class="small">Zone mise en avant</div>
+            <h3>Le Mans & Sarthe</h3>
+            <p>Entreprise de peinture et décoration avec présence locale au Mans et à La Chapelle-Saint-Aubin.</p>
+          </article>
         </div>
 
-        <p class="info"><strong>Téléphone :</strong> <a href="tel:+33600000000">06 00 00 00 00</a></p>
-        <p class="info"><strong>Adresse :</strong> Le Mans, Sarthe (72)</p>
-      </div>
-    </section>
+        <div style="height:22px"></div>
 
-    <section class="cards">
-      <div class="container grid">
-        <article class="card">
-          <h2>Peinture intérieure</h2>
-          <p>Mise en peinture soignée de vos pièces de vie, chambres, plafonds et boiseries.</p>
-        </article>
-        <article class="card">
-          <h2>Rénovation</h2>
-          <p>Préparation des supports, reprises murs/plafonds et remise en état complète.</p>
-        </article>
-        <article class="card">
-          <h2>Peinture extérieure</h2>
-          <p>Façades, volets, ferronneries et protection durable contre les intempéries.</p>
-        </article>
+        <div class="map-wrap" aria-label="Carte Google Maps vers ABC Peinture Déco">
+          <iframe
+            src="https://maps.google.com/maps?q=13-15%20Rue%20Albert%20Einstein%2072650%20La%20Chapelle-Saint-Aubin&z=15&output=embed"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            title="Carte Google Maps ABC Peinture Déco">
+          </iframe>
+        </div>
       </div>
-    </section>
-
-    <section class="container contact" id="contact">
-      <h3>Contact</h3>
-      <p>Besoin d’un chiffrage rapide ? Décrivez votre projet et laissez votre numéro : nous vous rappelons.</p>
-      <p><strong>Téléphone :</strong> <a href="tel:+33600000000">06 00 00 00 00</a></p>
-      <p><strong>Zone d’intervention :</strong> Le Mans et Sarthe.</p>
     </section>
   </main>
 
-  <div class="chat-widget" aria-label="Chat Betty">
-    <iframe src="/chat" title="Betty - Assistant devis" loading="lazy"></iframe>
-  </div>
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="legal">
+          <strong>ABC Peinture Déco</strong><br>
+          Activité principale : travaux de peinture et vitrerie (NAF 43.34Z).<br>
+          Forme juridique : SARL.<br>
+          SIREN : 793 751 249.<br>
+          Gérant : Antony Berge.<br>
+          Adresse de contact mise en avant : 13-15 Rue Albert Einstein, 72650 La Chapelle-Saint-Aubin.<br>
+          Siège social indiqué dans les données administratives : 53 avenue Bollée, 72000 Le Mans.
+        </div>
+
+        <div class="footer-note">
+          Landing conçue autour d’informations vérifiables, avec un rendu premium orienté contact local.
+        </div>
+      </div>
+    </div>
+  </footer>
+
 </body>
 </html>
