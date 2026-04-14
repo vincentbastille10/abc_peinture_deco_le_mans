@@ -4,7 +4,7 @@ import re
 import requests
 from http.server import BaseHTTPRequestHandler
 
-# ===== ENV =====
+# ===== CONFIG =====
 TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY", "")
 MODEL = os.getenv("LLM_MODEL", "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo")
 
@@ -23,58 +23,28 @@ QUESTIONS = {
     "projet": "Quelle pièce souhaitez-vous refaire ?",
     "surface": "Quelle surface environ en m² ?",
     "delai": "Vous souhaitez faire les travaux quand ?",
-    "nom": "À quel prénom puis-je enregistrer votre demande ?",
+    "nom": "Quel est votre prénom ?",
     "telephone": "Quel est votre numéro de téléphone ?",
-    "email": "Et votre email ?"
+    "email": "Quel est votre email ?"
 }
 
-# ===== SCORING =====
-def score_lead(data):
-    score = 0
-    if data.get("projet"): score += 1
-    if data.get("surface"): score += 1
-    if data.get("delai"): score += 2
-    if data.get("telephone"): score += 3
-    if data.get("email"): score += 2
-
-    if score >= 6:
-        return "chaud 🔥"
-    elif score >= 3:
-        return "tiède"
-    return "froid"
-
-# ===== CTA =====
-def build_cta(data):
-    score = score_lead(data)
-
-    if score == "chaud 🔥":
-        return "📞 Appelez directement le 02 43 75 98 18 pour aller plus vite."
-
-    if data.get("delai"):
-        return "📞 Vous pouvez appeler le 02 43 75 98 18 pour accélérer."
-
-    return ""
-
-# ===== RESPONSE JSON =====
+# ===== JSON RESPONSE =====
 def json_response(handler, payload):
     body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
     handler.send_response(200)
-    handler.send_header("Content-Type", "application/json; charset=utf-8")
+    handler.send_header("Content-Type", "application/json")
     handler.send_header("Access-Control-Allow-Origin", "*")
     handler.end_headers()
     handler.wfile.write(body)
 
-# ===== EXTRACTION =====
-def extract_lead(text):
-    email = re.findall(r"\S+@\S+\.\S+", text)
-    phone = re.findall(r"\b\d{10}\b", text)
+# ===== NORMALISATION =====
+def normalize_input(message, step):
+    # 👇 LE FIX CRUCIAL
+    if step == "surface" and message.isdigit():
+        return f"{message} m2"
+    return message
 
-    return {
-        "email": email[0] if email else None,
-        "phone": phone[0] if phone else None
-    }
-
-# ===== SEND MAIL =====
+# ===== ENVOI LEAD =====
 def send_lead(data):
     if not (MJ_API_KEY and MJ_API_SECRET and DEFAULT_LEAD_EMAIL):
         print("MAILJET NON CONFIGURÉ")
@@ -96,41 +66,43 @@ def send_lead(data):
                         "TextPart": json.dumps(data, indent=2, ensure_ascii=False)
                     }
                 ]
-            },
-            timeout=15
+            }
         )
     except Exception as e:
         print("ERREUR MAIL:", e)
 
 # ===== LLM =====
-def call_llm(user_msg, context, next_question):
+def call_llm(user_msg, context, current_step, next_question):
     if not TOGETHER_API_KEY:
         return next_question
 
     try:
-        cta = build_cta(context)
-
         prompt = f"""
 Tu es Betty, assistante commerciale pour une entreprise de peinture.
 
-Règles :
-- réponse très courte
-- naturelle
-- pas robotique
-- jamais répéter
-- poser UNE seule question
-- guider vers devis
+IMPORTANT :
+Le client répond à cette question :
+{current_step}
+
+Sa réponse :
+{user_msg}
 
 Contexte :
 {json.dumps(context, ensure_ascii=False)}
 
-Utilisateur : {user_msg}
+Ton comportement :
+- comprendre la réponse même si elle est courte (ex: "100")
+- valider rapidement (ex: "Parfait")
+- poser la question suivante
+
+Règles :
+- 1 phrase courte
+- naturel
+- jamais répéter
+- jamais reposer la même question
 
 Question suivante :
 {next_question}
-
-CTA si pertinent :
-{cta}
 
 Réponse :
 """
@@ -147,8 +119,8 @@ Réponse :
                     {"role": "system", "content": "Assistant commercial BTP"},
                     {"role": "user", "content": prompt}
                 ],
-                "temperature": 0.7,
-                "max_tokens": 120
+                "temperature": 0.5,
+                "max_tokens": 80
             },
             timeout=20
         )
@@ -189,42 +161,33 @@ class handler(BaseHTTPRequestHandler):
 
             s = sessions[user_id]
 
-            # extraction auto
-            auto = extract_lead(message)
-            if auto["email"]:
-                s["data"]["email"] = auto["email"]
-            if auto["phone"]:
-                s["data"]["telephone"] = auto["phone"]
+            # étape actuelle
+            if s["step"] < len(FLOW):
+                current_key = FLOW[s["step"]]
+            else:
+                current_key = None
 
-            # skip étapes déjà remplies
-            while s["step"] < len(FLOW) and FLOW[s["step"]] in s["data"]:
-                s["step"] += 1
+            # normalisation
+            message = normalize_input(message, current_key)
 
             # sauvegarde
-            if s["step"] < len(FLOW):
-                s["data"][FLOW[s["step"]]] = message
+            if current_key:
+                s["data"][current_key] = message
                 s["step"] += 1
 
             # FIN
             if s["step"] >= len(FLOW):
                 send_lead(s["data"])
-
-                score = score_lead(s["data"])
-
-                if score == "chaud 🔥":
-                    return json_response(self, {
-                        "response": "Parfait 👍 Votre demande est prioritaire. Appelez directement le 02 43 75 98 18."
-                    })
-
                 return json_response(self, {
-                    "response": "Parfait 👍 On vous recontacte rapidement pour votre devis."
+                    "response": "Parfait 👍 On vous recontacte très rapidement."
                 })
 
-            # suite
+            # prochaine question
             next_key = FLOW[s["step"]]
             next_q = QUESTIONS[next_key]
 
-            reply = call_llm(message, s["data"], next_q)
+            # réponse LLM intelligente
+            reply = call_llm(message, s["data"], current_key, next_q)
 
             return json_response(self, {
                 "response": reply
