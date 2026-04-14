@@ -244,51 +244,48 @@
     /* ─── HERO ─── */
     .hero {
       position: relative;
-      min-height: 100svh;
+      min-height: 100vh;
+      background-image: url('/static/abc_gris2.webp');
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: contain;
+      background-attachment: fixed;
       display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
+      align-items: center;
+      justify-content: center;
       overflow: hidden;
     }
 
-    .hero-bg {
+    .hero::before {
+      content: "";
       position: absolute;
       inset: 0;
-      z-index: 0;
-    }
-
-    .hero-bg img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center 30%;
-      filter: saturate(.55) brightness(.72) contrast(1.08);
-    }
-
-    .hero-overlay {
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(to bottom, rgba(9,17,31,.42) 0%, rgba(9,17,31,.18) 32%, rgba(9,17,31,.72) 68%, rgba(9,17,31,.97) 100%),
-        linear-gradient(to right, rgba(9,17,31,.62) 0%, transparent 60%);
+      background: rgba(0,0,0,.2);
+      z-index: 1;
     }
 
     .hero-content {
       position: relative;
       z-index: 2;
-      padding: 0 0 72px;
+      width: 100%;
+      text-align: center;
     }
 
     .hero-inner {
       width: min(var(--max), calc(100% - 48px));
       margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr 440px;
-      gap: 40px;
-      align-items: flex-end;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
     }
 
-    .hero-left {}
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
     .hero-badge {
       display: inline-flex;
@@ -330,6 +327,7 @@
       letter-spacing: -.04em;
       margin-bottom: 24px;
       text-wrap: balance;
+      text-align: center;
     }
 
     .hero-headline em {
@@ -341,19 +339,24 @@
       font-size: clamp(17px, 1.8vw, 20px);
       color: rgba(238,240,245,.78);
       line-height: 1.55;
-      max-width: 600px;
+      max-width: 700px;
       margin-bottom: 36px;
       font-weight: 300;
+      text-align: center;
     }
 
     .hero-ctas {
       display: flex;
       gap: 12px;
       flex-wrap: wrap;
+      justify-content: center;
     }
 
     /* ─── HERO BETTY CARD ─── */
     .hero-betty {
+      margin-top: 20px;
+      width: 100%;
+      max-width: 420px;
       background: rgba(13,25,41,.88);
       border: 1px solid rgba(255,255,255,.1);
       border-radius: var(--radius-xl);
@@ -1115,9 +1118,6 @@
 
     /* ─── RESPONSIVE ─── */
     @media (max-width: 1100px) {
-      .hero-inner { grid-template-columns: 1fr; }
-      .hero-betty { max-width: 540px; }
-      .hero-content { padding-bottom: 56px; }
       .positioning-grid { grid-template-columns: 1fr; gap: 40px; }
       .market-intro { grid-template-columns: 1fr; }
       .services-grid { grid-template-columns: repeat(2, 1fr); }
@@ -1131,7 +1131,7 @@
       .topbar-nav { display: none; }
       .topbar-inner { height: auto; padding: 14px 0; flex-wrap: wrap; }
       .topbar-actions { flex-wrap: wrap; gap: 8px; }
-      .hero { min-height: 100svh; }
+      .hero { min-height: 100vh; }
       .hero-inner { gap: 32px; }
       .hero-betty { max-width: 100%; }
       .betty-frame { height: 420px; }
@@ -1237,11 +1237,6 @@
 
     <!-- ════════════════ HERO ════════════════ -->
     <section class="hero" aria-labelledby="hero-headline">
-      <div class="hero-bg" aria-hidden="true">
-        <img src="/static/abc_gris2.webp" alt="Chantier de peinture professionnelle ABC Peinture Déco" loading="eager" fetchpriority="high" />
-        <div class="hero-overlay"></div>
-      </div>
-
       <div class="hero-content">
         <div class="hero-inner">
           <div class="hero-left">
