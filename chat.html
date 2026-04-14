@@ -20,7 +20,8 @@
 
     .header {
       background: linear-gradient(90deg, #2d5bff, #3b82f6);
-      padding: 14px 16px;
+      padding: 16px;
+      font-weight: bold;
       display: flex;
       align-items: center;
       gap: 10px;
@@ -31,22 +32,6 @@
       height: 40px;
       border-radius: 50%;
       object-fit: cover;
-    }
-
-    .header-text {
-      display: flex;
-      flex-direction: column;
-      line-height: 1.2;
-    }
-
-    .header-title {
-      font-weight: bold;
-      font-size: 14px;
-    }
-
-    .header-sub {
-      font-size: 12px;
-      opacity: 0.8;
     }
 
     .messages {
@@ -111,10 +96,7 @@
 
   <div class="header">
     <img src="/static/avatar.jpg" alt="Betty">
-    <div class="header-text">
-      <div class="header-title">Betty — ABC Peinture Déco</div>
-      <div class="header-sub">Devis peinture rapide — Le Mans & Sarthe</div>
-    </div>
+    Betty — Devis peinture rapide
   </div>
 
   <div class="messages" id="messages"></div>
@@ -128,6 +110,7 @@
 
 <script>
   const messages = document.getElementById("messages");
+  const input = document.getElementById("input");
 
   function addMessage(text, type) {
     const div = document.createElement("div");
@@ -151,9 +134,7 @@
   }
 
   async function sendMessage() {
-    const input = document.getElementById("input");
     const message = input.value.trim();
-
     if (!message) return;
 
     addUserMessage(message);
@@ -166,17 +147,10 @@
         body: JSON.stringify({ message })
       });
 
-      if (!res.ok) {
-        throw new Error("Erreur API");
-      }
+      if (!res.ok) throw new Error("Erreur API");
 
       const data = await res.json();
-
-      if (data.response) {
-        addBotMessage(data.response);
-      } else {
-        addBotMessage("Réponse vide.");
-      }
+      addBotMessage(data.response || "Réponse vide.");
 
     } catch (err) {
       console.error(err);
@@ -184,15 +158,15 @@
     }
   }
 
-  // Envoi avec ENTER (important UX)
-  document.getElementById("input").addEventListener("keypress", function(e) {
+  // ENTER pour envoyer
+  input.addEventListener("keydown", function(e) {
     if (e.key === "Enter") {
       sendMessage();
     }
   });
 
   // Message initial
-  addBotMessage("Bonjour, je suis Betty. Je peux vous aider à qualifier votre projet peinture et préparer un devis. Quelle pièce souhaitez-vous refaire ?");
+  addBotMessage("Bonjour, je suis Betty. Je peux vous aider à qualifier votre projet peinture et préparer un devis.");
 
 </script>
 
