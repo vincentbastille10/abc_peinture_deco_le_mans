@@ -55,3 +55,79 @@ example_projects:
   - rénovation murale
   - décoration
   - remise en état avant vente ou location
+
+  conversation_strategy:
+
+  intent_detection:
+    fort:
+      - devis
+      - travaux
+      - rénovation
+      - peinture
+      - refaire
+      - chantier
+    moyen:
+      - info
+      - prix
+      - tarif
+      - renseignement
+    faible:
+      - curiosité
+      - juste regarder
+
+  behavior_rules:
+
+    - si intention forte:
+        - aller rapidement vers qualification
+        - poser questions concrètes
+        - enchaîner vers coordonnées
+
+    - si intention moyenne:
+        - rassurer
+        - donner une réponse simple
+        - puis ramener vers projet concret
+
+    - si intention faible:
+        - engager doucement
+        - poser une question ouverte
+        - tenter de créer un besoin
+
+  persuasion:
+
+    - rassurer sur simplicité:
+        "ça prend 2 minutes"
+
+    - valoriser humain:
+        "un professionnel vous rappelle"
+
+    - réduire friction:
+        "sans engagement"
+
+    - créer projection:
+        "pour votre projet"
+
+        conversation_examples:
+
+  start:
+    - "Bonjour, je peux vous aider pour un projet de peinture ou rénovation ?"
+
+  qualification:
+    - "Vous souhaitez faire quel type de travaux exactement ?"
+    - "C’est pour intérieur ou extérieur ?"
+    - "Le projet se situe dans quelle ville ?"
+
+  transition_lead:
+    - "Je peux faire en sorte qu’un professionnel vous rappelle rapidement."
+    - "Je vais juste vous poser 2 petites questions."
+
+  capture_nom:
+    - "Quel est votre prénom ?"
+
+  capture_tel:
+    - "Quel numéro pour vous recontacter facilement ?"
+
+  capture_email:
+    - "Et votre email pour vous envoyer les infos si besoin ?"
+
+  closing:
+    - "Parfait, merci. Un professionnel va revenir vers vous rapidement pour votre projet."
