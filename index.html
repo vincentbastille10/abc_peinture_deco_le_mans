@@ -19,14 +19,14 @@
 
   <style>
     :root {
-      --ink: #09111f;
-      --ink-2: #0d1929;
-      --surface: #111e33;
-      --surface-2: #162540;
-      --line: rgba(255,255,255,.08);
-      --text: #eef0f5;
-      --muted: #8b98b4;
-      --dim: #4d5d78;
+      --ink: rgba(255,255,255,0.05);
+      --ink-2: rgba(255,255,255,0.05);
+      --surface: rgba(255,255,255,0.05);
+      --surface-2: rgba(255,255,255,0.05);
+      --line: rgba(255,255,255,.1);
+      --text: #1d2b3f;
+      --muted: #324966;
+      --dim: #4f6787;
       --gold: #c8a96e;
       --gold-light: #dfc08c;
       --gold-dim: rgba(200,169,110,.18);
@@ -34,8 +34,8 @@
       --cerulean-light: #5b9de8;
       --white: #ffffff;
       --red-corp: #8b1a2a;
-      --shadow-deep: 0 32px 80px rgba(0,0,0,.48);
-      --shadow-card: 0 8px 40px rgba(0,0,0,.28);
+      --shadow-deep: 0 20px 40px rgba(125, 146, 176, 0.18);
+      --shadow-card: 0 8px 24px rgba(125, 146, 176, 0.14);
       --radius-xl: 28px;
       --radius-lg: 20px;
       --radius-md: 12px;
@@ -49,31 +49,13 @@
 
     body {
       margin: 0;
+      padding: 0;
       font-family: var(--font-body);
       color: var(--text);
-      background:
-        linear-gradient(rgba(10,17,32,0.85), rgba(10,17,32,0.95)),
-        url('/static/abc_gris2.webp');
+      background: url('/static/abc_gris2.webp') no-repeat center center fixed;
       background-size: cover;
-      background-position: center;
-      background-attachment: fixed;
       line-height: 1.6;
       overflow-x: hidden;
-      position: relative;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      background: rgba(10,17,32,0.6);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    body > * {
-      position: relative;
-      z-index: 1;
     }
 
     a { color: inherit; text-decoration: none; }
@@ -88,7 +70,7 @@
       top: 0;
       z-index: 50;
 
-      background: rgba(12, 19, 34, 0.85);
+      background: rgba(255,255,255,0.05);
       backdrop-filter: blur(8px);
 
       padding: 10px 0;
@@ -111,7 +93,7 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      background: rgba(9,17,31,.88);
+      background: rgba(255,255,255,0.05);
       backdrop-filter: blur(18px) saturate(1.4);
       -webkit-backdrop-filter: blur(18px) saturate(1.4);
       border-bottom: 1px solid rgba(255,255,255,.07);
@@ -375,9 +357,9 @@
       height: 500px;
       border-radius: 20px;
       border: none;
-      background: rgba(0,0,0,0.6);
+      background: rgba(255,255,255,0.05);
       backdrop-filter: blur(8px);
-      box-shadow: 0 30px 70px rgba(0,0,0,0.5);
+      box-shadow: var(--shadow-deep);
     }
 
     /* ─── TRUST STRIP ─── */
@@ -968,7 +950,7 @@
 
     .cta-card {
       border-radius: var(--radius-lg);
-      background: linear-gradient(135deg, #1e3252 0%, #16263e 100%);
+      background: rgba(255,255,255,0.05);
       border: 1px solid rgba(91,157,232,.2);
       padding: 28px;
       display: flex;
