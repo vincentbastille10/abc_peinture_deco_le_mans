@@ -336,6 +336,59 @@
         padding: 40px 20px;
       }
     }
+
+    /* Betty widget */
+    .betty-widget {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      width: min(390px, calc(100vw - 24px));
+      height: 560px;
+      background: #0b1220;
+      border: 1px solid rgba(59, 130, 246, 0.45);
+      border-radius: 14px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+      overflow: hidden;
+      z-index: 1200;
+    }
+
+    .betty-widget-header {
+      background: linear-gradient(90deg, #1e3a8a 0%, #2563eb 100%);
+      color: #fff;
+      padding: 10px 14px;
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .betty-widget-header img {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid rgba(255, 255, 255, 0.45);
+    }
+
+    .betty-widget iframe {
+      width: 100%;
+      height: calc(100% - 49px);
+      border: 0;
+      background: #0f172a;
+    }
+
+    @media (max-width: 768px) {
+      .betty-widget {
+        right: 12px;
+        left: 12px;
+        width: auto;
+        bottom: 12px;
+        height: 66vh;
+      }
+    }
+
   </style>
 </head>
 
@@ -553,6 +606,15 @@
       <p style="color: rgba(255, 255, 255, 0.5);">© 2026 ABC Peinture Déco — Artisan peintre au Mans — Tous droits réservés</p>
     </div>
   </footer>
+
+
+  <aside class="betty-widget" aria-label="Assistant Betty">
+    <div class="betty-widget-header">
+      <img src="/static/neutre_femme2.webp" alt="Avatar Betty">
+      <span>Betty — Devis peinture rapide</span>
+    </div>
+    <iframe src="/chat" title="Chat Betty" loading="eager"></iframe>
+  </aside>
 
   <!-- Betty placeholder -->
   <script>
