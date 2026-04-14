@@ -2,18 +2,18 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8">
-
-  <title>Peintre Le Mans (72) — ABC Peinture Déco | Devis rapide & travail soigné</title>
-
-  <meta name="description" content="Entreprise de peinture au Mans. Travaux intérieurs, extérieurs et rénovation en Sarthe. ABC Peinture Déco : artisan local, finitions propres, devis gratuit rapide.">
-  <link rel="canonical" href="https://mybetty.online/abc-peinture-deco">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <meta property="og:title" content="Peintre Le Mans — ABC Peinture Déco">
-  <meta property="og:description" content="Travaux de peinture au Mans et en Sarthe. Artisan local, devis rapide, résultat soigné.">
+  <title>ABC Peinture Déco | Peintre Le Mans (72) - Devis rapide, finitions soignées</title>
+  <meta name="description" content="ABC Peinture Déco, entreprise de peinture au Mans et en Sarthe. Travaux intérieurs, extérieurs et rénovation. Devis clair, chantier propre, contact rapide.">
+  <link rel="canonical" href="https://mybetty.online/abc-peinture-deco">
+  <meta property="og:locale" content="fr_FR">
   <meta property="og:type" content="website">
+  <meta property="og:title" content="ABC Peinture Déco | Entreprise de peinture au Mans">
+  <meta property="og:description" content="Peintre bâtiment à Le Mans : rénovation intérieure/extérieure, préparation soignée et finitions durables en Sarthe.">
+  <meta property="og:url" content="https://mybetty.online/abc-peinture-deco">
+  <meta property="og:site_name" content="ABC Peinture Déco">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=1400&q=80">
 
-  <!-- SEO LOCAL -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -27,257 +27,406 @@
       "postalCode": "72650",
       "addressCountry": "FR"
     },
-    "areaServed": "Le Mans et Sarthe"
+    "areaServed": ["Le Mans", "Sarthe"],
+    "url": "https://mybetty.online/abc-peinture-deco"
   }
   </script>
 
   <style>
+    :root {
+      --bg: #f6f5f2;
+      --surface: #ffffff;
+      --ink: #222221;
+      --muted: #5a5f62;
+      --line: #dfdfdb;
+      --brand: #2e4f4f;
+      --brand-dark: #203737;
+      --accent: #b07933;
+      --ok: #2f6b4d;
+      --radius: 14px;
+      --shadow: 0 14px 32px rgba(24, 30, 36, 0.08);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
       margin: 0;
-      font-family: system-ui, -apple-system, Arial, sans-serif;
-      color: #1f2937;
-      background: #f9fafb;
+      font-family: "Inter", "Segoe UI", Arial, sans-serif;
+      color: var(--ink);
+      background: linear-gradient(180deg, #f4f2ed, #f8f8f6 30%, #f6f5f2 100%);
+      line-height: 1.6;
+    }
+    a { color: inherit; }
+    .wrap { width: min(1160px, 92%); margin: 0 auto; }
+
+    .topbar {
+      background: #1f3434;
+      color: #f4f6f4;
+      font-size: .95rem;
+      padding: .65rem 0;
+      border-bottom: 1px solid rgba(255,255,255,.15);
+    }
+    .topbar-inner {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+      align-items: center;
     }
 
-    .container {
-      max-width: 1100px;
-      margin: auto;
-      padding: 40px 20px;
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(6px);
+      background: rgba(246,245,242,.95);
+      border-bottom: 1px solid var(--line);
     }
-
-    h1 {
-      font-size: 38px;
-      margin-bottom: 20px;
-      line-height: 1.2;
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      padding: .9rem 0;
     }
-
-    h2 {
-      margin-top: 60px;
-      margin-bottom: 20px;
-      font-size: 26px;
+    .brand { font-weight: 800; letter-spacing: .2px; }
+    .brand small { display: block; font-weight: 500; font-size: .78rem; color: var(--muted); }
+    .nav-links { display: flex; gap: 1rem; font-size: .95rem; }
+    .btn, .btn-outline {
+      display: inline-block;
+      text-decoration: none;
+      padding: .9rem 1.2rem;
+      border-radius: 10px;
+      font-weight: 700;
+      transition: .25s ease;
+      border: 1px solid transparent;
     }
-
-    p {
-      line-height: 1.7;
-      margin-bottom: 15px;
+    .btn {
+      background: var(--brand);
+      color: #fff;
+      box-shadow: 0 8px 20px rgba(46,79,79,.25);
     }
+    .btn:hover { background: var(--brand-dark); transform: translateY(-1px); }
+    .btn-outline {
+      border-color: var(--brand);
+      color: var(--brand);
+      background: transparent;
+    }
+    .btn-outline:hover { background: rgba(46,79,79,.08); }
 
     .hero {
-      padding: 80px 0 40px;
-    }
-
-    .hero strong {
-      color: #0f172a;
-    }
-
-    .cta {
-      display: inline-block;
-      background: #111827;
-      color: white;
-      padding: 14px 22px;
-      border-radius: 6px;
-      text-decoration: none;
-      font-weight: 600;
-      margin-top: 20px;
-    }
-
-    .cta.secondary {
-      background: transparent;
-      border: 1px solid #111827;
-      color: #111827;
-      margin-left: 10px;
-    }
-
-    .grid {
+      padding: 4.2rem 0 2.4rem;
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 30px;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 2rem;
+      align-items: stretch;
     }
-
-    .card {
-      background: white;
-      padding: 25px;
-      border-radius: 8px;
-      border: 1px solid #e5e7eb;
+    .hero h1 {
+      margin: 0 0 1rem;
+      font-size: clamp(1.85rem, 2.9vw, 3rem);
+      line-height: 1.18;
     }
-
+    .hero p { color: var(--muted); margin: 0 0 1.3rem; }
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .65rem;
+      margin-bottom: 1.2rem;
+    }
     .badge {
+      padding: .45rem .68rem;
+      border-radius: 999px;
+      border: 1px solid #cfcdc6;
+      background: #fff;
+      font-size: .86rem;
+      color: #3e4448;
+      font-weight: 600;
+    }
+    .hero-actions { display: flex; gap: .8rem; flex-wrap: wrap; }
+    .hero-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1.2rem;
+      display: grid;
+      gap: .9rem;
+    }
+    .hero-card h2 { margin: 0; font-size: 1.25rem; }
+    .hero-card p { margin: 0; color: var(--muted); }
+    .hero-card .line {
+      border-top: 1px dashed #d6d4cf;
+      padding-top: .8rem;
+      font-size: .95rem;
+    }
+
+    section { padding: 2.4rem 0; }
+    .section-title { font-size: clamp(1.4rem, 2.3vw, 2rem); margin: 0 0 .8rem; }
+    .section-intro { margin: 0 0 1.4rem; color: var(--muted); }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1.2rem;
+    }
+    .card h3 { margin: .1rem 0 .45rem; font-size: 1.08rem; }
+    .card p { margin: 0; color: var(--muted); }
+
+    .zone {
+      background: #223938;
+      color: #eef2ef;
+      border-radius: var(--radius);
+      padding: 1.25rem;
+    }
+    .zone strong { color: #fff; }
+
+    .steps { counter-reset: etapes; }
+    .step { position: relative; padding-left: 2.3rem; }
+    .step::before {
+      counter-increment: etapes;
+      content: counter(etapes);
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1.6rem;
+      height: 1.6rem;
+      border-radius: 50%;
+      background: #e8ecea;
+      color: #1f3434;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: .82rem;
+    }
+
+    .faq details {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      padding: .85rem 1rem;
+      margin-bottom: .65rem;
+    }
+    .faq summary {
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .seo-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .6rem;
+      margin-top: 1rem;
+    }
+    .chip {
       display: inline-block;
-      background: #e5e7eb;
-      padding: 6px 10px;
-      border-radius: 4px;
-      margin-right: 8px;
-      font-size: 13px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: .5rem .8rem;
+      text-decoration: none;
+      font-size: .9rem;
+      color: #394245;
     }
 
-    .contact {
-      background: #111827;
-      color: white;
-      padding: 40px;
-      border-radius: 10px;
+    .contact-block {
+      background: linear-gradient(135deg, #203737, #2e4f4f);
+      color: #f3f7f5;
+      border-radius: 16px;
+      padding: 1.45rem;
+      box-shadow: var(--shadow);
     }
+    .contact-block h2 { margin-top: 0; font-size: 1.5rem; }
+    .contact-block p { margin: .35rem 0; color: #e7efea; }
+    .contact-actions { display: flex; gap: .75rem; flex-wrap: wrap; margin-top: .9rem; }
+    .contact-block .btn { background: #fff; color: #1f3434; box-shadow: none; }
+    .contact-block .btn-outline { border-color: rgba(255,255,255,.9); color: #fff; }
 
-    .contact a {
-      color: white;
-      font-weight: bold;
+    .betty {
+      margin-top: .9rem;
+      border-top: 1px solid rgba(255,255,255,.25);
+      padding-top: .8rem;
+      font-size: .93rem;
+      color: #dce8e0;
     }
 
     footer {
-      margin-top: 60px;
-      font-size: 14px;
-      color: #6b7280;
+      padding: 1.6rem 0 2.2rem;
+      color: #61696b;
+      font-size: .92rem;
     }
 
-    @media (max-width: 768px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-      h1 {
-        font-size: 30px;
-      }
+    @media (max-width: 980px) {
+      .hero { grid-template-columns: 1fr; }
+      .grid-3 { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 720px) {
+      .nav-links { display: none; }
+      .grid-3, .grid-2 { grid-template-columns: 1fr; }
+      .hero { padding-top: 2.8rem; }
+      .topbar-inner { flex-direction: column; align-items: flex-start; }
     }
   </style>
 </head>
-
 <body>
-
-<div class="container">
-
-  <!-- HERO -->
-  <section class="hero">
-    <h1>Peintre au Mans — Travaux propres, durables et réalisés avec soin</h1>
-    <p>
-      Vous cherchez une <strong>entreprise de peinture au Mans</strong> fiable pour votre intérieur ou votre façade ?
-      ABC Peinture Déco accompagne vos projets avec une approche simple : un chantier bien préparé, des finitions nettes, et un résultat qui tient dans le temps.
-    </p>
-
-    <div>
-      <span class="badge">Devis gratuit</span>
-      <span class="badge">Intervention Sarthe</span>
-      <span class="badge">Travail soigné</span>
+  <div class="topbar">
+    <div class="wrap topbar-inner">
+      <div>Entreprise locale de peinture bâtiment à Le Mans et en Sarthe</div>
+      <div><strong>Téléphone :</strong> <a href="tel:+33243759818">02 43 75 98 18</a></div>
     </div>
+  </div>
 
-    <a class="cta" href="#contact">Demander un devis</a>
-    <a class="cta secondary" href="tel:+33243759818">Appeler</a>
-  </section>
-
-  <!-- RASSURANCE -->
-  <section>
-    <div class="grid">
-      <div class="card">
-        <h2>Un artisan local, accessible</h2>
-        <p>Basée à La Chapelle-Saint-Aubin, l’entreprise intervient rapidement sur Le Mans et la Sarthe.</p>
-      </div>
-      <div class="card">
-        <h2>Un chantier maîtrisé</h2>
-        <p>Préparation des supports, protection, finitions : chaque étape est réalisée avec rigueur.</p>
-      </div>
-      <div class="card">
-        <h2>Un devis clair</h2>
-        <p>Pas de surprise : vous savez précisément ce qui est prévu avant le début des travaux.</p>
-      </div>
-      <div class="card">
-        <h2>Un résultat durable</h2>
-        <p>Des matériaux adaptés et un travail propre pour un rendu esthétique et solide.</p>
-      </div>
+  <header>
+    <div class="wrap nav">
+      <div class="brand">ABC Peinture Déco<small>Anthony Berge · 13-15 Rue Albert Einstein, 72650 La Chapelle-Saint-Aubin</small></div>
+      <nav class="nav-links" aria-label="Navigation principale">
+        <a href="#prestations">Prestations</a>
+        <a href="#zone">Zone d'intervention</a>
+        <a href="#faq">FAQ</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <a class="btn" href="tel:+33243759818">Appeler</a>
     </div>
-  </section>
+  </header>
 
-  <!-- SERVICES -->
-  <section>
-    <h2>Travaux de peinture au Mans et en Sarthe</h2>
-    <div class="grid">
-      <div class="card">
-        <h3>Peinture intérieure</h3>
-        <p>Murs, plafonds, pièces de vie, rénovation complète ou rafraîchissement.</p>
+  <main class="wrap">
+    <section class="hero" aria-label="Hero">
+      <div>
+        <h1>Peintre au Mans : confiez votre chantier à une entreprise de peinture locale, sérieuse et réactive</h1>
+        <p>Vous voulez un résultat net, durable et propre ? ABC Peinture Déco vous accompagne sur vos travaux de peinture intérieure, extérieure et rénovation peinture à Le Mans et dans toute la Sarthe. Notre priorité : un chantier bien préparé, des finitions soignées et un devis peintre clair dès le départ.</p>
+        <div class="badges">
+          <span class="badge">Devis gratuit</span>
+          <span class="badge">Chantier propre</span>
+          <span class="badge">Intervention Le Mans & Sarthe</span>
+          <span class="badge">Contact direct</span>
+        </div>
+        <div class="hero-actions">
+          <a class="btn" href="#contact">Demander un devis peintre Le Mans</a>
+          <a class="btn-outline" href="tel:+33243759818">02 43 75 98 18</a>
+        </div>
       </div>
-      <div class="card">
-        <h3>Peinture extérieure</h3>
-        <p>Façades, murs extérieurs, protection et mise en valeur de votre habitation.</p>
+      <aside class="hero-card" aria-label="Réassurance immédiate">
+        <h2>Votre projet mérite mieux qu'un simple coup de peinture</h2>
+        <p>Une bonne tenue dans le temps dépend de la préparation, du choix des produits et de l'exécution. C'est sur ces points que se joue la différence.</p>
+        <div class="line"><strong>Entreprise :</strong> ABC Peinture Déco</div>
+        <div class="line"><strong>Dirigeant :</strong> Anthony Berge</div>
+        <div class="line"><strong>Adresse :</strong> 13-15 Rue Albert Einstein, 72650 La Chapelle-Saint-Aubin</div>
+      </aside>
+    </section>
+
+    <section aria-label="Réassurance">
+      <h2 class="section-title">Des engagements concrets dès le premier échange</h2>
+      <p class="section-intro">Quand vous comparez plusieurs artisans peintres au Mans, les détails font la différence : clarté, méthode et qualité d'exécution.</p>
+      <div class="grid-3">
+        <article class="card"><h3>Devis lisible et structuré</h3><p>Vous savez ce qui est prévu : préparation des supports, application, finitions et étapes du chantier.</p></article>
+        <article class="card"><h3>Intervention organisée</h3><p>Protection des zones, planification réaliste et communication simple pour avancer sereinement.</p></article>
+        <article class="card"><h3>Finitions de peinture soignées</h3><p>Recherche d'un rendu propre et régulier, sur intérieur comme extérieur, en rénovation ou rafraîchissement.</p></article>
       </div>
-      <div class="card">
-        <h3>Rénovation</h3>
-        <p>Remise en état, préparation des supports, reprise des surfaces abîmées.</p>
+    </section>
+
+    <section id="prestations" aria-label="Prestations">
+      <h2 class="section-title">Prestations de votre entreprise peinture Le Mans</h2>
+      <p class="section-intro">ABC Peinture Déco accompagne particuliers et professionnels pour des travaux peinture au Mans adaptés à l'usage des lieux.</p>
+      <div class="grid-2">
+        <article class="card"><h3>Peinture intérieure</h3><p>Murs, plafonds et pièces de vie : reprise des supports et application propre pour un rendu harmonieux.</p></article>
+        <article class="card"><h3>Peinture extérieure</h3><p>Façades et éléments exposés : protection, esthétique et tenue dans le temps.</p></article>
+        <article class="card"><h3>Rénovation peinture</h3><p>Remise en état avant mise en peinture sur surfaces marquées par l'usure.</p></article>
+        <article class="card"><h3>Travaux en habitat et locaux</h3><p>Approche adaptée selon les contraintes d'occupation, avec souci de propreté du chantier.</p></article>
       </div>
-      <div class="card">
-        <h3>Finitions</h3>
-        <p>Application soignée pour un rendu propre, net et durable.</p>
+    </section>
+
+    <section aria-label="Pourquoi nous faire confiance">
+      <h2 class="section-title">Pourquoi faire confiance à un artisan peintre en Sarthe ?</h2>
+      <p class="section-intro">Un peintre bâtiment local connaît les contraintes climatiques, les typologies d'habitats et les attentes de propriétaires en Sarthe. Résultat : des conseils pertinents et un accompagnement plus fluide.</p>
+      <div class="grid-3">
+        <article class="card"><h3>Proximité terrain</h3><p>Échanges directs et suivi plus simple autour de Le Mans.</p></article>
+        <article class="card"><h3>Vision durable</h3><p>Priorité donnée à la préparation et à la tenue des finitions.</p></article>
+        <article class="card"><h3>Relation de confiance</h3><p>Discours concret, sans promesses excessives ni jargon.</p></article>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- POURQUOI -->
-  <section>
-    <h2>Pourquoi faire appel à un peintre professionnel au Mans ?</h2>
-    <p>
-      Un projet de peinture ne se limite pas à appliquer une couleur. Une bonne préparation, le choix des bons produits
-      et une application maîtrisée font toute la différence dans le temps.
-    </p>
-    <p>
-      Faire appel à une <strong>entreprise de peinture en Sarthe</strong> permet d’obtenir un résultat homogène,
-      durable et adapté à votre logement ou local professionnel.
-    </p>
-  </section>
+    <section id="zone" aria-label="Zone d'intervention">
+      <div class="zone">
+        <h2 class="section-title">Zone d'intervention : Le Mans et Sarthe (72)</h2>
+        <p>ABC Peinture Déco intervient depuis <strong>La Chapelle-Saint-Aubin</strong> sur <strong>Le Mans</strong> et les communes de la Sarthe pour les projets de peinture intérieure, extérieure et rénovation.</p>
+      </div>
+    </section>
 
-  <!-- ZONE -->
-  <section>
-    <h2>Zone d’intervention</h2>
-    <p>
-      ABC Peinture Déco intervient au Mans, à La Chapelle-Saint-Aubin et dans toute la Sarthe (72).
-    </p>
-  </section>
+    <section aria-label="Projet client">
+      <h2 class="section-title">Un projet de peinture ? Commencez avec un cadre clair</h2>
+      <p class="section-intro">Que vous rénoviez votre maison, un appartement ou un local professionnel, l'objectif est le même : un chantier maîtrisé et un résultat propre qui valorise le bien.</p>
+      <div class="grid-2">
+        <article class="card"><h3>Vous voulez rafraîchir rapidement</h3><p>Nous orientons les choix de teintes et de finitions pour un impact visuel immédiat sans alourdir le chantier.</p></article>
+        <article class="card"><h3>Vous préparez une rénovation plus complète</h3><p>Nous structurons les étapes pour avancer avec visibilité, de la préparation à la mise en peinture finale.</p></article>
+      </div>
+    </section>
 
-  <!-- PROCESS -->
-  <section>
-    <h2>Comment se déroule votre projet ?</h2>
-    <div class="grid">
-      <div class="card"><strong>1. Échange</strong><p>Analyse de votre besoin et conseils.</p></div>
-      <div class="card"><strong>2. Devis</strong><p>Proposition claire et détaillée.</p></div>
-      <div class="card"><strong>3. Chantier</strong><p>Intervention propre et organisée.</p></div>
-      <div class="card"><strong>4. Résultat</strong><p>Finitions soignées et durables.</p></div>
-    </div>
-  </section>
+    <section aria-label="Processus" class="steps">
+      <h2 class="section-title">Déroulé type de votre devis et de votre chantier</h2>
+      <div class="grid-2">
+        <article class="card step"><h3>Échange initial</h3><p>Vous décrivez votre besoin (surface, état, délais, usage des pièces).</p></article>
+        <article class="card step"><h3>Visite et recommandations</h3><p>Analyse du support et définition de la solution peinture adaptée.</p></article>
+        <article class="card step"><h3>Devis détaillé</h3><p>Budget et périmètre clairement posés avant intervention.</p></article>
+        <article class="card step"><h3>Réalisation soignée</h3><p>Mise en œuvre rigoureuse avec contrôle des finitions en fin de chantier.</p></article>
+      </div>
+    </section>
 
-  <!-- FAQ -->
-  <section>
-    <h2>Questions fréquentes</h2>
-    <p><strong>Quel est le délai pour un devis ?</strong><br>Généralement rapide après échange.</p>
-    <p><strong>Intervenez-vous en rénovation ?</strong><br>Oui, intérieur et extérieur.</p>
-    <p><strong>Travaillez-vous sur Le Mans ?</strong><br>Oui, ainsi que toute la Sarthe.</p>
-  </section>
+    <section id="faq" class="faq" aria-label="FAQ SEO">
+      <h2 class="section-title">FAQ - Entreprise de peinture Le Mans</h2>
+      <details>
+        <summary>Intervenez-vous uniquement à Le Mans ?</summary>
+        <p>Non. ABC Peinture Déco intervient à Le Mans mais aussi plus largement en Sarthe selon la nature du projet.</p>
+      </details>
+      <details>
+        <summary>Proposez-vous la rénovation peinture intérieure et extérieure ?</summary>
+        <p>Oui, l'activité couvre les travaux de peinture intérieure, extérieure et la remise en état des supports avant application.</p>
+      </details>
+      <details>
+        <summary>Peut-on obtenir un devis peintre au Mans rapidement ?</summary>
+        <p>Oui, un premier échange permet de cadrer votre demande puis d'établir un devis clair selon le chantier.</p>
+      </details>
+      <details>
+        <summary>Travaillez-vous aussi pour des professionnels ?</summary>
+        <p>Oui, des prestations peuvent être réalisées dans des locaux professionnels en plus des chantiers d'habitation.</p>
+      </details>
+    </section>
 
-  <!-- CONTACT -->
-  <section id="contact" class="contact">
-    <h2>Demandez votre devis</h2>
-    <p>
-      Un projet de peinture au Mans ou en Sarthe ? Contactez directement ABC Peinture Déco.
-    </p>
+    <section aria-label="Pages SEO complémentaires">
+      <h2 class="section-title">Pages locales complémentaires</h2>
+      <p class="section-intro">Consultez nos pages dédiées pour approfondir selon votre besoin.</p>
+      <div class="seo-links">
+        <a class="chip" href="peintre-le-mans.html">Peintre Le Mans</a>
+        <a class="chip" href="renovation-magasin-le-mans.html">Rénovation magasin Le Mans</a>
+        <a class="chip" href="entreprise-peinture-sarthe.html">Entreprise peinture Sarthe</a>
+      </div>
+    </section>
 
-    <p><strong>📍 Adresse :</strong> 13-15 Rue Albert Einstein, 72650 La Chapelle-Saint-Aubin</p>
-    <p><strong>📞 Téléphone :</strong> <a href="tel:+33243759818">02 43 75 98 18</a></p>
+    <section id="contact" class="contact-block" aria-label="Contact final">
+      <h2>Parlons de votre projet peinture à Le Mans</h2>
+      <p><strong>ABC Peinture Déco</strong> - Anthony Berge</p>
+      <p><strong>Adresse :</strong> 13-15 Rue Albert Einstein, 72650 La Chapelle-Saint-Aubin</p>
+      <p><strong>Téléphone :</strong> <a href="tel:+33243759818">02 43 75 98 18</a></p>
+      <div class="contact-actions">
+        <a class="btn" href="tel:+33243759818">Appeler maintenant</a>
+        <a class="btn-outline" href="mailto:contact@abc-peinture-deco.fr">Demander un devis par email</a>
+      </div>
+      <div class="betty" aria-label="Espace assistant Betty">
+        Besoin d'un premier tri rapide ? Un assistant Betty spécialisé BTP/devis peut être intégré ici pour qualifier votre demande avant rappel.
+      </div>
+    </section>
+  </main>
 
-    <a class="cta" href="tel:+33243759818">Appeler maintenant</a>
-  </section>
-
-  <!-- MAILLAGE SEO -->
-  <section>
-    <h2>En savoir plus</h2>
-    <ul>
-      <li><a href="peintre-le-mans.html">Peintre Le Mans</a></li>
-      <li><a href="renovation-maison-le-mans.html">Rénovation maison Le Mans</a></li>
-      <li><a href="entreprise-peinture-sarthe.html">Entreprise peinture Sarthe</a></li>
-    </ul>
-  </section>
-
-  <footer>
-    © ABC Peinture Déco — Anthony Berge
+  <footer class="wrap">
+    <p>© ABC Peinture Déco - Entreprise de peinture au Mans et en Sarthe.</p>
   </footer>
-
-</div>
-
-<script>
-  console.log("Betty BTP prêt");
-</script>
-
 </body>
 </html>
