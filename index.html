@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
@@ -62,7 +62,16 @@
       width: min(var(--max), calc(100% - 48px));
       margin: 0 auto;
     }
+    .logo-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 50;
 
+      background: rgba(12, 19, 34, 0.85);
+      backdrop-filter: blur(8px);
+
+      padding: 10px 0;
+    }
     /* ─── SCROLL REVEAL ─── */
     .reveal {
       opacity: 0;
