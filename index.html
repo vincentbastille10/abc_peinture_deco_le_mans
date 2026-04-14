@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
@@ -19,14 +19,14 @@
 
   <style>
     :root {
-      --ink: rgba(255,255,255,0.05);
-      --ink-2: rgba(255,255,255,0.05);
-      --surface: rgba(255,255,255,0.05);
-      --surface-2: rgba(255,255,255,0.05);
-      --line: rgba(255,255,255,.1);
-      --text: #1d2b3f;
-      --muted: #324966;
-      --dim: #4f6787;
+      --ink: #09111f;
+      --ink-2: #0d1929;
+      --surface: #111e33;
+      --surface-2: #162540;
+      --line: rgba(255,255,255,.08);
+      --text: #eef0f5;
+      --muted: #8b98b4;
+      --dim: #4d5d78;
       --gold: #c8a96e;
       --gold-light: #dfc08c;
       --gold-dim: rgba(200,169,110,.18);
@@ -34,8 +34,8 @@
       --cerulean-light: #5b9de8;
       --white: #ffffff;
       --red-corp: #8b1a2a;
-      --shadow-deep: 0 20px 40px rgba(125, 146, 176, 0.18);
-      --shadow-card: 0 8px 24px rgba(125, 146, 176, 0.14);
+      --shadow-deep: 0 32px 80px rgba(0,0,0,.48);
+      --shadow-card: 0 8px 40px rgba(0,0,0,.28);
       --radius-xl: 28px;
       --radius-lg: 20px;
       --radius-md: 12px;
@@ -48,56 +48,21 @@
     html { scroll-behavior: smooth; font-size: 16px; }
 
     body {
-      margin: 0;
-      padding: 0;
       font-family: var(--font-body);
       color: var(--text);
-      background: url('/static/abc_gris2.webp') no-repeat center center fixed;
-      background-size: contain;
-      background-position: center;
-      background-repeat: no-repeat;
-      background-color: #1a1a1a;
+      background-color: var(--ink);
       line-height: 1.6;
       overflow-x: hidden;
     }
 
     a { color: inherit; text-decoration: none; }
-
-    :is(h1, h2, h3, p, span, a, li) {
-      color: #f7f1e4;
-      text-shadow:
-        0 0 2px rgba(255,255,255,0.9),
-        0 1px 4px rgba(0,0,0,0.4),
-        0 2px 10px rgba(0,0,0,0.32);
-      -webkit-text-stroke: 0.35px rgba(223,192,140,0.72);
-      paint-order: stroke fill;
-      font-weight: 560;
-    }
-
-    h1, h2, h3 {
-      font-weight: 700;
-      letter-spacing: .01em;
-    }
-
-    p, li, a, span {
-      font-size: clamp(1rem, 0.98rem + 0.15vw, 1.08rem);
-    }
     img { max-width: 100%; display: block; }
 
     .container {
       width: min(var(--max), calc(100% - 48px));
       margin: 0 auto;
     }
-    .logo-wrap {
-      position: sticky;
-      top: 0;
-      z-index: 50;
 
-      background: rgba(255,255,255,0.05);
-      backdrop-filter: blur(8px);
-
-      padding: 10px 0;
-    }
     /* ─── SCROLL REVEAL ─── */
     .reveal {
       opacity: 0;
@@ -116,7 +81,7 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      background: rgba(255,255,255,0.05);
+      background: rgba(9,17,31,.88);
       backdrop-filter: blur(18px) saturate(1.4);
       -webkit-backdrop-filter: blur(18px) saturate(1.4);
       border-bottom: 1px solid rgba(255,255,255,.07);
@@ -279,12 +244,6 @@
     /* ─── HERO ─── */
     .hero {
       position: relative;
-      background: url('/static/abc_gris2.webp') no-repeat center center;
-      background-size: contain;
-      background-position: center;
-      background-repeat: no-repeat;
-      background-color: #1a1a1a;
-      color: #1f2a37;
       min-height: 100svh;
       display: flex;
       flex-direction: column;
@@ -292,23 +251,41 @@
       overflow: hidden;
     }
 
-    .hero-shell {
-      background: transparent;
-      border: none;
-      box-shadow: none;
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+
+    .hero-bg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 30%;
+      filter: saturate(.55) brightness(.72) contrast(1.08);
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(9,17,31,.42) 0%, rgba(9,17,31,.18) 32%, rgba(9,17,31,.72) 68%, rgba(9,17,31,.97) 100%),
+        linear-gradient(to right, rgba(9,17,31,.62) 0%, transparent 60%);
     }
 
     .hero-content {
       position: relative;
-      z-index: 3;
-      max-width: 700px;
+      z-index: 2;
       padding: 0 0 72px;
     }
 
     .hero-inner {
       width: min(var(--max), calc(100% - 48px));
       margin: 0 auto;
-      display: block;
+      display: grid;
+      grid-template-columns: 1fr 440px;
+      gap: 40px;
+      align-items: flex-end;
     }
 
     .hero-left {}
@@ -355,13 +332,6 @@
       text-wrap: balance;
     }
 
-    .hero h1,
-    .hero h2,
-    .hero p,
-    .hero span {
-      text-shadow: 0 2px 8px rgba(0,0,0,0.3);
-    }
-
     .hero-headline em {
       font-style: normal;
       color: var(--gold-light);
@@ -382,21 +352,51 @@
       flex-wrap: wrap;
     }
 
-    .betty-center {
-      margin-top: 40px;
+    /* ─── HERO BETTY CARD ─── */
+    .hero-betty {
+      background: rgba(13,25,41,.88);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      backdrop-filter: blur(12px);
+      box-shadow: var(--shadow-deep);
+    }
+
+    .betty-header {
+      padding: 18px 22px 14px;
+      border-bottom: 1px solid rgba(255,255,255,.07);
       display: flex;
-      justify-content: center;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .betty-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 8px rgba(34,197,94,.5);
+      animation: pulse-dot 2.2s ease-in-out infinite;
+    }
+
+    .betty-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .betty-sublabel {
+      font-size: 12px;
+      color: var(--muted);
+      margin-left: auto;
     }
 
     .betty-frame {
+      display: block;
       width: 100%;
-      max-width: 480px;
-      height: 500px;
-      border-radius: 20px;
+      height: 480px;
       border: none;
-      background: rgba(255,255,255,0.05);
-      backdrop-filter: blur(8px);
-      box-shadow: var(--shadow-deep);
+      background: transparent;
     }
 
     /* ─── TRUST STRIP ─── */
@@ -749,7 +749,14 @@
       line-height: 1.6;
     }
 
-    
+    .method-connector {
+      position: absolute;
+      top: 30px;
+      right: -14px;
+      width: 24px;
+      height: 1px;
+      background: linear-gradient(90deg, var(--line), transparent);
+    }
 
     .method-step:last-child .method-connector { display: none; }
 
@@ -987,7 +994,7 @@
 
     .cta-card {
       border-radius: var(--radius-lg);
-      background: rgba(255,255,255,0.05);
+      background: linear-gradient(135deg, #1e3252 0%, #16263e 100%);
       border: 1px solid rgba(91,157,232,.2);
       padding: 28px;
       display: flex;
@@ -1108,6 +1115,8 @@
 
     /* ─── RESPONSIVE ─── */
     @media (max-width: 1100px) {
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero-betty { max-width: 540px; }
       .hero-content { padding-bottom: 56px; }
       .positioning-grid { grid-template-columns: 1fr; gap: 40px; }
       .market-intro { grid-template-columns: 1fr; }
@@ -1123,6 +1132,8 @@
       .topbar-inner { height: auto; padding: 14px 0; flex-wrap: wrap; }
       .topbar-actions { flex-wrap: wrap; gap: 8px; }
       .hero { min-height: 100svh; }
+      .hero-inner { gap: 32px; }
+      .hero-betty { max-width: 100%; }
       .betty-frame { height: 420px; }
       .trust-items { flex-direction: column; gap: 0; }
       .trust-item { width: 100%; border-right: none; border-bottom: 1px solid var(--line); }
@@ -1225,7 +1236,12 @@
   <main>
 
     <!-- ════════════════ HERO ════════════════ -->
-    <section class="hero hero-shell" aria-labelledby="hero-headline">
+    <section class="hero" aria-labelledby="hero-headline">
+      <div class="hero-bg" aria-hidden="true">
+        <img src="/static/abc_gris2.webp" alt="Chantier de peinture professionnelle ABC Peinture Déco" loading="eager" fetchpriority="high" />
+        <div class="hero-overlay"></div>
+      </div>
+
       <div class="hero-content">
         <div class="hero-inner">
           <div class="hero-left">
@@ -1244,15 +1260,6 @@
               ABC Peinture Déco intervient sur vos locaux professionnels et chantiers résidentiels en Sarthe. Peinture intérieure et extérieure, revêtements, plâtrerie et vitrerie — avec la méthode et la rigueur qu'exigent les environnements exigeants.
             </p>
 
-            <div class="betty-center reveal reveal-delay-4">
-              <iframe
-                src="/chat"
-                class="betty-frame"
-                title="Betty, assistant devis ABC Peinture Déco"
-                loading="lazy">
-              </iframe>
-            </div>
-
             <div class="hero-ctas reveal reveal-delay-3">
               <a class="btn btn-gold btn-large" href="tel:0243759818">
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.62 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9a16 16 0 0 0 6.09 6.09l1.96-1.94a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
@@ -1260,6 +1267,20 @@
               </a>
               <a class="btn btn-outline btn-large" href="#contact">Demander un devis</a>
             </div>
+          </div>
+
+          <div class="hero-betty reveal reveal-delay-4">
+            <div class="betty-header">
+              <div class="betty-dot" aria-hidden="true"></div>
+              <span class="betty-label">Betty — Devis rapide</span>
+              <span class="betty-sublabel">Réponse immédiate</span>
+            </div>
+            <iframe
+              src="/chat"
+              class="betty-frame"
+              title="Betty, assistant devis ABC Peinture Déco"
+              loading="lazy">
+            </iframe>
           </div>
         </div>
       </div>
