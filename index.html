@@ -185,18 +185,13 @@
     }
 
     .logo-wrap{
-      width:min(100%, 1120px);
+      width:min(100%, 1200px);
       margin:0 auto 26px;
     }
 
-    .logo-wrap {
-      max-width: 1200px;
-      margin: auto;
-    }
-
-    .logo-hero {
-      width: 100%;
-      height: auto;
+    .logo-hero{
+      width:100%;
+      height:auto;
     }
 
     .eyebrow{
@@ -272,6 +267,28 @@
     .trust-card span{
       color:var(--muted);
       font-size:14px;
+    }
+
+    .betty-section{
+      padding:10px 0 34px;
+    }
+
+    .betty-shell{
+      width:min(820px, 100%);
+      margin:0 auto;
+      border-radius:30px;
+      overflow:hidden;
+      background:linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.025));
+      border:1px solid rgba(255,255,255,.10);
+      box-shadow:0 30px 80px rgba(0,0,0,.42);
+    }
+
+    .betty-frame{
+      display:block;
+      width:100%;
+      height:860px;
+      border:none;
+      background:transparent;
     }
 
     section{
@@ -364,6 +381,7 @@
     }
 
     .bullet:first-child{border-top:0;padding-top:0}
+
     .bullet-dot{
       width:11px;
       height:11px;
@@ -400,6 +418,7 @@
     }
 
     .hour-row:first-child{border-top:0;padding-top:0}
+
     .day{
       font-weight:700;
       color:#f1ecdf;
@@ -512,6 +531,10 @@
       .contact-grid{
         grid-template-columns:1fr;
       }
+
+      .betty-frame{
+        height:760px;
+      }
     }
 
     @media (max-width: 760px){
@@ -544,23 +567,21 @@
       .logo-hero{
         max-height:180px;
       }
-      .hero-inner {
-        position: relative;
-        padding: 60px 520px 60px 60px;
+
+      .betty-section{
+        padding:0 0 24px;
       }
 
-      .betty {
-        position: absolute;
-        top: 40px;
-        right: 40px;
-
-        width: 460px;
-        height: 700px;
-
-        border: none;
-        border-radius: 20px;
-        box-shadow: 0 30px 70px rgba(0,0,0,0.5);
+      .betty-shell{
+        width:100%;
+        border-radius:22px;
       }
+
+      .betty-frame{
+        height:72vh;
+        min-height:620px;
+      }
+    }
   </style>
 
   <script type="application/ld+json">
@@ -636,9 +657,7 @@
               <a class="btn btn-primary" href="tel:0243759818">Appeler maintenant</a>
               <a class="btn btn-secondary" href="#contact">Voir les informations de contact</a>
             </div>
-            <div class="betty-wrapper">
-            <iframe src="/chat" class="betty"></iframe>
-            </div>
+
             <div class="trust-row">
               <div class="trust-card">
                 <div class="label">Téléphone</div>
@@ -665,6 +684,14 @@
               </div>
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="betty-section" aria-label="Assistant devis Betty">
+      <div class="container">
+        <div class="betty-shell">
+          <iframe src="/chat" class="betty-frame" title="Betty - devis peinture rapide"></iframe>
         </div>
       </div>
     </section>
