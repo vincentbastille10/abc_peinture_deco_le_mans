@@ -2,69 +2,111 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Betty Chat</title>
+<title>Betty</title>
 
 <style>
 body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: transparent;
+  margin:0;
+  font-family: Inter, Arial, sans-serif;
+  background:transparent;
 }
 
+/* CONTAINER */
 .chat {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
+  display:flex;
+  flex-direction:column;
+  height:100vh;
+  background:#0f172a;
+  border-radius:16px;
+  overflow:hidden;
 }
 
+/* HEADER */
+.header {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:14px;
+  background:#0b1220;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+}
+
+.header img {
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  object-fit:cover;
+}
+
+.header-text {
+  display:flex;
+  flex-direction:column;
+  line-height:1.1;
+}
+
+.header-text strong {
+  font-size:14px;
+  color:white;
+}
+
+.header-text span {
+  font-size:12px;
+  color:#9ca3af;
+}
+
+/* MESSAGES */
 .messages {
-  flex: 1;
-  padding: 15px;
-  overflow-y: auto;
+  flex:1;
+  padding:15px;
+  overflow-y:auto;
 }
 
 .msg {
-  margin-bottom: 12px;
-  padding: 10px 14px;
-  border-radius: 10px;
-  max-width: 80%;
-  line-height: 1.4;
+  margin-bottom:12px;
+  padding:10px 14px;
+  border-radius:10px;
+  max-width:80%;
+  line-height:1.4;
+  font-size:14px;
 }
 
 .bot {
-  background: #111827;
-  color: white;
+  background:#1e293b;
+  color:white;
 }
 
 .user {
-  background: #2d5bff;
-  color: white;
-  margin-left: auto;
+  background:#d2a86f;
+  color:#1a1410;
+  margin-left:auto;
 }
 
+/* INPUT */
 .input-box {
-  display: flex;
-  padding: 10px;
-  border-top: 1px solid #ddd;
-  background: white;
+  display:flex;
+  padding:10px;
+  background:#0b1220;
+  border-top:1px solid rgba(255,255,255,0.08);
 }
 
 input {
-  flex: 1;
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 14px;
+  flex:1;
+  padding:10px;
+  border-radius:6px;
+  border:none;
+  outline:none;
+  font-size:14px;
 }
 
 button {
-  margin-left: 10px;
-  padding: 10px 14px;
-  border: none;
-  background: #2d5bff;
-  color: white;
-  border-radius: 6px;
-  cursor: pointer;
+  margin-left:10px;
+  padding:10px 14px;
+  border:none;
+  background:#d2a86f;
+  color:#1a1410;
+  border-radius:6px;
+  cursor:pointer;
+  font-weight:bold;
 }
 </style>
 </head>
@@ -72,19 +114,30 @@ button {
 <body>
 
 <div class="chat">
+
+  <!-- HEADER (UNE FOIS) -->
+  <div class="header">
+    <img src="/static/avatar.jpg" alt="Betty">
+    <div class="header-text">
+      <strong>Betty</strong>
+      <span>Devis peinture rapide</span>
+    </div>
+  </div>
+
   <div id="messages" class="messages"></div>
 
   <div class="input-box">
     <input id="input" placeholder="Ex : repeindre salon 30m²">
     <button onclick="sendMessage()">Envoyer</button>
   </div>
+
 </div>
 
 <script>
 const messages = document.getElementById("messages");
 const input = document.getElementById("input");
 
-function addMessage(text, type) {
+function addMessage(text, type){
   const div = document.createElement("div");
   div.className = "msg " + type;
   div.innerText = text;
@@ -92,39 +145,36 @@ function addMessage(text, type) {
   messages.scrollTop = messages.scrollHeight;
 }
 
-async function sendMessage() {
-  const message = input.value.trim();
-  if (!message) return;
+async function sendMessage(){
+  const msg = input.value.trim();
+  if(!msg) return;
 
-  addMessage(message, "user");
+  addMessage(msg,"user");
   input.value = "";
 
-  try {
-    const res = await fetch("/api/chat", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ message })
+  try{
+    const res = await fetch("/api/chat",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({message:msg})
     });
 
     const data = await res.json();
+    addMessage(data.response || "Pas de réponse","bot");
 
-    addMessage(data.response || "Pas de réponse", "bot");
-
-  } catch (e) {
-    addMessage("Erreur technique", "bot");
+  }catch(e){
+    addMessage("Erreur technique","bot");
   }
 }
 
 // ENTER
-input.addEventListener("keydown", function(e) {
-  if (e.key === "Enter") {
+input.addEventListener("keydown", function(e){
+  if(e.key === "Enter"){
     sendMessage();
   }
 });
 
-// Message initial
+// MESSAGE INITIAL (conversion)
 addMessage(
   "Bonjour, je peux vous aider à préparer votre devis peinture. Quelle pièce souhaitez-vous refaire ?",
   "bot"
