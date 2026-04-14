@@ -1,686 +1,1392 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>ABC Peinture Déco | Peintre professionnel au Mans, La Chapelle-Saint-Aubin & Sarthe</title>
-  <meta name="description" content="ABC Peinture Déco intervient au Mans et en Sarthe pour vos travaux de peinture intérieure et extérieure, revêtements sols et murs, plâtrerie et vitrerie. Devis rapide, assurance décennale GAN." />
+  <title>ABC Peinture Déco | Entreprise de peinture professionnelle au Mans & Sarthe</title>
+  <meta name="description" content="ABC Peinture Déco, entreprise de peinture professionnelle au Mans et en Sarthe. Peinture intérieure, extérieure, revêtements sols et murs, plâtrerie et vitrerie pour locaux professionnels et particuliers. Assurance décennale GAN. Devis rapide." />
+  <meta name="keywords" content="peintre Le Mans, entreprise peinture Le Mans, peinture Sarthe, peinture 72, peinture locaux professionnels Le Mans, rénovation peinture Le Mans, revêtements sols murs Sarthe, peintre professionnel Sarthe, ABC Peinture Déco" />
 
-  <meta property="og:title" content="ABC Peinture Déco | Peintre professionnel au Mans & Sarthe" />
-  <meta property="og:description" content="Peinture intérieure, extérieure, revêtements sols et murs, plâtrerie, vitrerie. Contactez ABC Peinture Déco à La Chapelle-Saint-Aubin." />
+  <meta property="og:title" content="ABC Peinture Déco | Entreprise de peinture professionnelle au Mans & Sarthe" />
+  <meta property="og:description" content="Peinture intérieure, extérieure, revêtements sols et murs, plâtrerie, vitrerie. Locaux professionnels & particuliers. Présence au Mans, La Chapelle-Saint-Aubin, Sarthe." />
   <meta property="og:type" content="website" />
+  <meta property="og:locale" content="fr_FR" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet" />
 
   <style>
-    :root{
-      --bg:#0c1322;
-      --bg-2:#10192c;
-      --panel:#111b30;
-      --panel-2:#16233c;
-      --line:rgba(255,255,255,.10);
-      --text:#f4f1ea;
-      --muted:#b8c1d1;
-      --accent:#d2a86f;
-      --accent-2:#8fa7c7;
-      --white:#ffffff;
-      --shadow:0 20px 60px rgba(0,0,0,.28);
-      --radius:24px;
-      --max:1320px;
+    :root {
+      --ink: #09111f;
+      --ink-2: #0d1929;
+      --surface: #111e33;
+      --surface-2: #162540;
+      --line: rgba(255,255,255,.08);
+      --text: #eef0f5;
+      --muted: #8b98b4;
+      --dim: #4d5d78;
+      --gold: #c8a96e;
+      --gold-light: #dfc08c;
+      --gold-dim: rgba(200,169,110,.18);
+      --cerulean: #3b7dc8;
+      --cerulean-light: #5b9de8;
+      --white: #ffffff;
+      --red-corp: #8b1a2a;
+      --shadow-deep: 0 32px 80px rgba(0,0,0,.48);
+      --shadow-card: 0 8px 40px rgba(0,0,0,.28);
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 12px;
+      --max: 1280px;
+      --font-display: 'Syne', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
     }
 
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{
-      margin:0;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color:var(--text);
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      font-family: var(--font-body);
+      color: var(--text);
+      background-color: var(--ink);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    .container {
+      width: min(var(--max), calc(100% - 48px));
+      margin: 0 auto;
+    }
+
+    /* ─── SCROLL REVEAL ─── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity .7s cubic-bezier(.22,1,.36,1), transform .7s cubic-bezier(.22,1,.36,1);
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+    .reveal-delay-1 { transition-delay: .1s; }
+    .reveal-delay-2 { transition-delay: .2s; }
+    .reveal-delay-3 { transition-delay: .3s; }
+    .reveal-delay-4 { transition-delay: .4s; }
+    .reveal-delay-5 { transition-delay: .5s; }
+
+    /* ─── TOPBAR ─── */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(9,17,31,.88);
+      backdrop-filter: blur(18px) saturate(1.4);
+      -webkit-backdrop-filter: blur(18px) saturate(1.4);
+      border-bottom: 1px solid rgba(255,255,255,.07);
+    }
+
+    .topbar-inner {
+      width: min(var(--max), calc(100% - 48px));
+      margin: 0 auto;
+      height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .topbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-shrink: 0;
+    }
+
+    .brand-logo-mark {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      flex-shrink: 0;
+    }
+
+    .logo-abc {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 22px;
+      letter-spacing: .06em;
+      color: var(--white);
+      line-height: 1;
+    }
+
+    .logo-abc span.letter-a { color: var(--red-corp); }
+    .logo-abc span.letter-b { color: var(--red-corp); }
+    .logo-abc span.letter-c { color: var(--red-corp); }
+
+    .logo-separator {
+      width: 1px;
+      height: 28px;
+      background: rgba(255,255,255,.2);
+      margin: 0 12px;
+    }
+
+    .logo-sub {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 11px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--cerulean-light);
+      line-height: 1.3;
+    }
+
+    .topbar-nav {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .topbar-nav a {
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--muted);
+      letter-spacing: .02em;
+      transition: color .2s;
+    }
+
+    .topbar-nav a:hover { color: var(--text); }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .tel-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 16px;
+      height: 42px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.1);
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: .02em;
+      white-space: nowrap;
+      transition: background .2s;
+    }
+
+    .tel-badge:hover { background: rgba(255,255,255,.09); }
+
+    .tel-badge svg { opacity: .6; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      height: 44px;
+      padding: 0 22px;
+      border-radius: 999px;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: .01em;
+      transition: all .22s ease;
+      cursor: pointer;
+      border: none;
+      white-space: nowrap;
+    }
+
+    .btn-gold {
+      background: linear-gradient(135deg, #d4af74 0%, #a87d44 100%);
+      color: #1c1204;
+      box-shadow: 0 8px 28px rgba(184,139,70,.28);
+    }
+
+    .btn-gold:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 36px rgba(184,139,70,.38);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,.18);
+      color: var(--text);
+    }
+
+    .btn-outline:hover {
+      background: rgba(255,255,255,.06);
+      border-color: rgba(255,255,255,.28);
+    }
+
+    .btn-large {
+      height: 56px;
+      padding: 0 32px;
+      font-size: 15.5px;
+    }
+
+    .btn-cerulean {
+      background: linear-gradient(135deg, #4a8fd6 0%, #2a6ab0 100%);
+      color: #fff;
+      box-shadow: 0 8px 28px rgba(42,106,176,.28);
+    }
+
+    .btn-cerulean:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 36px rgba(42,106,176,.38);
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      position: relative;
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+
+    .hero-bg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 30%;
+      filter: saturate(.55) brightness(.72) contrast(1.08);
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
       background:
-        radial-gradient(circle at top left, rgba(210,168,111,.10), transparent 28%),
-        radial-gradient(circle at 85% 12%, rgba(143,167,199,.14), transparent 22%),
-        linear-gradient(180deg, #0b1220 0%, #101827 45%, #0a1120 100%);
-      line-height:1.5;
+        linear-gradient(to bottom, rgba(9,17,31,.42) 0%, rgba(9,17,31,.18) 32%, rgba(9,17,31,.72) 68%, rgba(9,17,31,.97) 100%),
+        linear-gradient(to right, rgba(9,17,31,.62) 0%, transparent 60%);
     }
 
-    a{color:inherit;text-decoration:none}
-    img{max-width:100%;display:block}
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 0 0 72px;
+    }
+
+    .hero-inner {
+      width: min(var(--max), calc(100% - 48px));
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 440px;
+      gap: 40px;
+      align-items: flex-end;
+    }
+
+    .hero-left {}
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(200,169,110,.14);
+      border: 1px solid rgba(200,169,110,.3);
+      margin-bottom: 24px;
+    }
+
+    .hero-badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      animation: pulse-dot 2.2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: .5; transform: scale(.7); }
+    }
+
+    .hero-badge-text {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+    }
+
+    .hero-headline {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: clamp(44px, 6vw, 88px);
+      line-height: .95;
+      letter-spacing: -.04em;
+      margin-bottom: 24px;
+      text-wrap: balance;
+    }
+
+    .hero-headline em {
+      font-style: normal;
+      color: var(--gold-light);
+    }
+
+    .hero-sub {
+      font-size: clamp(17px, 1.8vw, 20px);
+      color: rgba(238,240,245,.78);
+      line-height: 1.55;
+      max-width: 600px;
+      margin-bottom: 36px;
+      font-weight: 300;
+    }
+
+    .hero-ctas {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* ─── HERO BETTY CARD ─── */
+    .hero-betty {
+      background: rgba(13,25,41,.88);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      backdrop-filter: blur(12px);
+      box-shadow: var(--shadow-deep);
+    }
+
+    .betty-header {
+      padding: 18px 22px 14px;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .betty-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 8px rgba(34,197,94,.5);
+      animation: pulse-dot 2.2s ease-in-out infinite;
+    }
+
+    .betty-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .betty-sublabel {
+      font-size: 12px;
+      color: var(--muted);
+      margin-left: auto;
+    }
+
+    .betty-frame {
+      display: block;
+      width: 100%;
+      height: 480px;
+      border: none;
+      background: transparent;
+    }
+
+    /* ─── TRUST STRIP ─── */
+    .trust-strip {
+      padding: 22px 0;
+      background: var(--ink-2);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .trust-items {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      overflow: hidden;
+    }
+
+    .trust-item {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 0 32px;
+      border-right: 1px solid var(--line);
+    }
+
+    .trust-item:last-child { border-right: none; }
 
-    .container{
-      width:min(var(--max), calc(100% - 40px));
-      margin:0 auto;
+    .trust-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--gold-dim);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
     }
 
-    .topbar{
-      position:sticky;
-      top:0;
-      z-index:20;
-      backdrop-filter: blur(14px);
-      background:rgba(10,17,32,.72);
-      border-bottom:1px solid rgba(255,255,255,.08);
+    .trust-icon svg { color: var(--gold); }
+
+    .trust-text strong {
+      display: block;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .trust-text span {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    /* ─── SECTION COMMONS ─── */
+    section { padding: 96px 0; }
+
+    .label-eyebrow {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+
+    .section-h {
+      font-family: var(--font-display);
+      font-size: clamp(34px, 3.6vw, 56px);
+      font-weight: 800;
+      letter-spacing: -.04em;
+      line-height: 1;
+      margin-bottom: 18px;
+    }
+
+    .section-lead {
+      font-size: 18px;
+      color: var(--muted);
+      line-height: 1.6;
+      max-width: 640px;
+      font-weight: 300;
     }
 
-    .topbar-inner{
-      width:min(var(--max), calc(100% - 40px));
-      margin:0 auto;
-      min-height:74px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:24px;
+    .section-header { margin-bottom: 56px; }
+
+    /* ─── POSITIONNEMENT ─── */
+    .positioning {
+      background: var(--ink-2);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .positioning-grid {
+      display: grid;
+      grid-template-columns: .9fr 1.1fr;
+      gap: 64px;
+      align-items: center;
+    }
+
+    .positioning-left {}
+
+    .positioning-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      margin-top: 40px;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--line);
+    }
+
+    .pos-stat {
+      padding: 28px 24px;
+      background: rgba(255,255,255,.03);
+      transition: background .2s;
     }
 
-    .topbar-left{
-      display:flex;
-      align-items:center;
-      gap:16px;
-      min-width:0;
+    .pos-stat:hover { background: rgba(255,255,255,.055); }
+
+    .pos-stat strong {
+      display: block;
+      font-family: var(--font-display);
+      font-size: 38px;
+      font-weight: 800;
+      letter-spacing: -.04em;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 6px;
     }
 
-    .mini-brand{
-      width:58px;
-      flex:0 0 58px;
-      opacity:.98;
+    .pos-stat span {
+      font-size: 13px;
+      color: var(--muted);
     }
 
-    .topbar-title{
-      display:flex;
-      flex-direction:column;
-      min-width:0;
+    .positioning-pillars {
+      display: grid;
+      gap: 1px;
+      background: var(--line);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
     }
 
-    .topbar-title strong{
-      font-size:16px;
-      letter-spacing:.01em;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
+    .pillar {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      padding: 28px 28px;
+      background: var(--surface);
+      transition: background .2s;
     }
+
+    .pillar:hover { background: var(--surface-2); }
 
-    .topbar-title span{
-      color:var(--muted);
-      font-size:13px;
+    .pillar-num {
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: .1em;
+      flex-shrink: 0;
+      padding-top: 3px;
     }
 
-    .topbar-actions{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
+    .pillar h3 {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      letter-spacing: -.02em;
     }
 
-    .tel-link{
-      color:var(--white);
-      font-weight:700;
-      font-size:15px;
-      white-space:nowrap;
+    .pillar p {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.55;
     }
 
-    .btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-      min-height:52px;
-      padding:0 22px;
-      border-radius:999px;
-      font-weight:700;
-      letter-spacing:.01em;
-      transition:.22s ease;
-      border:1px solid transparent;
-      cursor:pointer;
+    /* ─── MARCHÉ / UNIVERS CLIENT ─── */
+    .market-section {}
+
+    .market-intro {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 56px;
+      align-items: center;
     }
 
-    .btn-primary{
-      background:linear-gradient(135deg, #d7af7a 0%, #b88b57 100%);
-      color:#1a1410;
-      box-shadow:0 10px 30px rgba(184,139,87,.22);
+    .market-logos-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+      background: var(--line);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--line);
     }
 
-    .btn-primary:hover{
-      transform:translateY(-1px);
-      box-shadow:0 14px 34px rgba(184,139,87,.30);
+    .market-logo-cell {
+      background: var(--surface);
+      padding: 28px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      color: var(--dim);
+      text-align: center;
+      transition: all .22s;
+      cursor: default;
+      min-height: 88px;
     }
 
-    .btn-secondary{
-      background:rgba(255,255,255,.04);
-      border-color:rgba(255,255,255,.13);
-      color:var(--white);
+    .market-logo-cell:hover {
+      background: var(--surface-2);
+      color: var(--muted);
     }
 
-    .btn-secondary:hover{
-      background:rgba(255,255,255,.07);
+    .market-statement {
+      margin-top: 40px;
+      padding: 28px 32px;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(135deg, rgba(200,169,110,.1), rgba(59,125,200,.06));
+      border: 1px solid rgba(200,169,110,.18);
     }
 
-    .hero{
-      padding:54px 0 34px;
+    .market-statement p {
+      font-size: 17px;
+      color: rgba(238,240,245,.82);
+      line-height: 1.6;
+      font-weight: 300;
     }
 
-    .hero-shell{
-      position:relative;
-      overflow:hidden;
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:32px;
-      background:
-        linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,.02)),
-        linear-gradient(180deg, rgba(20,31,53,.92), rgba(11,19,35,.96));
-      box-shadow:var(--shadow);
+    .market-statement strong {
+      color: var(--gold-light);
+      font-weight: 600;
     }
 
-    .hero-shell::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      pointer-events:none;
-      background:
-        linear-gradient(90deg, rgba(210,168,111,.16), transparent 24%, transparent 76%, rgba(143,167,199,.12)),
-        radial-gradient(circle at 50% 0%, rgba(255,255,255,.06), transparent 40%);
-      mix-blend-mode:screen;
-      opacity:.85;
+    /* ─── SERVICES ─── */
+    .services-bg {
+      background: var(--ink-2);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
     }
 
-    .hero-inner{
-      position:relative;
-      z-index:1;
-      padding:58px 56px 52px;
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      background: var(--line);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
     }
 
-    .logo-wrap{
-      width:min(100%, 1200px);
-      margin:0 auto 26px;
+    .service-card {
+      background: var(--surface);
+      padding: 36px 32px;
+      transition: background .22s;
+      position: relative;
+      overflow: hidden;
     }
 
-    .logo-hero{
-      width:100%;
-      height:auto;
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--gold), transparent);
+      opacity: 0;
+      transition: opacity .3s;
     }
+
+    .service-card:hover { background: var(--surface-2); }
+    .service-card:hover::before { opacity: 1; }
 
-    .eyebrow{
-      text-align:center;
-      color:var(--accent);
-      text-transform:uppercase;
-      letter-spacing:.18em;
-      font-size:12px;
-      font-weight:800;
-      margin-bottom:14px;
+    .service-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      background: var(--gold-dim);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 22px;
     }
 
-    h1{
-      margin:0 auto 18px;
-      text-align:center;
-      max-width:1060px;
-      font-size:clamp(42px, 6.2vw, 84px);
-      line-height:.98;
-      letter-spacing:-.04em;
-      font-weight:900;
-      text-wrap:balance;
+    .service-icon svg { color: var(--gold); }
+
+    .service-num {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 10px;
     }
 
-    .hero-sub{
-      margin:0 auto;
-      max-width:960px;
-      text-align:center;
-      color:#d8dfeb;
-      font-size:clamp(18px, 2vw, 26px);
-      line-height:1.45;
-      text-wrap:balance;
+    .service-card h3 {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -.03em;
+      margin-bottom: 12px;
+      line-height: 1.1;
     }
 
-    .hero-ctas{
-      margin-top:30px;
-      display:flex;
-      gap:16px;
-      justify-content:center;
-      flex-wrap:wrap;
+    .service-card p {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.6;
     }
 
-    .trust-row{
-      margin-top:34px;
-      display:grid;
-      grid-template-columns:repeat(4, minmax(0,1fr));
-      gap:16px;
+    /* ─── MÉTHODE ─── */
+    .method-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
     }
 
-    .trust-card{
-      padding:18px 18px 16px;
-      border-radius:20px;
-      background:rgba(255,255,255,.045);
-      border:1px solid rgba(255,255,255,.08);
-      min-height:118px;
+    .method-step {
+      position: relative;
     }
 
-    .trust-card .label{
-      color:var(--accent);
-      font-size:12px;
-      text-transform:uppercase;
-      letter-spacing:.14em;
-      font-weight:800;
-      margin-bottom:10px;
+    .method-step-num {
+      font-family: var(--font-display);
+      font-size: 64px;
+      font-weight: 800;
+      letter-spacing: -.06em;
+      color: rgba(255,255,255,.04);
+      line-height: 1;
+      margin-bottom: 14px;
+      user-select: none;
     }
 
-    .trust-card strong{
-      display:block;
-      font-size:20px;
-      line-height:1.2;
-      margin-bottom:6px;
+    .method-step-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -.03em;
+      margin-bottom: 10px;
+      line-height: 1.1;
     }
 
-    .trust-card span{
-      color:var(--muted);
-      font-size:14px;
+    .method-step p {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.6;
     }
 
-    .betty-section{
-      padding:10px 0 34px;
+    .method-connector {
+      position: absolute;
+      top: 30px;
+      right: -14px;
+      width: 24px;
+      height: 1px;
+      background: linear-gradient(90deg, var(--line), transparent);
     }
 
-    .betty-shell{
-      width:min(820px, 100%);
-      margin:0 auto;
-      border-radius:30px;
-      overflow:hidden;
-      background:linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.025));
-      border:1px solid rgba(255,255,255,.10);
-      box-shadow:0 30px 80px rgba(0,0,0,.42);
+    .method-step:last-child .method-connector { display: none; }
+
+    .method-tag {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgba(200,169,110,.12);
+      border: 1px solid rgba(200,169,110,.2);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 18px;
     }
 
-     .betty-frame{
-      display:block;
-      width:100%;
-      height:520px;   /* 👈 taille parfaite */
-      border:none;
-      background:transparent;
+    /* ─── RÉASSURANCE ─── */
+    .reassurance-bg {
+      background: var(--ink-2);
+      border-top: 1px solid var(--line);
     }
 
-    section{
-      padding:26px 0 0;
+    .reassurance-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 28px;
+      align-items: stretch;
     }
 
-    .section-title{
-      font-size:clamp(28px, 3.2vw, 44px);
-      line-height:1.05;
-      letter-spacing:-.03em;
-      margin:0 0 10px;
+    .reas-panel {
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--line);
+      overflow: hidden;
     }
 
-    .section-sub{
-      color:var(--muted);
-      margin:0 0 24px;
-      font-size:17px;
+    .reas-panel-header {
+      padding: 28px 32px 22px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,.025);
     }
 
-    .services-grid{
-      display:grid;
-      grid-template-columns:repeat(4, minmax(0,1fr));
-      gap:18px;
+    .reas-panel-header h3 {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -.03em;
     }
 
-    .service{
-      min-height:240px;
-      padding:28px 24px;
-      border-radius:24px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.03));
-      border:1px solid rgba(255,255,255,.09);
-      box-shadow:var(--shadow);
+    .reas-list {
+      padding: 8px 0;
     }
 
-    .service-number{
-      color:var(--accent);
-      font-size:13px;
-      font-weight:800;
-      letter-spacing:.18em;
-      text-transform:uppercase;
-      margin-bottom:14px;
+    .reas-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
+      padding: 0 32px;
+      border-bottom: 1px solid var(--line);
     }
+
+    .reas-row:last-child { border-bottom: none; }
 
-    .service h3{
-      margin:0 0 12px;
-      font-size:25px;
-      letter-spacing:-.03em;
-      line-height:1.05;
+    .reas-key {
+      flex: 0 0 180px;
+      padding: 18px 0;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color: var(--dim);
     }
 
-    .service p{
-      margin:0;
-      color:var(--muted);
-      font-size:16px;
+    .reas-val {
+      padding: 18px 0 18px 20px;
+      border-left: 1px solid var(--line);
+      font-size: 15px;
+      color: var(--text);
+      font-weight: 500;
     }
 
-    .split{
-      display:grid;
-      grid-template-columns:1.1fr .9fr;
-      gap:22px;
-      align-items:stretch;
+    .reas-val span {
+      display: block;
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 400;
+      margin-top: 3px;
     }
 
-    .panel{
-      border-radius:28px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.028));
-      border:1px solid rgba(255,255,255,.09);
-      box-shadow:var(--shadow);
-      overflow:hidden;
+    .reas-right {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
     }
 
-    .panel-inner{
-      padding:30px 28px;
+    .reas-highlight {
+      flex: 1;
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(200,169,110,.22);
+      background: linear-gradient(135deg, rgba(200,169,110,.08), rgba(200,169,110,.03));
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
     }
 
-    .bullet-list{
-      display:grid;
-      gap:14px;
-      margin-top:14px;
+    .reas-highlight-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
     }
 
-    .bullet{
-      display:flex;
-      gap:14px;
-      align-items:flex-start;
-      padding:14px 0;
-      border-top:1px solid rgba(255,255,255,.08);
+    .reas-highlight-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: rgba(200,169,110,.14);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
     }
 
-    .bullet:first-child{border-top:0;padding-top:0}
+    .reas-highlight-icon svg { color: var(--gold); }
 
-    .bullet-dot{
-      width:11px;
-      height:11px;
-      border-radius:50%;
-      background:linear-gradient(135deg, #d7af7a, #9e7449);
-      margin-top:7px;
-      flex:0 0 11px;
+    .reas-highlight-text strong {
+      display: block;
+      font-size: 16px;
+      font-weight: 600;
     }
 
-    .bullet strong{
-      display:block;
-      font-size:18px;
-      margin-bottom:3px;
+    .reas-highlight-text span {
+      font-size: 14px;
+      color: var(--muted);
     }
 
-    .bullet span{
-      color:var(--muted);
-      font-size:15px;
+    /* ─── HORAIRES ─── */
+    .hours-grid {
+      display: grid;
+      gap: 2px;
+      background: var(--line);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
     }
 
-    .hours{
-      display:grid;
-      gap:10px;
-      margin-top:12px;
+    .hour-row {
+      display: flex;
+      align-items: center;
+      padding: 18px 28px;
+      background: var(--surface);
+      gap: 0;
+      transition: background .18s;
     }
 
-    .hour-row{
-      display:grid;
-      grid-template-columns:160px 1fr;
-      gap:18px;
-      align-items:center;
-      padding:12px 0;
-      border-top:1px solid rgba(255,255,255,.08);
+    .hour-row:hover { background: var(--surface-2); }
+
+    .hour-day {
+      flex: 0 0 180px;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    .hour-time {
+      color: var(--muted);
+      font-size: 15px;
+      flex: 1;
     }
 
-    .hour-row:first-child{border-top:0;padding-top:0}
+    .hour-closed {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.05);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--dim);
+    }
 
-    .day{
-      font-weight:700;
-      color:#f1ecdf;
+    /* ─── CONTACT ─── */
+    .contact-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      gap: 28px;
     }
 
-    .time{
-      color:var(--muted);
+    .contact-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
     }
 
-    .map-wrap{
-      overflow:hidden;
-      border-radius:24px;
-      border:1px solid rgba(255,255,255,.08);
-      min-height:460px;
-      background:#0b1220;
+    .contact-card {
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--line);
+      background: var(--surface);
+      padding: 26px 28px;
+      transition: background .2s, border-color .2s;
     }
 
-    .map-wrap iframe{
-      width:100%;
-      height:100%;
-      min-height:460px;
-      border:0;
-      display:block;
-      filter:grayscale(.15) contrast(1.03) saturate(.9);
+    .contact-card:hover {
+      background: var(--surface-2);
+      border-color: rgba(255,255,255,.14);
     }
 
-    .contact-grid{
-      display:grid;
-      grid-template-columns:repeat(3, minmax(0,1fr));
-      gap:18px;
+    .contact-card-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 10px;
     }
 
-    .contact-card{
-      border-radius:22px;
-      padding:24px;
-      background:rgba(255,255,255,.042);
-      border:1px solid rgba(255,255,255,.08);
-      min-height:180px;
+    .contact-card h3 {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -.03em;
+      line-height: 1.1;
+      margin-bottom: 6px;
     }
 
-    .contact-card .small{
-      color:var(--accent);
-      font-size:12px;
-      text-transform:uppercase;
-      letter-spacing:.16em;
-      font-weight:800;
-      margin-bottom:12px;
+    .contact-card p {
+      font-size: 15px;
+      color: var(--muted);
     }
 
-    .contact-card h3{
-      margin:0 0 10px;
-      font-size:24px;
-      letter-spacing:-.03em;
+    .contact-card a {
+      color: var(--cerulean-light);
+      text-decoration: underline;
+      text-underline-offset: 3px;
     }
 
-    .contact-card p{
-      margin:0;
-      color:var(--muted);
-      font-size:16px;
+    .cta-card {
+      border-radius: var(--radius-lg);
+      background: linear-gradient(135deg, #1e3252 0%, #16263e 100%);
+      border: 1px solid rgba(91,157,232,.2);
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
     }
 
-    .contact-card a{
-      color:#f1ecdf;
-      text-decoration:underline;
-      text-underline-offset:3px;
+    .cta-card p {
+      font-size: 16px;
+      color: var(--muted);
+      line-height: 1.55;
     }
+
+    .cta-card .btn { width: 100%; }
 
-    .footer{
-      padding:30px 0 44px;
+    .map-container {
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: var(--surface);
     }
 
-    .footer-inner{
-      border-top:1px solid rgba(255,255,255,.09);
-      padding-top:24px;
-      display:grid;
-      grid-template-columns:1.2fr .8fr;
-      gap:24px;
+    .map-container iframe {
+      width: 100%;
+      height: 100%;
+      min-height: 480px;
+      border: none;
+      display: block;
+      filter: saturate(.7) contrast(1.05);
     }
 
-    .legal{
-      color:var(--muted);
-      font-size:14px;
-      line-height:1.7;
+    /* ─── FOOTER ─── */
+    .footer {
+      padding: 48px 0 40px;
+      border-top: 1px solid var(--line);
     }
 
-    .legal strong{
-      color:var(--text);
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.6fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 48px;
     }
 
-    .footer-note{
-      display:flex;
-      justify-content:flex-end;
-      align-items:flex-start;
-      color:var(--muted);
-      font-size:14px;
-      text-align:right;
+    .footer-brand {}
+
+    .footer-logo {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: .04em;
+      margin-bottom: 14px;
     }
 
-    @media (max-width: 1180px){
-      .trust-row,
-      .services-grid{
-        grid-template-columns:repeat(2, minmax(0,1fr));
-      }
+    .footer-logo .abc { color: var(--red-corp); }
 
-      .split,
-      .footer-inner{
-        grid-template-columns:1fr;
-      }
+    .footer-desc {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 320px;
+    }
 
-      .contact-grid{
-        grid-template-columns:1fr;
-      }
+    .footer-col h4 {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--dim);
+      margin-bottom: 18px;
+    }
 
-      .betty-frame{
-        height:760px;
-      }
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
 
-    @media (max-width: 760px){
-      .topbar-inner{
-        min-height:auto;
-        padding:12px 0;
-        align-items:flex-start;
-        flex-direction:column;
-      }
+    .footer-col ul li a {
+      font-size: 14px;
+      color: var(--muted);
+      transition: color .18s;
+    }
 
-      .topbar-actions{
-        width:100%;
-        justify-content:flex-start;
-      }
+    .footer-col ul li a:hover { color: var(--text); }
 
-      .hero-inner{
-        padding:32px 20px 28px;
-      }
+    .footer-bottom {
+      border-top: 1px solid var(--line);
+      padding-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
 
-      .trust-row,
-      .services-grid{
-        grid-template-columns:1fr;
-      }
+    .footer-legal {
+      font-size: 13px;
+      color: var(--dim);
+      line-height: 1.6;
+    }
 
-      .hour-row{
-        grid-template-columns:1fr;
-        gap:4px;
-      }
+    .footer-siren {
+      font-size: 12.5px;
+      color: var(--dim);
+      text-align: right;
+      line-height: 1.6;
+    }
 
-      .logo-hero{
-        max-height:180px;
-      }
+    /* ─── DIVIDERS ─── */
+    .section-divider {
+      width: 48px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--gold), transparent);
+      border-radius: 99px;
+      margin: 20px 0 0;
+    }
 
-      .betty-section{
-        padding:0 0 24px;
-      }
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 1100px) {
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero-betty { max-width: 540px; }
+      .hero-content { padding-bottom: 56px; }
+      .positioning-grid { grid-template-columns: 1fr; gap: 40px; }
+      .market-intro { grid-template-columns: 1fr; }
+      .services-grid { grid-template-columns: repeat(2, 1fr); }
+      .method-grid { grid-template-columns: repeat(2, 1fr); }
+      .reassurance-grid { grid-template-columns: 1fr; }
+      .contact-layout { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
 
-      .betty-shell{
-        width:100%;
-        border-radius:22px;
-      }
+    @media (max-width: 768px) {
+      .topbar-nav { display: none; }
+      .topbar-inner { height: auto; padding: 14px 0; flex-wrap: wrap; }
+      .topbar-actions { flex-wrap: wrap; gap: 8px; }
+      .hero { min-height: 100svh; }
+      .hero-inner { gap: 32px; }
+      .hero-betty { max-width: 100%; }
+      .betty-frame { height: 420px; }
+      .trust-items { flex-direction: column; gap: 0; }
+      .trust-item { width: 100%; border-right: none; border-bottom: 1px solid var(--line); }
+      .trust-item:last-child { border-bottom: none; }
+      section { padding: 72px 0; }
+      .market-logos-grid { grid-template-columns: repeat(3, 1fr); }
+      .services-grid { grid-template-columns: 1fr; }
+      .method-grid { grid-template-columns: 1fr; }
+      .positioning-stats { grid-template-columns: 1fr 1fr; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .footer-siren { text-align: left; }
+    }
 
-      .betty-frame{
-        height:72vh;
-        min-height:620px;
-      }
+    @media (max-width: 520px) {
+      .hero-ctas { flex-direction: column; }
+      .hero-ctas .btn { width: 100%; justify-content: center; }
+      .market-logos-grid { grid-template-columns: repeat(2, 1fr); }
+      .reas-key { flex: 0 0 130px; }
     }
   </style>
 
   <script type="application/ld+json">
   {
-    "@context":"https://schema.org",
-    "@type":"LocalBusiness",
-    "name":"ABC Peinture Déco",
-    "image":"/static/ABC.png",
-    "telephone":"+33 2 43 75 98 18",
-    "address":{
-      "@type":"PostalAddress",
-      "streetAddress":"13-15 Rue Albert Einstein",
-      "postalCode":"72650",
-      "addressLocality":"La Chapelle-Saint-Aubin",
-      "addressCountry":"FR"
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "ABC Peinture Déco",
+    "legalName": "ABC Peinture Déco SARL",
+    "telephone": "+33243759818",
+    "identifier": { "@type": "PropertyValue", "name": "SIREN", "value": "793751249" },
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "13-15 Rue Albert Einstein",
+      "postalCode": "72650",
+      "addressLocality": "La Chapelle-Saint-Aubin",
+      "addressRegion": "Sarthe",
+      "addressCountry": "FR"
     },
-    "areaServed":["Le Mans","La Chapelle-Saint-Aubin","Sarthe"],
-    "description":"Travaux de peinture et vitrerie, peinture intérieure et extérieure, revêtements sols et murs, plâtrerie.",
-    "openingHoursSpecification":[
-      {"@type":"OpeningHoursSpecification","dayOfWeek":"Monday","opens":"09:00","closes":"12:00"},
-      {"@type":"OpeningHoursSpecification","dayOfWeek":"Monday","opens":"13:00","closes":"16:00"},
-      {"@type":"OpeningHoursSpecification","dayOfWeek":"Tuesday","opens":"09:00","closes":"12:00"},
-      {"@type":"OpeningHoursSpecification","dayOfWeek":"Tuesday","opens":"13:00","closes":"16:00"},
-      {"@type":"OpeningHoursSpecification","dayOfWeek":"Wednesday","opens":"09:00","closes":"12:00"},
-      {"@type":"OpeningHoursSpecification","dayOfWeek":"Thursday","opens":"09:00","closes":"12:00"},
-      {"@type":"OpeningHoursSpecification","dayOfWeek":"Thursday","opens":"13:00","closes":"16:00"},
-      {"@type":"OpeningHoursSpecification","dayOfWeek":"Friday","opens":"09:00","closes":"12:00"},
-      {"@type":"OpeningHoursSpecification","dayOfWeek":"Friday","opens":"13:00","closes":"16:00"}
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 47.99,
+      "longitude": 0.17
+    },
+    "areaServed": [
+      { "@type": "City", "name": "Le Mans" },
+      { "@type": "City", "name": "La Chapelle-Saint-Aubin" },
+      { "@type": "AdministrativeArea", "name": "Sarthe" }
+    ],
+    "description": "Entreprise de peinture professionnelle au Mans et en Sarthe. Peinture intérieure et extérieure, revêtements sols et murs, plâtrerie et vitrerie. Interventions sur locaux professionnels et chantiers résidentiels.",
+    "openingHoursSpecification": [
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": "Monday", "opens": "09:00", "closes": "12:00" },
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": "Monday", "opens": "13:00", "closes": "16:00" },
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": "Tuesday", "opens": "09:00", "closes": "12:00" },
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": "Tuesday", "opens": "13:00", "closes": "16:00" },
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": "Wednesday", "opens": "09:00", "closes": "12:00" },
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": "Thursday", "opens": "09:00", "closes": "12:00" },
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": "Thursday", "opens": "13:00", "closes": "16:00" },
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": "Friday", "opens": "09:00", "closes": "12:00" },
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": "Friday", "opens": "13:00", "closes": "16:00" }
+    ],
+    "sameAs": [
+      "https://www.pagesjaunes.fr/pros/55586368"
     ]
   }
   </script>
 </head>
 <body>
 
-  <header class="topbar">
+  <!-- ════════════════ TOPBAR ════════════════ -->
+  <header class="topbar" role="banner">
     <div class="topbar-inner">
-      <div class="topbar-left">
-        <img class="mini-brand" src="/static/ABC.png" alt="ABC Peinture Déco">
-        <div class="topbar-title">
-          <strong>ABC Peinture Déco</strong>
-          <span>Peinture intérieure, extérieure, revêtements, plâtrerie, vitrerie</span>
+      <div class="topbar-brand">
+        <div class="brand-logo-mark">
+          <div class="logo-abc">
+            <span class="letter-a">A</span><span class="letter-b">B</span><span class="letter-c">C</span>
+          </div>
+          <div class="logo-separator"></div>
+          <div class="logo-sub">Peinture Déco<br>Le Mans · Sarthe</div>
         </div>
       </div>
 
+      <nav class="topbar-nav" aria-label="Navigation principale">
+        <a href="#services">Prestations</a>
+        <a href="#methode">Notre méthode</a>
+        <a href="#entreprise">Entreprise</a>
+        <a href="#horaires">Horaires</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
       <div class="topbar-actions">
-        <a class="tel-link" href="tel:0243759818">02 43 75 98 18</a>
-        <a class="btn btn-secondary" href="#horaires">Voir les horaires</a>
-        <a class="btn btn-primary" href="#contact">Demander un devis</a>
+        <a class="tel-badge" href="tel:0243759818" aria-label="Appeler ABC Peinture Déco">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.62 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9a16 16 0 0 0 6.09 6.09l1.96-1.94a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          02 43 75 98 18
+        </a>
+        <a class="btn btn-gold" href="#contact">Demander un devis</a>
       </div>
     </div>
   </header>
 
   <main>
-    <section class="hero">
-      <div class="container">
-        <div class="hero-shell">
-          <div class="hero-inner">
-            <div class="logo-wrap">
-              <img class="logo-hero" src="/static/ABC.png" alt="Logo ABC Peinture Déco">
+
+    <!-- ════════════════ HERO ════════════════ -->
+    <section class="hero" aria-labelledby="hero-headline">
+      <div class="hero-bg" aria-hidden="true">
+        <img src="/static/abc_gris2.webp" alt="Chantier de peinture professionnelle ABC Peinture Déco" loading="eager" fetchpriority="high" />
+        <div class="hero-overlay"></div>
+      </div>
+
+      <div class="hero-content">
+        <div class="hero-inner">
+          <div class="hero-left">
+            <div class="hero-badge reveal">
+              <div class="hero-badge-dot" aria-hidden="true"></div>
+              <span class="hero-badge-text">Peinture professionnelle · Sarthe · 72</span>
             </div>
 
-            <div class="eyebrow">Le Mans • La Chapelle-Saint-Aubin • Sarthe</div>
+            <h1 class="hero-headline reveal reveal-delay-1" id="hero-headline">
+              L'entreprise de peinture<br>
+              <em>de référence</em><br>
+              au Mans.
+            </h1>
 
-            <h1>Peinture & rénovation avec une présence locale solide et une image haut de gamme.</h1>
-
-            <p class="hero-sub">
-              ABC Peinture Déco accompagne les projets de peinture intérieure et extérieure,
-              revêtements sols et murs, plâtrerie et vitrerie, avec un point de contact à
-              La Chapelle-Saint-Aubin et une activité établie depuis 2013.
+            <p class="hero-sub reveal reveal-delay-2">
+              ABC Peinture Déco intervient sur vos locaux professionnels et chantiers résidentiels en Sarthe. Peinture intérieure et extérieure, revêtements, plâtrerie et vitrerie — avec la méthode et la rigueur qu'exigent les environnements exigeants.
             </p>
 
-            <div class="hero-ctas">
-              <a class="btn btn-primary" href="tel:0243759818">Appeler maintenant</a>
-              <a class="btn btn-secondary" href="#contact">Voir les informations de contact</a>
+            <div class="hero-ctas reveal reveal-delay-3">
+              <a class="btn btn-gold btn-large" href="tel:0243759818">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.62 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9a16 16 0 0 0 6.09 6.09l1.96-1.94a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                Appeler maintenant
+              </a>
+              <a class="btn btn-outline btn-large" href="#contact">Demander un devis</a>
             </div>
+          </div>
 
-            <div class="trust-row">
-              <div class="trust-card">
-                <div class="label">Téléphone</div>
-                <strong>02 43 75 98 18</strong>
-                <span>  </span>
+          <div class="hero-betty reveal reveal-delay-4">
+            <div class="betty-header">
+              <div class="betty-dot" aria-hidden="true"></div>
+              <span class="betty-label">Betty — Devis rapide</span>
+              <span class="betty-sublabel">Réponse immédiate</span>
+            </div>
+            <iframe
+              src="/chat"
+              class="betty-frame"
+              title="Betty, assistant devis ABC Peinture Déco"
+              loading="lazy">
+            </iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════ TRUST STRIP ════════════════ -->
+    <div class="trust-strip" aria-label="Réassurance">
+      <div class="container">
+        <div class="trust-items">
+          <div class="trust-item">
+            <div class="trust-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div class="trust-text">
+              <strong>Assurance décennale GAN</strong>
+              <span>Garantie et couverture professionnelle</span>
+            </div>
+          </div>
+          <div class="trust-item">
+            <div class="trust-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <div class="trust-text">
+              <strong>+ de 20 ans d'expérience</strong>
+              <span>SARL créée en juin 2013, métier maîtrisé</span>
+            </div>
+          </div>
+          <div class="trust-item">
+            <div class="trust-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <div class="trust-text">
+              <strong>Le Mans & Sarthe</strong>
+              <span>Présence locale, intervention rapide</span>
+            </div>
+          </div>
+          <div class="trust-item">
+            <div class="trust-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </div>
+            <div class="trust-text">
+              <strong>Devis rapide & gratuit</strong>
+              <span>Réponse sous 24h</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════ POSITIONNEMENT ════════════════ -->
+    <section class="positioning" aria-labelledby="pos-title">
+      <div class="container">
+        <div class="positioning-grid">
+          <div class="positioning-left">
+            <span class="label-eyebrow reveal">Positionnement</span>
+            <h2 class="section-h reveal reveal-delay-1" id="pos-title">Une entreprise structurée pour les chantiers qui comptent.</h2>
+            <p class="section-lead reveal reveal-delay-2">ABC Peinture Déco est conçue pour répondre aux exigences des environnements professionnels : locaux commerciaux, bureaux, espaces de travail, bâtiments tertiaires. Et pour accompagner les particuliers avec le même niveau de soin.</p>
+            <div class="section-divider reveal reveal-delay-2"></div>
+
+            <div class="positioning-stats reveal reveal-delay-3">
+              <div class="pos-stat">
+                <strong>2013</strong>
+                <span>Création de la société</span>
               </div>
-
-              <div class="trust-card">
-                <div class="label">Adresse de contact</div>
-                <strong>13-15 Rue Albert Einstein</strong>
-                <span>72650 La Chapelle-Saint-Aubin</span>
+              <div class="pos-stat">
+                <strong>+20</strong>
+                <span>Années d'expérience métier</span>
               </div>
-
-              <div class="trust-card">
-                <div class="label">Réassurance</div>
-                <strong>Assurance décennale GAN</strong>
-                <span> </span>
+              <div class="pos-stat">
+                <strong>SARL</strong>
+                <span>Structure juridique solide</span>
               </div>
+              <div class="pos-stat">
+                <strong>72</strong>
+                <span>Zone d'intervention Sarthe</span>
+              </div>
+            </div>
+          </div>
 
-              <div class="trust-card">
-                <div class="label">Expérience</div>
-                <strong>+ de 20 ans</strong>
-                <span>Expérience métier.</span>
+          <div class="positioning-pillars reveal reveal-delay-2">
+            <div class="pillar">
+              <div class="pillar-num">01</div>
+              <div>
+                <h3>Interventions sur locaux professionnels</h3>
+                <p>Espaces commerciaux, bureaux, entrepôts, surfaces de vente — ABC Peinture Déco maîtrise les contraintes des environnements d'entreprise : délais, propreté de chantier, rendu irréprochable.</p>
+              </div>
+            </div>
+            <div class="pillar">
+              <div class="pillar-num">02</div>
+              <div>
+                <h3>Organisation rigoureuse de chantier</h3>
+                <p>Chaque intervention suit une planification précise : état des lieux, préparation des surfaces, exécution contrôlée, finitions vérifiées. Pas d'improvisation.</p>
+              </div>
+            </div>
+            <div class="pillar">
+              <div class="pillar-num">03</div>
+              <div>
+                <h3>Présence locale, réactivité Sarthe</h3>
+                <p>Basée à La Chapelle-Saint-Aubin, l'entreprise est ancrée dans la réalité du territoire sarthois et capable d'intervenir sur l'ensemble du département.</p>
+              </div>
+            </div>
+            <div class="pillar">
+              <div class="pillar-num">04</div>
+              <div>
+                <h3>Assurance et structure rassurantes</h3>
+                <p>SARL avec assurance décennale GAN, SIREN enregistré, gérant identifié : toutes les garanties d'une structure professionnelle sérieuse.</p>
               </div>
             </div>
           </div>
@@ -688,203 +1394,424 @@
       </div>
     </section>
 
-    <section class="betty-section" aria-label="Assistant devis Betty">
+    <!-- ════════════════ UNIVERS CLIENT ════════════════ -->
+    <section class="market-section" aria-labelledby="market-title">
       <div class="container">
-        <div class="betty-shell">
-          <iframe src="/chat" class="betty-frame" title="Betty - devis peinture rapide"></iframe>
+        <div class="market-intro">
+          <div>
+            <span class="label-eyebrow reveal">Univers d'intervention</span>
+            <h2 class="section-h reveal reveal-delay-1" id="market-title">Adapté aux standards des environnements exigeants.</h2>
+            <p class="section-lead reveal reveal-delay-2">Nos méthodes et notre niveau d'exigence sont conçus pour répondre aux attentes des espaces commerciaux, des enseignes et des structures professionnelles qui ne peuvent pas se permettre un chantier raté.</p>
+          </div>
+          <div class="market-statement reveal reveal-delay-2">
+            <p>
+              <strong>Commerces, enseignes, espaces tertiaires :</strong> nous comprenons vos contraintes opérationnelles. Intervention hors horaires d'ouverture si nécessaire, délais maîtrisés, finitions au niveau des standards retail et corporate.
+            </p>
+          </div>
+        </div>
+
+        <div class="market-logos-grid reveal reveal-delay-1" aria-label="Types d'environnements professionnels servis">
+          <div class="market-logo-cell">Grande Distribution</div>
+          <div class="market-logo-cell">Surfaces Commerciales</div>
+          <div class="market-logo-cell">Espaces Bureaux</div>
+          <div class="market-logo-cell">Hôtellerie & Restauration</div>
+          <div class="market-logo-cell">Immobilier d'Entreprise</div>
+          <div class="market-logo-cell">Locaux Artisanaux</div>
+          <div class="market-logo-cell">Établissements Publics</div>
+          <div class="market-logo-cell">Promoteurs & Syndics</div>
+          <div class="market-logo-cell">Entrepôts & Logistique</div>
+          <div class="market-logo-cell">Cliniques & Cabinets</div>
+          <div class="market-logo-cell">Franchises & Enseignes</div>
+          <div class="market-logo-cell">Particuliers Exigeants</div>
+        </div>
+
+        <div style="margin-top:20px; padding:20px 28px; border-radius:12px; background:rgba(255,255,255,.03); border:1px solid var(--line);">
+          <p style="font-size:13px; color:var(--dim); line-height:1.6;">
+            Ces catégories représentent les types d'environnements professionnels pour lesquels ABC Peinture Déco est organisée et équipée. Elles illustrent notre positionnement, non des références client contractuellement attestées.
+          </p>
         </div>
       </div>
     </section>
 
-    <section aria-labelledby="services">
+    <!-- ════════════════ SERVICES ════════════════ -->
+    <section class="services-bg" aria-labelledby="services-title" id="services">
       <div class="container">
-        <h2 id="services" class="section-title">Prestations mises en avant</h2>
-        <p class="section-sub">
-         
-        </p>
+        <div class="section-header">
+          <span class="label-eyebrow reveal">Prestations</span>
+          <h2 class="section-h reveal reveal-delay-1" id="services-title">Peinture intérieure, extérieure<br>et bien plus.</h2>
+          <p class="section-lead reveal reveal-delay-2">Peinture en bâtiment, revêtements sols et murs, plâtrerie et vitrerie : un panel de compétences complet pour prendre en charge vos chantiers de A à Z.</p>
+        </div>
 
         <div class="services-grid">
-          <article class="service">
-            <div class="service-number">Service 01</div>
+          <article class="service-card reveal reveal-delay-1">
+            <div class="service-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+            </div>
+            <div class="service-num">Prestation 01</div>
             <h3>Peinture intérieure</h3>
-            <p>Travaux de peinture en bâtiment pour les espaces de vie, les surfaces murales, les plafonds et les finitions intérieures.</p>
+            <p>Travaux de peinture en bâtiment pour l'ensemble des surfaces intérieures : murs, plafonds, boiseries, finitions. Résultat impeccable sur tous types de supports, en neuf comme en rénovation.</p>
           </article>
 
-          <article class="service">
-            <div class="service-number">Service 02</div>
+          <article class="service-card reveal reveal-delay-2">
+            <div class="service-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </div>
+            <div class="service-num">Prestation 02</div>
             <h3>Peinture extérieure</h3>
-            <p>Interventions extérieures, activité déclarée de peinture en bâtiment.</p>
+            <p>Interventions extérieures sur façades, menuiseries, clôtures et surfaces exposées. Préparation rigoureuse, produits adaptés aux conditions climatiques, durabilité assurée.</p>
           </article>
 
-          <article class="service">
-            <div class="service-number">Service 03</div>
+          <article class="service-card reveal reveal-delay-3">
+            <div class="service-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 0 0 6.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 0 0 6.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/></svg>
+            </div>
+            <div class="service-num">Prestation 03</div>
+            <h3>Rénovation de locaux</h3>
+            <p>Remise en état complète de locaux professionnels et d'espaces résidentiels. Prise en charge globale du projet, coordination des interventions, rendu soigné même dans des délais contraints.</p>
+          </article>
+
+          <article class="service-card reveal reveal-delay-1">
+            <div class="service-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+            </div>
+            <div class="service-num">Prestation 04</div>
             <h3>Revêtements sols et murs</h3>
-            <p>Pose de revêtements de sols et murs.</p>
+            <p>Pose de revêtements muraux et de sol : carrelage, parquet, faïence, revêtements plastiques et textiles. Solutions adaptées aux contraintes de chaque espace, du commerce au logement.</p>
           </article>
 
-          <article class="service">
-            <div class="service-number">Service 04</div>
-            <h3>Plâtrerie & vitrerie</h3>
-            <p>La plâtrerie est mentionnée sur Travaux.com, tandis que la vitrerie apparaît dans la description métier et le code NAF 43.34Z.</p>
+          <article class="service-card reveal reveal-delay-2">
+            <div class="service-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            </div>
+            <div class="service-num">Prestation 05</div>
+            <h3>Plâtrerie</h3>
+            <p>Travaux de plâtrerie pour cloisons, doublages et faux-plafonds. Préparation de surfaces pour un rendu peinture irréprochable. Compétence complémentaire pour prendre en charge des chantiers complets.</p>
+          </article>
+
+          <article class="service-card reveal reveal-delay-3">
+            <div class="service-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            </div>
+            <div class="service-num">Prestation 06</div>
+            <h3>Vitrerie</h3>
+            <p>Intervention vitrerie intégrée à l'activité principale de peinture et décoration (code NAF 43.34Z). Vitrage et travaux associés pour une prise en charge globale de vos chantiers.</p>
           </article>
         </div>
       </div>
     </section>
 
-    <section aria-labelledby="entreprise">
+    <!-- ════════════════ MÉTHODE ════════════════ -->
+    <section aria-labelledby="methode-title" id="methode">
       <div class="container">
-        <div class="split">
-          <div class="panel">
-            <div class="panel-inner">
-              <h2 id="entreprise" class="section-title">Entreprise & réassurance</h2>
-              <p class="section-sub">
-                Une présentation fondée sur les données professionnelles et administratives accessibles publiquement.
-              </p>
+        <div class="section-header">
+          <span class="label-eyebrow reveal">Notre méthode</span>
+          <h2 class="section-h reveal reveal-delay-1" id="methode-title">Un process clair,<br>du premier contact au rendu final.</h2>
+          <p class="section-lead reveal reveal-delay-2">Chez ABC Peinture Déco, chaque intervention suit une organisation structurée. Parce que la qualité d'exécution commence bien avant la pose du premier coup de pinceau.</p>
+        </div>
 
-              <div class="bullet-list">
-                <div class="bullet">
-                  <div class="bullet-dot"></div>
-                  <div>
-                    <strong>SARL créée en juin 2013</strong>
-                    <span>La société ABC Peinture Déco a été créée en juin 2013 sous la forme juridique SARL.</span>
-                  </div>
-                </div>
-
-                <div class="bullet">
-                  <div class="bullet-dot"></div>
-                  <div>
-                    <strong>SIREN 793 751 249</strong>
-                    <span>Identifiant de société affiché sur les fiches annuaires et sur e-pro.</span>
-                  </div>
-                </div>
-
-                <div class="bullet">
-                  <div class="bullet-dot"></div>
-                  <div>
-                    <strong>Gérant : Antony Berge</strong>
-                    <span>Le représentant légal indiqué sur la fiche e-pro est Antony Berge.</span>
-                  </div>
-                </div>
-
-                <div class="bullet">
-                  <div class="bullet-dot"></div>
-                  <div>
-                    <strong>Activité principale : travaux de peinture et vitrerie</strong>
-                    <span>Code NAF 43.34Z.  </div>
-                </div>
-
-                <div class="bullet">
-                  <div class="bullet-dot"></div>
-                  <div>
-                    <strong>Présence au Mans & à La Chapelle-Saint-Aubin</strong>
-                    <span>Le siège social est au 53 avenue Bollée au Mans, avec un établissement actif Rue Albert Einstein à La Chapelle-Saint-Aubin.</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+        <div class="method-grid">
+          <div class="method-step reveal reveal-delay-1">
+            <div class="method-connector" aria-hidden="true"></div>
+            <div class="method-tag">Étape 01</div>
+            <div class="method-step-num" aria-hidden="true">01</div>
+            <h3 class="method-step-title">Analyse du besoin</h3>
+            <p>Visite du site, compréhension des contraintes (délais, occupation, matériaux, environnement), établissement d'un devis précis et détaillé. Aucune approximation.</p>
           </div>
 
-          <div class="panel" id="horaires">
-            <div class="panel-inner">
-              <h2 class="section-title">Horaires d’ouverture</h2>
-              <p class="section-sub">
-                Horaires visibles dans les résultats et fiches locales consultés.
-              </p>
+          <div class="method-step reveal reveal-delay-2">
+            <div class="method-connector" aria-hidden="true"></div>
+            <div class="method-tag">Étape 02</div>
+            <div class="method-step-num" aria-hidden="true">02</div>
+            <h3 class="method-step-title">Planification rigoureuse</h3>
+            <p>Définition du planning d'intervention, des équipes mobilisées et des matériaux. Coordination anticipée pour ne pas perturber votre activité, même en milieu professionnel occupé.</p>
+          </div>
 
-              <div class="hours">
-                <div class="hour-row">
-                  <div class="day">Lundi</div>
-                  <div class="time">09:00–12:00 / 13:00–16:00</div>
-                </div>
-                <div class="hour-row">
-                  <div class="day">Mardi</div>
-                  <div class="time">09:00–12:00 / 13:00–16:00</div>
-                </div>
-                <div class="hour-row">
-                  <div class="day">Mercredi</div>
-                  <div class="time">09:00–12:00</div>
-                </div>
-                <div class="hour-row">
-                  <div class="day">Jeudi</div>
-                  <div class="time">09:00–12:00 / 13:00–16:00</div>
-                </div>
-                <div class="hour-row">
-                  <div class="day">Vendredi</div>
-                  <div class="time">09:00–12:00 / 13:00–16:00</div>
-                </div>
-                <div class="hour-row">
-                  <div class="day">Samedi</div>
-                  <div class="time">Fermé</div>
-                </div>
-                <div class="hour-row">
-                  <div class="day">Dimanche</div>
-                  <div class="time">Fermé</div>
-                </div>
-              </div>
-            </div>
+          <div class="method-step reveal reveal-delay-3">
+            <div class="method-connector" aria-hidden="true"></div>
+            <div class="method-tag">Étape 03</div>
+            <div class="method-step-num" aria-hidden="true">03</div>
+            <h3 class="method-step-title">Exécution maîtrisée</h3>
+            <p>Préparation des surfaces, application des produits adaptés, respect des règles de l'art du métier. Propreté de chantier maintenue tout au long de l'intervention.</p>
+          </div>
+
+          <div class="method-step reveal reveal-delay-4">
+            <div class="method-tag">Étape 04</div>
+            <div class="method-step-num" aria-hidden="true">04</div>
+            <h3 class="method-step-title">Contrôle & finalisation</h3>
+            <p>Vérification des finitions, reprise si nécessaire, nettoyage complet du site. Réception du chantier avec le client pour s'assurer que le résultat correspond aux attentes.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <section aria-labelledby="contact">
+    <!-- ════════════════ RÉASSURANCE ENTREPRISE ════════════════ -->
+    <section class="reassurance-bg" aria-labelledby="entreprise-title" id="entreprise">
       <div class="container">
-        <h2 id="contact" class="section-title">Contact & localisation</h2>
-        <p class="section-sub">
-        </p>
-
-        <div class="contact-grid">
-          <article class="contact-card">
-            <div class="small">Téléphone</div>
-            <h3>02 43 75 98 18</h3>
-            <p>
-              <a href="tel:0243759818">Appeler ABC Peinture Déco</a>
-            </p>
-          </article>
-
-          <article class="contact-card">
-            <div class="small">Adresse</div>
-            <h3>13-15 Rue Albert Einstein</h3>
-            <p>72650 La Chapelle-Saint-Aubin</p>
-          </article>
-
-          <article class="contact-card">
-            <div class="small">Zone mise en avant</div>
-            <h3>Le Mans & Sarthe</h3>
-            <p>Entreprise de peinture et décoration avec présence locale au Mans et à La Chapelle-Saint-Aubin.</p>
-          </article>
+        <div class="section-header">
+          <span class="label-eyebrow reveal">Entreprise</span>
+          <h2 class="section-h reveal reveal-delay-1" id="entreprise-title">Une structure solide,<br>des données vérifiables.</h2>
+          <p class="section-lead reveal reveal-delay-2">Transparence totale sur notre identité professionnelle. Toutes les informations ci-dessous sont issues des registres et annuaires officiels.</p>
         </div>
 
-        <div style="height:22px"></div>
+        <div class="reassurance-grid">
+          <div class="reas-panel reveal reveal-delay-1">
+            <div class="reas-panel-header">
+              <h3>Identité professionnelle</h3>
+            </div>
+            <div class="reas-list">
+              <div class="reas-row">
+                <div class="reas-key">Raison sociale</div>
+                <div class="reas-val">ABC Peinture Déco<span>Dénomination officielle enregistrée</span></div>
+              </div>
+              <div class="reas-row">
+                <div class="reas-key">Forme juridique</div>
+                <div class="reas-val">SARL<span>Société à Responsabilité Limitée</span></div>
+              </div>
+              <div class="reas-row">
+                <div class="reas-key">SIREN</div>
+                <div class="reas-val">793 751 249<span>Identifiant entreprise registre officiel</span></div>
+              </div>
+              <div class="reas-row">
+                <div class="reas-key">Date de création</div>
+                <div class="reas-val">Juin 2013<span>+ de 10 ans d'activité</span></div>
+              </div>
+              <div class="reas-row">
+                <div class="reas-key">Gérant</div>
+                <div class="reas-val">Antony Berge<span>Représentant légal</span></div>
+              </div>
+              <div class="reas-row">
+                <div class="reas-key">Code NAF</div>
+                <div class="reas-val">43.34Z<span>Travaux de peinture et vitrerie</span></div>
+              </div>
+              <div class="reas-row">
+                <div class="reas-key">Siège social</div>
+                <div class="reas-val">53 Avenue Bollée, Le Mans<span>72000 Le Mans</span></div>
+              </div>
+              <div class="reas-row">
+                <div class="reas-key">Établissement actif</div>
+                <div class="reas-val">13-15 Rue Albert Einstein<span>72650 La Chapelle-Saint-Aubin</span></div>
+              </div>
+            </div>
+          </div>
 
-        <div class="map-wrap" aria-label="Carte Google Maps vers ABC Peinture Déco">
-          <iframe
-            src="https://maps.google.com/maps?q=13-15%20Rue%20Albert%20Einstein%2072650%20La%20Chapelle-Saint-Aubin&z=15&output=embed"
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-            title="Carte Google Maps ABC Peinture Déco">
-          </iframe>
+          <div class="reas-right">
+            <div class="reas-highlight reveal reveal-delay-2">
+              <div class="reas-highlight-item">
+                <div class="reas-highlight-icon">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <div class="reas-highlight-text">
+                  <strong>Assurance décennale GAN</strong>
+                  <span>Couverture professionnelle active</span>
+                </div>
+              </div>
+              <div class="reas-highlight-item">
+                <div class="reas-highlight-icon">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
+                <div class="reas-highlight-text">
+                  <strong>Plus de 20 ans d'expérience métier</strong>
+                  <span>Maîtrise accumulée sur le terrain</span>
+                </div>
+              </div>
+              <div class="reas-highlight-item">
+                <div class="reas-highlight-icon">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </div>
+                <div class="reas-highlight-text">
+                  <strong>Structure identifiée & transparente</strong>
+                  <span>Gérant, SIREN et adresse vérifiables</span>
+                </div>
+              </div>
+              <div class="reas-highlight-item">
+                <div class="reas-highlight-icon">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                </div>
+                <div class="reas-highlight-text">
+                  <strong>Ancrage territorial Sarthe</strong>
+                  <span>Deux implantations au Mans et à La Chapelle-Saint-Aubin</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
+
+    <!-- ════════════════ HORAIRES ════════════════ -->
+    <section aria-labelledby="horaires-title" id="horaires">
+      <div class="container">
+        <div class="section-header">
+          <span class="label-eyebrow reveal">Disponibilités</span>
+          <h2 class="section-h reveal reveal-delay-1" id="horaires-title">Horaires d'ouverture.</h2>
+          <p class="section-lead reveal reveal-delay-2">Nous sommes disponibles du lundi au vendredi. Pour toute urgence ou demande hors horaires, n'hésitez pas à laisser un message.</p>
+        </div>
+
+        <div style="max-width:640px;">
+          <div class="hours-grid reveal reveal-delay-1">
+            <div class="hour-row">
+              <div class="hour-day">Lundi</div>
+              <div class="hour-time">09 h 00 – 12 h 00 &nbsp;/&nbsp; 13 h 00 – 16 h 00</div>
+            </div>
+            <div class="hour-row">
+              <div class="hour-day">Mardi</div>
+              <div class="hour-time">09 h 00 – 12 h 00 &nbsp;/&nbsp; 13 h 00 – 16 h 00</div>
+            </div>
+            <div class="hour-row">
+              <div class="hour-day">Mercredi</div>
+              <div class="hour-time">09 h 00 – 12 h 00</div>
+            </div>
+            <div class="hour-row">
+              <div class="hour-day">Jeudi</div>
+              <div class="hour-time">09 h 00 – 12 h 00 &nbsp;/&nbsp; 13 h 00 – 16 h 00</div>
+            </div>
+            <div class="hour-row">
+              <div class="hour-day">Vendredi</div>
+              <div class="hour-time">09 h 00 – 12 h 00 &nbsp;/&nbsp; 13 h 00 – 16 h 00</div>
+            </div>
+            <div class="hour-row">
+              <div class="hour-day">Samedi</div>
+              <div class="hour-time"><span class="hour-closed">Fermé</span></div>
+            </div>
+            <div class="hour-row">
+              <div class="hour-day">Dimanche</div>
+              <div class="hour-time"><span class="hour-closed">Fermé</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════ CONTACT ════════════════ -->
+    <section style="background:var(--ink-2); border-top:1px solid var(--line);" aria-labelledby="contact-title" id="contact">
+      <div class="container">
+        <div class="section-header">
+          <span class="label-eyebrow reveal">Contact</span>
+          <h2 class="section-h reveal reveal-delay-1" id="contact-title">Parlons de votre projet.</h2>
+          <p class="section-lead reveal reveal-delay-2">Un chantier à planifier, un devis à demander, une question sur nos prestations — nous sommes disponibles pour vous répondre.</p>
+        </div>
+
+        <div class="contact-layout">
+          <div class="contact-cards">
+            <div class="contact-card reveal reveal-delay-1">
+              <div class="contact-card-label">Téléphone</div>
+              <h3>02 43 75 98 18</h3>
+              <p><a href="tel:0243759818">Appeler ABC Peinture Déco →</a></p>
+            </div>
+
+            <div class="contact-card reveal reveal-delay-2">
+              <div class="contact-card-label">Adresse de l'établissement</div>
+              <h3>13-15 Rue Albert Einstein</h3>
+              <p>72650 La Chapelle-Saint-Aubin, Sarthe</p>
+            </div>
+
+            <div class="contact-card reveal reveal-delay-3">
+              <div class="contact-card-label">Zone d'intervention</div>
+              <h3>Le Mans & Sarthe</h3>
+              <p>Interventions sur l'ensemble de la Sarthe (département 72) et zones limitrophes.</p>
+            </div>
+
+            <div class="cta-card reveal reveal-delay-4">
+              <span class="label-eyebrow" style="margin-bottom:8px;">Devis gratuit</span>
+              <p>Décrivez votre projet à Betty, notre assistant, ou appelez-nous directement. Réponse rapide garantie.</p>
+              <a class="btn btn-gold" href="tel:0243759818">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.62 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9a16 16 0 0 0 6.09 6.09l1.96-1.94a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                Appeler maintenant
+              </a>
+              <a class="btn btn-outline" href="#" aria-label="Utiliser l'assistant devis Betty" onclick="document.querySelector('.betty-frame').scrollIntoView({behavior:'smooth'}); return false;">
+                Utiliser l'assistant Betty
+              </a>
+            </div>
+          </div>
+
+          <div class="map-container reveal reveal-delay-2">
+            <iframe
+              src="https://maps.google.com/maps?q=13-15%20Rue%20Albert%20Einstein%2072650%20La%20Chapelle-Saint-Aubin&z=15&output=embed"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              title="Localisation ABC Peinture Déco — La Chapelle-Saint-Aubin, Sarthe"
+              aria-label="Carte Google Maps montrant la localisation d'ABC Peinture Déco">
+            </iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </main>
 
-  <footer class="footer">
+  <!-- ════════════════ FOOTER ════════════════ -->
+  <footer class="footer" role="contentinfo">
     <div class="container">
-      <div class="footer-inner">
-        <div class="legal">
-          <strong>ABC Peinture Déco</strong><br>
-          Activité principale : travaux de peinture et vitrerie (NAF 43.34Z).<br>
-          Forme juridique : SARL.<br>
-          SIREN : 793 751 249.<br>
-          Gérant : Antony Berge.<br>
-          Adresse: 13-15 Rue Albert Einstein, 72650 La Chapelle-Saint-Aubin.<br>
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <span class="abc">ABC</span> Peinture Déco
+          </div>
+          <p class="footer-desc">Entreprise de peinture et vitrerie professionnelle au Mans et en Sarthe. Locaux professionnels, espaces commerciaux et chantiers résidentiels depuis 2013.</p>
         </div>
 
-        <div class="footer-note">
+        <div class="footer-col">
+          <h4>Prestations</h4>
+          <ul>
+            <li><a href="#services">Peinture intérieure</a></li>
+            <li><a href="#services">Peinture extérieure</a></li>
+            <li><a href="#services">Rénovation de locaux</a></li>
+            <li><a href="#services">Revêtements sols et murs</a></li>
+            <li><a href="#services">Plâtrerie</a></li>
+            <li><a href="#services">Vitrerie</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Informations</h4>
+          <ul>
+            <li><a href="#entreprise">L'entreprise</a></li>
+            <li><a href="#methode">Notre méthode</a></li>
+            <li><a href="#horaires">Horaires</a></li>
+            <li><a href="#contact">Contact & localisation</a></li>
+            <li><a href="tel:0243759818">02 43 75 98 18</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="footer-legal">
+          <strong style="color:var(--text);">ABC Peinture Déco</strong> — SARL · SIREN 793 751 249 · Gérant : Antony Berge<br>
+          13-15 Rue Albert Einstein, 72650 La Chapelle-Saint-Aubin · Activité : Travaux de peinture et vitrerie (NAF 43.34Z)<br>
+          Assurance décennale GAN
+        </div>
+        <div class="footer-siren">
+          Peintre professionnel au Mans & Sarthe<br>
+          Entreprise de peinture 72 · Devis gratuit
         </div>
       </div>
     </div>
   </footer>
+
+  <script>
+    // ─── SCROLL REVEAL ───
+    const revealEls = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -48px 0px' });
+
+    revealEls.forEach(el => io.observe(el));
+
+    // ─── TOPBAR BORDER ON SCROLL ───
+    const topbar = document.querySelector('.topbar');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 10) {
+        topbar.style.borderBottomColor = 'rgba(255,255,255,.1)';
+      } else {
+        topbar.style.borderBottomColor = 'rgba(255,255,255,.07)';
+      }
+    }, { passive: true });
+  </script>
+
 </body>
 </html>
