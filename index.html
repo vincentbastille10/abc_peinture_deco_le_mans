@@ -192,7 +192,7 @@
     .btn {
       display: inline-flex;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
       gap: 8px;
       height: 44px;
       padding: 0 22px;
@@ -248,44 +248,81 @@
 
     /* ─── HERO ─── */
     .hero {
-      height: 100vh;
+      position: relative;
+      min-height: 200vh;
       width: 100%;
-      background-color: #0b1220;
+      overflow: clip;
+    }
+
+    .hero-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
+      background-color: #09111f;
     }
 
-    .hero-img {
+    .hero-bg img {
       width: 100%;
       height: 100%;
       max-width: 100vw;
       max-height: 100vh;
       object-fit: contain;
       object-position: center;
+      background-color: #09111f;
       display: block;
     }
 
+    .hero-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background:
+        linear-gradient(to bottom,
+        rgba(9,17,31,0.2),
+        rgba(9,17,31,0.4),
+        rgba(9,17,31,0.85)
+      );
+    }
+
     .hero-content-section {
-      padding-top: 80px;
-      background: #09111f;
+      min-height: 100vh;
+      padding-top: calc(var(--topbar-offset) + 44px);
+      padding-bottom: 52px;
+      display: flex;
+      align-items: flex-end;
+      position: relative;
+      z-index: 2;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+
+    .hero-content-section.is-visible {
+      opacity: 1;
+      transform: none;
     }
 
     .hero-content-inner {
       width: min(var(--max), calc(100% - 48px));
       margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      display: grid;
+      grid-template-columns: minmax(0,1fr) minmax(320px,420px);
+      align-items: end;
       gap: 28px;
     }
 
     .hero-text-block {
       display: flex;
       flex-direction: column;
-      align-items: center;
+      align-items: flex-start;
+      justify-content: flex-end;
     }
 
     .hero-badge {
@@ -337,7 +374,7 @@
       letter-spacing: -.04em;
       margin-bottom: 24px;
       text-wrap: balance;
-      text-align: center;
+      text-align: left;
       text-shadow:
         0 0 3px rgba(0,0,0,1),
         0 0 6px rgba(0,0,0,0.9),
@@ -356,19 +393,19 @@
       max-width: 700px;
       margin-bottom: 36px;
       font-weight: 300;
-      text-align: center;
+      text-align: left;
     }
 
     .hero-ctas {
       display: flex;
       gap: 12px;
       flex-wrap: wrap;
-      justify-content: center;
+      justify-content: flex-start;
     }
 
     /* ─── HERO BETTY CARD ─── */
     .hero-betty {
-      margin-top: 20px;
+      margin-top: 40px;
       width: 100%;
       max-width: 420px;
       background: rgba(13,25,41,.88);
@@ -414,6 +451,28 @@
       height: 480px;
       border: none;
       background: transparent;
+    }
+
+    .scroll-indicator {
+      position: fixed;
+      left: 50%;
+      bottom: 20px;
+      transform: translateX(-50%);
+      z-index: 2;
+      font-size: 30px;
+      line-height: 1;
+      color: rgba(238,240,245,.82);
+      text-shadow: 0 8px 18px rgba(0,0,0,.45);
+      pointer-events: none;
+      animation: scroll-bounce 1.8s ease-in-out infinite;
+      transition: opacity .3s ease;
+    }
+
+    .scroll-indicator.is-hidden { opacity: 0; }
+
+    @keyframes scroll-bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(8px); }
     }
 
     /* ─── TRUST STRIP ─── */
@@ -1146,9 +1205,19 @@
       .topbar-nav { display: none; }
       .topbar-inner { height: auto; padding: 14px 0; flex-wrap: wrap; }
       .topbar-actions { flex-wrap: wrap; gap: 8px; }
-      .hero { height: 100vh; }
-      .hero-content-inner { gap: 32px; }
-      .hero-betty { max-width: 100%; }
+      .hero { min-height: 210vh; }
+      .hero-content-section {
+        padding-top: calc(var(--topbar-offset) + 24px);
+        align-items: flex-end;
+      }
+      .hero-content-inner {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+      .hero-betty {
+        max-width: 100%;
+        margin-top: 40px;
+      }
       .betty-frame { height: 420px; }
       .trust-items { flex-direction: column; gap: 0; }
       .trust-item { width: 100%; border-right: none; border-bottom: 1px solid var(--line); }
@@ -1164,8 +1233,16 @@
     }
 
     @media (max-width: 520px) {
+      .hero-content-section {
+        min-height: 100vh;
+        padding-bottom: 36px;
+      }
       .hero-ctas { flex-direction: column; }
       .hero-ctas .btn { width: 100%; justify-content: center; }
+      .hero-betty {
+        margin-top: 40px;
+        width: 100%;
+      }
       .market-logos-grid { grid-template-columns: repeat(2, 1fr); }
       .reas-key { flex: 0 0 130px; }
     }
@@ -1252,12 +1329,15 @@
 
     <!-- ════════════════ HERO ════════════════ -->
     <section class="hero" aria-label="Logo ABC Peinture Déco en plein écran">
-      <img src="/static/abc_gris2.webp" alt="ABC Peinture Déco" class="hero-img">
-    </section>
+      <div class="hero-bg">
+        <img src="/static/abc_gris2.webp" alt="ABC Peinture Déco" class="hero-img">
+      </div>
+      <div class="hero-overlay" aria-hidden="true"></div>
+      <div class="scroll-indicator" aria-hidden="true">↓</div>
 
-    <section class="hero-content-section" aria-labelledby="hero-headline">
-      <div class="hero-content-inner">
-        <div class="hero-text-block">
+      <div class="hero-content-section" aria-labelledby="hero-headline">
+        <div class="hero-content-inner">
+          <div class="hero-text-block">
           <div class="hero-badge reveal">
             <div class="hero-badge-dot" aria-hidden="true"></div>
             <span class="hero-badge-text">Peinture professionnelle · Sarthe · 72</span>
@@ -1294,6 +1374,7 @@
             title="Betty, assistant devis ABC Peinture Déco"
             loading="lazy">
           </iframe>
+        </div>
         </div>
       </div>
     </section>
@@ -1813,6 +1894,29 @@
     }, { threshold: 0.08, rootMargin: '0px 0px -48px 0px' });
 
     revealEls.forEach(el => io.observe(el));
+
+    // ─── HERO CONTENT FADE-IN ON SCROLL ───
+    const heroContent = document.querySelector('.hero-content-section');
+    const scrollIndicator = document.querySelector('.scroll-indicator');
+
+    const updateHeroState = () => {
+      const revealStart = Math.max(window.innerHeight * 0.18, 120);
+      if (window.scrollY > revealStart) {
+        heroContent?.classList.add('is-visible');
+      } else {
+        heroContent?.classList.remove('is-visible');
+      }
+
+      if (window.scrollY > 80) {
+        scrollIndicator?.classList.add('is-hidden');
+      } else {
+        scrollIndicator?.classList.remove('is-hidden');
+      }
+    };
+
+    updateHeroState();
+    window.addEventListener('scroll', updateHeroState, { passive: true });
+    window.addEventListener('resize', updateHeroState);
 
     // ─── TOPBAR BORDER ON SCROLL ───
     const topbar = document.querySelector('.topbar');
