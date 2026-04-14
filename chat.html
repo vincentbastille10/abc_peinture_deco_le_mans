@@ -1,258 +1,176 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Betty — Assistant devis peinture</title>
+  <meta charset="UTF-8">
+  <title>Betty — ABC Peinture Déco</title>
+
   <style>
-    :root {
-      --bg: #0f172a;
-      --panel: #111827;
-      --panel-2: #1f2937;
-      --border: #374151;
-      --text: #f3f4f6;
-      --muted: #cbd5e1;
-      --accent: #2563eb;
-      --accent-hover: #1d4ed8;
-    }
-
-    * { box-sizing: border-box; }
-
     body {
       margin: 0;
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background: linear-gradient(180deg, #0b1220 0%, #111827 100%);
-      color: var(--text);
-      min-height: 100vh;
-      padding: 16px;
-    }
-
-    .chat-shell {
-      max-width: 900px;
-      margin: 0 auto;
-      height: calc(100vh - 32px);
-      background: rgba(17, 24, 39, 0.94);
-      border: 1px solid rgba(148, 163, 184, 0.2);
-      border-radius: 16px;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.35);
-    }
-
-    .chat-header {
-      display: flex;
-      gap: 14px;
-      align-items: center;
-      padding: 14px 16px;
-      border-bottom: 1px solid var(--border);
-      background: rgba(2, 6, 23, 0.6);
-    }
-
-    .chat-header img {
-      width: 56px;
-      height: 56px;
-      border-radius: 12px;
-      object-fit: cover;
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      font-family: 'DM Sans', sans-serif;
       background: #0b1220;
+      color: white;
     }
 
-    .chat-header h1 {
-      margin: 0;
-      font-size: 18px;
-      font-weight: 700;
-    }
-
-    .chat-header p {
-      margin: 4px 0 0;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    #messages {
-      flex: 1;
-      overflow-y: auto;
-      padding: 16px;
+    .chat-container {
       display: flex;
       flex-direction: column;
+      height: 100vh;
+    }
+
+    .header {
+      background: linear-gradient(90deg, #2d5bff, #3b82f6);
+      padding: 16px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
       gap: 10px;
-      background: linear-gradient(180deg, rgba(15, 23, 42, 0.8) 0%, rgba(17, 24, 39, 0.7) 100%);
+    }
+
+    .header img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .messages {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
     }
 
     .msg {
-      max-width: min(92%, 680px);
-      padding: 10px 12px;
-      border-radius: 10px;
-      line-height: 1.5;
-      white-space: normal;
-      word-break: break-word;
-      font-size: 15px;
+      margin-bottom: 15px;
+      max-width: 80%;
+      padding: 12px 16px;
+      border-radius: 12px;
+      line-height: 1.4;
     }
 
-    .msg.user {
+    .bot {
+      background: #111827;
+      border: 1px solid #1f2937;
+    }
+
+    .user {
+      background: #2d5bff;
       align-self: flex-end;
-      background: #1d4ed8;
-      color: #fff;
     }
 
-    .msg.bot {
-      align-self: flex-start;
-      background: #0b1220;
-      border: 1px solid rgba(148, 163, 184, 0.25);
-      color: #e5e7eb;
-    }
-
-    .msg a {
-      color: #93c5fd;
-      text-decoration: underline;
-      text-underline-offset: 2px;
-    }
-
-    .chat-input {
+    .input-box {
       display: flex;
-      gap: 8px;
-      padding: 12px;
-      border-top: 1px solid var(--border);
-      background: rgba(2, 6, 23, 0.6);
+      padding: 15px;
+      border-top: 1px solid #1f2937;
     }
 
-    .chat-input input {
+    input {
       flex: 1;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: #0b1220;
-      color: var(--text);
       padding: 12px;
-      font-size: 15px;
-    }
-
-    .chat-input button {
+      border-radius: 8px;
       border: none;
-      border-radius: 10px;
-      background: var(--accent);
-      color: #fff;
-      padding: 0 18px;
-      font-weight: 600;
-      cursor: pointer;
+      outline: none;
+      font-size: 14px;
     }
 
-    .chat-input button:hover { background: var(--accent-hover); }
+    button {
+      margin-left: 10px;
+      padding: 12px 18px;
+      background: #2d5bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: #1e40af;
+    }
   </style>
 </head>
+
 <body>
-  <main class="chat-shell">
-    <header class="chat-header">
-      <img src="/static/neutre_femme2.webp" alt="Avatar de Betty" />
-      <div>
-        <h1>Betty — ABC Peinture Déco</h1>
-        <p>Posez votre question, je vous aide à préparer votre demande de devis.</p>
-      </div>
-    </header>
 
-    <section id="messages" aria-live="polite"></section>
+<div class="chat-container">
 
-    <form id="chat-form" class="chat-input">
-      <input id="input" type="text" placeholder="Ex. Je veux repeindre mon salon à Le Mans" autocomplete="off" required />
-      <button id="send" type="submit">Envoyer</button>
-    </form>
-  </main>
+  <div class="header">
+    <img src="/static/avatar.jpg" alt="Betty">
+    Betty — Devis peinture rapide
+  </div>
 
-  <script>
-    const apiUrl = "/api/chat";
-    const messagesEl = document.getElementById("messages");
-    const inputEl = document.getElementById("input");
-    const formEl = document.getElementById("chat-form");
-    const history = [];
+  <div class="messages" id="messages"></div>
 
-    const sanitize = (unsafe) => {
-      const tpl = document.createElement("template");
-      tpl.innerHTML = unsafe;
+  <div class="input-box">
+    <input id="input" placeholder="Ex : Je veux repeindre mon salon">
+    <button onclick="sendMessage()">Envoyer</button>
+  </div>
 
-      const allowedTags = new Set(["A", "BR", "STRONG", "EM", "UL", "OL", "LI", "P"]);
-      const walk = (node) => {
-        [...node.children].forEach((child) => {
-          if (!allowedTags.has(child.tagName)) {
-            child.replaceWith(document.createTextNode(child.textContent || ""));
-            return;
-          }
-          if (child.tagName === "A") {
-            child.setAttribute("target", "_blank");
-            child.setAttribute("rel", "noopener noreferrer");
-            const href = child.getAttribute("href") || "";
-            if (!/^https?:\/\//i.test(href) && !href.startsWith("mailto:") && !href.startsWith("tel:")) {
-              child.removeAttribute("href");
-            }
-          }
-          walk(child);
-        });
-      };
+</div>
 
-      walk(tpl.content);
-      return tpl.innerHTML;
-    };
+<script>
+  const messages = document.getElementById("messages");
 
-    const linkify = (text) => text
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/\n/g, "<br>")
-      .replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
+  function addMessage(text, type) {
+    const div = document.createElement("div");
+    div.className = "msg " + type;
 
-    function addMessage(content, role) {
-      const msg = document.createElement("div");
-      msg.className = `msg ${role}`;
-      msg.innerHTML = sanitize(linkify(content));
-      messagesEl.appendChild(msg);
-      messagesEl.scrollTop = messagesEl.scrollHeight;
-    }
+    // Rend les liens cliquables
+    div.innerHTML = text.replace(
+      /(https?:\/\/[^\s]+)/g,
+      '<a href="$1" target="_blank" style="color:#60a5fa">$1</a>'
+    );
 
-    async function sendMessage() {
-      const message = inputEl.value.trim();
-      if (!message) return;
+    messages.appendChild(div);
+    messages.scrollTop = messages.scrollHeight;
+  }
 
-      addMessage(message, "user");
-      history.push({ role: "user", content: message });
-      inputEl.value = "";
+  function addUserMessage(text) {
+    addMessage(text, "user");
+  }
 
-      const waitId = `wait-${Date.now()}`;
-      const waiting = document.createElement("div");
-      waiting.className = "msg bot";
-      waiting.id = waitId;
-      waiting.textContent = "Betty réfléchit…";
-      messagesEl.appendChild(waiting);
-      messagesEl.scrollTop = messagesEl.scrollHeight;
+  function addBotMessage(text) {
+    addMessage(text, "bot");
+  }
 
-      try {
-        const response = await fetch(apiUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message, history })
-        });
+  async function sendMessage() {
+    const input = document.getElementById("input");
+    const message = input.value.trim();
 
-        const data = await response.json();
-        waiting.remove();
+    if (!message) return;
 
-        if (!response.ok) {
-          throw new Error(data.error || "Erreur serveur");
-        }
+    addUserMessage(message);
+    input.value = "";
 
-        const botText = data.response || "Je suis disponible pour vous aider à préparer votre devis.";
-        addMessage(botText, "bot");
-        history.push({ role: "assistant", content: botText });
-      } catch (error) {
-        waiting.remove();
-        addMessage("Un souci technique est survenu. Réessayez dans quelques secondes.", "bot");
-        console.error(error);
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message })
+      });
+
+      if (!res.ok) {
+        throw new Error("Erreur API");
       }
+
+      const data = await res.json();
+
+      if (data.response) {
+        addBotMessage(data.response);
+      } else {
+        addBotMessage("Réponse vide.");
+      }
+
+    } catch (err) {
+      console.error(err);
+      addBotMessage("Un souci technique est survenu. Réessayez dans quelques secondes.");
     }
+  }
 
-    formEl.addEventListener("submit", (event) => {
-      event.preventDefault();
-      sendMessage();
-    });
+  // Message initial
+  addBotMessage("Bonjour, je suis Betty. Je peux vous aider à qualifier votre projet peinture et préparer un devis.");
 
-    addMessage("Bonjour, je suis Betty. Je peux vous aider à qualifier votre projet peinture et préparer un devis.", "bot");
-  </script>
+</script>
+
 </body>
 </html>
