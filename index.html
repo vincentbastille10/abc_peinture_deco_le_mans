@@ -252,14 +252,14 @@
       min-height: 200vh;
       width: 100%;
       overflow: clip;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .hero-bg {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      position: absolute;
+      inset: 0;
       z-index: 0;
       display: flex;
       align-items: center;
@@ -270,8 +270,6 @@
     .hero-bg img {
       width: 100%;
       height: 100%;
-      max-width: 100vw;
-      max-height: 100vh;
       object-fit: contain;
       object-position: center;
       background-color: #09111f;
@@ -279,16 +277,15 @@
     }
 
     .hero-overlay {
-      position: fixed;
+      position: absolute;
       inset: 0;
       z-index: 1;
       pointer-events: none;
       background:
         linear-gradient(to bottom,
-        rgba(9,17,31,0.2),
-        rgba(9,17,31,0.4),
-        rgba(9,17,31,0.85)
-      );
+          rgba(9,17,31,.2) 0%,
+          rgba(9,17,31,.4) 60%,
+          rgba(9,17,31,.85) 100%);
     }
 
     .hero-content-section {
@@ -309,12 +306,13 @@
       transform: none;
     }
 
-    .hero-content-inner {
+    .hero-content-inner,
+    .hero-inner {
       width: min(var(--max), calc(100% - 48px));
       margin: 0 auto;
       display: grid;
       grid-template-columns: minmax(0,1fr) minmax(320px,420px);
-      align-items: end;
+      align-items: center;
       gap: 28px;
     }
 
@@ -1191,6 +1189,9 @@
 
     /* ─── RESPONSIVE ─── */
     @media (max-width: 1100px) {
+      .hero-content-inner,
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero-betty { margin-top: 30px; }
       .positioning-grid { grid-template-columns: 1fr; gap: 40px; }
       .market-intro { grid-template-columns: 1fr; }
       .services-grid { grid-template-columns: repeat(2, 1fr); }
@@ -1336,7 +1337,7 @@
       <div class="scroll-indicator" aria-hidden="true">↓</div>
 
       <div class="hero-content-section" aria-labelledby="hero-headline">
-        <div class="hero-content-inner">
+        <div class="hero-content-inner hero-inner">
           <div class="hero-text-block">
           <div class="hero-badge reveal">
             <div class="hero-badge-dot" aria-hidden="true"></div>
