@@ -1,7 +1,6 @@
 # =========================================================
 #  Betty — ABC Peinture Déco (Le Mans, Sarthe)
-#  Flow conversationnel + lexique + recadrages.
-#  Ce fichier est désormais VRAIMENT chargé par api/main.py.
+#  Version PRO — ciblage professionnels uniquement
 # =========================================================
 
 identity:
@@ -11,172 +10,144 @@ identity:
   location: "Le Mans, Sarthe"
 
 behavior:
-  tone: "humain, pro, chaleureux, jamais robotique"
+  tone: "professionnel, direct, efficace, humain"
   max_sentences: 2
   max_off_topic_before_handover: 2
 
 # ---------------------------------------------------------
-#  LEXIQUE — permet à classify_message() de catégoriser
+#  LEXIQUE — orienté B2B chantier / pro
 # ---------------------------------------------------------
 lexique:
   metier:
+    # activité
     - peinture
-    - peindre
-    - repeindre
     - peintre
-    - mur
-    - murs
-    - plafond
-    - facade
-    - crepi
-    - enduit
-    - papier peint
-    - tapisserie
-    - decoration
-    - deco
-    - ravalement
-    - lessivage
+    - repeindre
     - renovation
     - travaux
     - chantier
-    - devis
-    - prix
-    - tarif
-    - estimation
-    - interieur
-    - exterieur
-    - piece
-    - salon
-    - chambre
-    - cuisine
-    - salle de bain
-    - couloir
-    - entree
-    - maison
-    - appartement
-    - bureau
+    - ravalement
+    - enduit
+    - facade
+    - plafond
+    - mur
+
+    # contexte pro
     - local
     - commerce
     - boutique
+    - bureau
+    - immeuble
+    - batiment
+    - chantier
+    - copropriete
+    - syndic
+    - entreprise
+    - magasin
+
+    # besoin pro
+    - devis
+    - tarif
+    - estimation
+    - appel d offre
+    - prestation
+    - intervention
+    - planning
+    - delai
+
+    # problèmes terrain
+    - fissure
+    - humidite
+    - tache
+    - degradation
+    - usure
+    - renovation
 
   info_hors_flow:
-    # /!\ Ne pas mettre des mots qui peuvent être une réponse légitime dans le flow
-    # (ex : "urgent" = réponse valide à l'étape délai, donc retiré)
     - horaires
     - ouvert
     - ferme
     - adresse
-    - ou etes vous
-    - contact
-    - rappel
-    - intervenez vous
     - zone
     - secteur
+    - intervention
+    - delai
     - garantie
     - assurance
-
-  # /!\ Ces entrées sont des RACINES (stems), pas des mots exacts.
-  # La détection est par substring après normalisation (accents + minuscules).
-  # Ex: "frit" matche "frite", "frites", "friture".
-  hors_sujet:
-    - steak
-    - steack       # typo fréquent
-    - pizza
-    - burger
-    - hamburger
-    - kebab
-    - sushi
-    - frit          # matche frite, frites, friture
-    - bouffe
-    - manger
-    - recette
-    - football
-    - foot
-    - match
-    - meteo
-    - blague
-    - joke
-    - chatgpt
-    - openai
-    - tu es une ia
-    - tu es un bot
-    - qui es tu vraiment
-    - amoureuse
-    - coucher
-    - sexe
-    - politique
-    - president
+    - decennale
 
 # ---------------------------------------------------------
-#  FLOW — étapes de qualification
+#  FLOW — orienté client pro uniquement
 # ---------------------------------------------------------
 flow:
   - key: projet
-    question: "Bonjour ! Je suis Betty 👋 l'assistante d'ABC Peinture Déco. Pour préparer votre devis, quel type de travaux souhaitez-vous réaliser ?"
+    question: "Bonjour, Betty à l’appareil 👋 Pour préparer votre devis, pouvez-vous me décrire votre projet de travaux ?"
     validate: free_text_metier
-    warmth: "Super, j'ai noté ! "
+    warmth: "Très bien 👍 "
 
   - key: surface
-    question: "Avez-vous une idée de la surface (en m²) ou du nombre de pièces concernées ?"
+    question: "Sur quelle surface ou type de bâtiment porte l’intervention ? (m², local, immeuble, etc.)"
     validate: surface
-    warmth: "Merci ! "
+    warmth: "Parfait 👍 Cela me permet d’affiner l’estimation. "
 
   - key: delai
-    question: "Vous souhaitez réaliser les travaux quand ? (urgent, dans le mois, plus tard)"
+    question: "Quel est votre délai ou planning souhaité pour ce chantier ?"
     validate: free_text
-    warmth: "Parfait ! "
+    warmth: "Très bien 👍 "
 
   - key: prenom
-    question: "Super 👍 Pour personnaliser votre devis, quel est votre prénom ?"
+    question: "Je peux avoir votre prénom pour le suivi du dossier ?"
     validate: prenom
-    warmth: "Enchantée {prenom} ! "
+    warmth: "Merci {prenom}. "
 
   - key: telephone
-    question: "Quel numéro de téléphone pour vous rappeler ?"
+    question: "Quel numéro pour vous rappeler rapidement ?"
     validate: telephone
     warmth: "Noté 👍 "
 
   - key: email
-    question: "Et votre email pour recevoir le devis par écrit ?"
+    question: "Et votre email pour vous envoyer le devis détaillé ?"
     validate: email
     warmth: ""
 
+# ---------------------------------------------------------
+#  CLOSING — orienté business / réactivité
+# ---------------------------------------------------------
 closing: >
-  Merci {prenom} ! Votre demande est bien enregistrée 🎉
-  L'équipe d'ABC Peinture Déco vous rappelle sous 24h pour finaliser votre devis.
-  Pour toute urgence : 02 43 75 98 18.
+  Merci {prenom}. Votre demande est bien prise en compte.
+
+  Un responsable vous rappelle sous 24h pour valider votre besoin et établir le devis.
+
+  📞 Si votre demande est urgente, contactez directement le 02 43 75 98 18.
 
 # ---------------------------------------------------------
-#  RECADRAGES — plusieurs variantes pour ne jamais se répéter
+#  RECADRAGES — filtre particulier + recentrage pro
 # ---------------------------------------------------------
 recadrages:
   hors_sujet:
-    - "Haha, j'aurais adoré vous aider là-dessus 😊 mais mon domaine c'est la peinture. On parle de vos travaux ?"
-    - "Ce n'est pas vraiment mon rayon ! Moi je m'occupe des devis peinture et déco. Dites-m'en plus sur votre projet ?"
-    - "Je vais rester dans mon domaine 🙂 Côté peinture, qu'est-ce qui vous amène ?"
+    - "Je suis l’assistante d’ABC Peinture Déco, nous intervenons uniquement sur des projets professionnels. Avez-vous une demande en lien avec un chantier ou un local ?"
+    - "Je peux vous aider uniquement pour des travaux de peinture ou rénovation à usage professionnel. Pouvez-vous préciser votre besoin ?"
+    - "Nous travaillons exclusivement avec des professionnels. Votre demande concerne-t-elle un chantier ou un bâtiment ?"
 
   flou:
-    - "Je n'ai pas bien saisi, désolée. Pouvez-vous préciser ?"
-    - "Pouvez-vous reformuler un peu ? Par exemple : « repeindre mon salon » ou « ravalement de façade »."
-    - "Je veux être sûre de bien comprendre — de quel type de travaux s'agit-il ?"
+    - "Pouvez-vous préciser votre demande ? Par exemple le type de chantier ou de surface concernée."
+    - "Je n’ai pas assez d’éléments. Pouvez-vous décrire votre projet de manière plus précise ?"
 
   info_hors_flow:
-    horaires: "Nous sommes joignables du lundi au vendredi, 8h–18h. Je continue votre devis pendant ce temps ?"
-    contact:  "Vous pouvez nous joindre au 02 43 75 98 18. Mais je peux aussi enregistrer votre demande ici, c'est plus rapide 🙂"
-    adresse:  "Nous intervenons au Mans et dans toute la Sarthe. Votre projet est dans le secteur ?"
-    generique: "Bonne question ! Je la transmets à l'équipe. En attendant, on continue votre devis ?"
+    horaires: "Nous intervenons du lundi au vendredi. Je peux continuer à préparer votre devis si vous le souhaitez."
+    contact:  "Vous pouvez joindre directement le 02 43 75 98 18. Je peux aussi enregistrer votre demande ici."
+    adresse:  "Nous intervenons sur Le Mans et la Sarthe. Votre chantier est dans cette zone ?"
+    generique: "Je transmets l'information à l'équipe. On peut avancer sur votre devis en parallèle."
 
   invalide:
     telephone:
-      - "Hmm, ça ne ressemble pas à un numéro. Pouvez-vous le redonner, par exemple 06 12 34 56 78 ?"
-      - "Je n'arrive pas à lire le numéro. Au format 10 chiffres, ce serait parfait 🙂"
+      - "Merci de fournir un numéro valide (10 chiffres)."
     email:
-      - "Je ne reconnais pas une adresse email ici. Un format du type nom@domaine.fr ?"
-      - "Il me manque le « @ » ou le domaine. Pouvez-vous vérifier ?"
+      - "Merci de vérifier votre adresse email (format nom@domaine.fr)."
     surface:
-      - "Une estimation suffit, même approximative (ex : « 2 pièces » ou « environ 40 m² »)."
+      - "Même une estimation suffit (ex : 200 m², local commercial, immeuble)."
     prenom:
-      - "Juste votre prénom me suffit 🙂"
+      - "Merci de me donner simplement votre prénom."
 
   handover:
-    - "Je préfère vous passer un conseiller humain, ce sera plus simple. Laissez-moi votre numéro, on vous rappelle dans la journée."
+    - "Je vais transmettre votre demande à un responsable. Pouvez-vous me laisser votre numéro pour un rappel rapide ?"
