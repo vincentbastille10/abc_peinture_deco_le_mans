@@ -60,6 +60,8 @@ lexique:
     - boutique
 
   info_hors_flow:
+    # /!\ Ne pas mettre des mots qui peuvent être une réponse légitime dans le flow
+    # (ex : "urgent" = réponse valide à l'étape délai, donc retiré)
     - horaires
     - ouvert
     - ferme
@@ -67,20 +69,26 @@ lexique:
     - ou etes vous
     - contact
     - rappel
-    - urgent
     - intervenez vous
     - zone
     - secteur
     - garantie
     - assurance
-    - combien de temps
-    - quand
 
+  # /!\ Ces entrées sont des RACINES (stems), pas des mots exacts.
+  # La détection est par substring après normalisation (accents + minuscules).
+  # Ex: "frit" matche "frite", "frites", "friture".
   hors_sujet:
     - steak
+    - steack       # typo fréquent
     - pizza
     - burger
-    - frites
+    - hamburger
+    - kebab
+    - sushi
+    - frit          # matche frite, frites, friture
+    - bouffe
+    - manger
     - recette
     - football
     - foot
@@ -96,6 +104,8 @@ lexique:
     - amoureuse
     - coucher
     - sexe
+    - politique
+    - president
 
 # ---------------------------------------------------------
 #  FLOW — étapes de qualification
