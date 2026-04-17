@@ -169,6 +169,11 @@ def classify_message(msg: str, step_idx: int) -> str:
     step      = FLOW[step_idx]
     validator = VALIDATORS.get(step.get("validate", "free_text"), validate_free_text)
 
+    # 🧠 1. check sens métier AVANT validation
+    if not contains_any(msg, LEX["metier"]):
+        return "hors_sujet"
+
+    # 🧠 2. ensuite seulement validation
     if validator(msg):
         return "pertinent"
 
