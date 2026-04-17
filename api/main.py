@@ -309,21 +309,14 @@ def _reset_session():
 
 
 def handle_message(user_id, message):
-    s = sessions.setdefault(user_id, _reset_session())
-
-    # ===== RESET explicite : user dit "bonjour" / "reset" =====
-    # Évite les sessions fantômes qui piègent l'utilisateur à une étape avancée.
-     
     n = normalize(message)
 
-    # 🔥 RESET ROBUSTE
+    # ===== RESET explicite : user dit "bonjour" / "reset" =====
     if any(n.startswith(g) for g in GREETINGS) or n in {"reset", "recommencer", "restart"}:
-    
-       # reset session
-       sessions[user_id] = _reset_session()
+        sessions[user_id] = _reset_session()
+        return get_question(0, {})
 
-       # 🔥 CRITIQUE : STOP ICI
-       return get_question(0, {})
+    s = sessions.setdefault(user_id, _reset_session())
 
     # ===== FIN DE FLOW : on est en mode libre =====
     if s["qualified"]:
