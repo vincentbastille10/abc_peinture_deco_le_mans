@@ -1,21 +1,15 @@
 """
 Betty — ABC Peinture Déco
-Backend Vercel serverless — VERSION CONVERSION (refonte agressive)
+Backend Vercel serverless — VERSION CONVERSION FINALE
+(flow court + short-circuit téléphone + intégration site_memory.json)
 
 Objectif unique : capturer prénom + téléphone + projet en 3 messages max.
 
-Changements majeurs vs version précédente :
-  - Flow raccourci : projet → prénom → téléphone → (bonus surface/délai)
-  - Email SUPPRIMÉ du flow obligatoire
-  - Short-circuit : si un numéro de téléphone est détecté à n'importe quel
-    moment du flow, on le capture et on saute directement à l'étape suivante
-    (ou on clôture si c'était la dernière brique manquante)
-  - Classification plus tolérante : on n'enferme plus le user dans "hors_sujet"
-    dès qu'il sort du lexique. On accepte la réponse et on qualifie plus tard.
-  - Recadrages doux, variés, orientés "rappel rapide"
-  - Particuliers acceptés (le bot ne filtre plus)
-  - Détection d'intention "devis rapide" → raccourci téléphone immédiat
-  - Tolérance fautes renforcée (seuil 0.80 + variantes clavier)
+Structure de repo attendue :
+  repo_root/
+    api/main.py            ← ce fichier
+    betty_btp_abc.yaml
+    site_memory.json
 """
 import os
 import re
@@ -46,6 +40,21 @@ MAX_OFFTOPIC = CFG["behavior"].get("max_off_topic_before_handover", 3)
 COMPANY_PHONE = CFG["identity"].get("phone", "02 43 75 98 18")
 
 FLOW_KEYS = [step["key"] for step in FLOW]
+
+# ---------------------------------------------------------
+#  CHARGEMENT DE LA MÉMOIRE SITE (site_memory.json)
+# ---------------------------------------------------------
+SITE_MEMORY_PATH = ROOT / "site_memory.json"
+try:
+    with open(SITE_MEMORY_PATH, "r", encoding="utf-8") as _f:
+        SITE_MEM = json.load(_f)
+except Exception:
+    SITE_MEM = {}
+
+SITE_INTENTS    = SITE_MEM.get("intent_map", {})
+SITE_RESPONSES  = SITE_MEM.get("responses", {})
+SITE_FALLBACK   = SITE_RESPONSES.get("fallback", ["Je regarde ça 👍"])
+SITE_CONVERSION = SITE_MEM.get("conversion", {})
 
 # ---------------------------------------------------------
 #  CONFIG LLM (Together AI) — fallback uniquement
@@ -93,7 +102,7 @@ def normalize(txt: str) -> str:
 
 
 def fuzzy_in(token: str, keyword: str) -> bool:
-    """Match tolérant aux fautes de frappe (AZERTY / doigts gros)."""
+    """Match tolérant aux fautes de frappe."""
     token = normalize(token)
     keyword = normalize(keyword)
     if not token or not keyword:
@@ -101,12 +110,10 @@ def fuzzy_in(token: str, keyword: str) -> bool:
     if token == keyword:
         return True
     if keyword in token or token in keyword:
-        # substring tolérée seulement si le mot court a >= 4 lettres
         if min(len(token), len(keyword)) >= 4:
             return True
     if abs(len(token) - len(keyword)) <= 2:
         ratio = SequenceMatcher(None, token, keyword).ratio()
-        # 🔥 seuil abaissé à 0.80 → plus tolérant
         if ratio >= 0.80:
             return True
     return False
@@ -119,7 +126,6 @@ def contains_any(txt: str, keywords) -> bool:
         for kw in keywords:
             if fuzzy_in(token, kw):
                 return True
-    # recherche aussi en bigrammes ("appel offre", "des que possible"...)
     joined = " " + n + " "
     for kw in keywords:
         nkw = " " + normalize(kw) + " "
@@ -138,10 +144,7 @@ def pick(variants):
 
 def is_greeting(msg: str) -> bool:
     n = normalize(msg).rstrip("!.,?").strip()
-    if n in GREETINGS:
-        return True
-    # "bonjour je voudrais un devis" → greeting + payload, pas un reset
-    return False
+    return n in GREETINGS
 
 
 def is_skip(msg: str) -> bool:
@@ -163,22 +166,18 @@ PHONE_RE = re.compile(
 
 def extract_phone(msg: str):
     """Extrait un numéro FR depuis n'importe quel texte."""
-    # simplifie : cherche 9-13 chiffres consécutifs (avec séparateurs)
     candidate = re.sub(r"[^\d+]", "", msg)
-    # retire indicatif international
     if candidate.startswith("+33"):
         candidate = "0" + candidate[3:]
     elif candidate.startswith("0033"):
         candidate = "0" + candidate[4:]
     if 9 <= len(candidate) <= 11 and candidate.isdigit():
-        # normalise sur 10 chiffres si possible
         if len(candidate) == 9 and not candidate.startswith("0"):
             candidate = "0" + candidate
         if len(candidate) == 10 and candidate.startswith("0"):
             return candidate
         if 9 <= len(candidate) <= 11:
             return candidate
-    # fallback regex
     m = PHONE_RE.search(msg)
     if m:
         return re.sub(r"\D", "", m.group(0))[:10]
@@ -187,7 +186,6 @@ def extract_phone(msg: str):
 
 def extract_prenom(msg: str):
     """Extrait un prénom probable d'un message libre."""
-    # patterns type "je m'appelle X", "c'est X", "moi c'est X"
     patterns = [
         r"(?:je m['’ ]?appelle|je suis|c['’ ]?est|moi c['’ ]?est|mon prenom est|mon prénom est)\s+([a-zàâçéèêëîïôûùüÿñæœ\-]{2,30})",
     ]
@@ -196,12 +194,10 @@ def extract_prenom(msg: str):
         m = re.search(p, normalize(n))
         if m:
             return m.group(1).capitalize()
-    # message d'un seul mot → probablement un prénom
     tokens = re.findall(r"[A-Za-zàâçéèêëîïôûùüÿñæœ\-]{2,30}", n)
     if len(tokens) == 1 and not contains_any(tokens[0], LEX.get("metier", [])):
         return tokens[0].capitalize()
     if len(tokens) == 2 and all(len(t) >= 2 for t in tokens):
-        # "Jean Dupont" → on garde le premier
         return tokens[0].capitalize()
     return None
 
@@ -222,7 +218,6 @@ def validate_telephone(msg: str) -> bool:
 
 
 def validate_surface(msg: str) -> bool:
-    # toujours OK si on répond quelque chose d'utile, sinon skip
     if is_skip(msg):
         return True
     return len(normalize(msg)) >= 1
@@ -232,12 +227,10 @@ def validate_prenom(msg: str) -> bool:
     n = normalize(msg)
     if not n:
         return False
-    # accepte "Jean", "Jean-Pierre", "jp", "Mme Durand"
     if re.search(r"\d", n):
         return False
-    if re.search(r"(.)\1{3,}", n):  # refuse "aaaaaa"
+    if re.search(r"(.)\1{3,}", n):
         return False
-    # au moins 2 lettres alphabétiques
     letters = re.findall(r"[a-zàâçéèêëîïôûùüÿñæœ]", n)
     return len(letters) >= 2 and len(n) <= 40
 
@@ -247,10 +240,7 @@ def validate_free_text(msg: str) -> bool:
 
 
 def validate_projet(msg: str) -> bool:
-    """🔥 TRÈS permissif : on ne bloque JAMAIS sur le projet.
-    Tant qu'il y a du texte, on accepte. La qualification se fait humainement
-    au rappel. Mieux vaut un lead "flou" qu'un utilisateur qui ferme l'onglet.
-    """
+    """Très permissif : on ne bloque jamais sur le projet."""
     n = normalize(msg)
     if len(n) < 2:
         return False
@@ -269,7 +259,28 @@ VALIDATORS = {
 
 
 # ---------------------------------------------------------
-#  CLASSIFICATION (plus tolérante, orientée conversion)
+#  DÉTECTION INTENTION SITE_MEMORY
+# ---------------------------------------------------------
+def detect_site_intent(msg: str):
+    """Retourne la clé d'intention (horaires, contact, zone, services) ou None."""
+    if not SITE_INTENTS:
+        return None
+    n = normalize(msg)
+    tokens = set(re.findall(r"[a-z0-9']+", n))
+    best = None
+    for intent, keywords in SITE_INTENTS.items():
+        for kw in keywords:
+            nkw = normalize(kw)
+            if nkw in tokens:
+                return intent
+            for tok in tokens:
+                if fuzzy_in(tok, nkw):
+                    best = intent
+    return best
+
+
+# ---------------------------------------------------------
+#  CLASSIFICATION
 # ---------------------------------------------------------
 def classify_message(msg: str, step_idx: int) -> str:
     n = normalize(msg)
@@ -282,9 +293,7 @@ def classify_message(msg: str, step_idx: int) -> str:
     step_key = step["key"]
     validator = VALIDATORS.get(step.get("validate", "free_text"), validate_free_text)
 
-    # 🔥 PRIORITÉ ABSOLUE : format attendu
     if step_key == "telephone":
-        # téléphone : on ne valide QUE si on extrait un vrai numéro
         if validator(msg):
             return "pertinent"
         return "invalide"
@@ -295,17 +304,16 @@ def classify_message(msg: str, step_idx: int) -> str:
         return "invalide"
 
     if step_key == "surface":
-        # surface : tout est accepté (y compris skip / texte libre)
         return "pertinent"
 
-    # Pour l'étape projet : TRÈS permissif
+    # Étape projet : permissif
     if step_key == "projet":
         if validator(msg):
             return "pertinent"
         return "flou"
 
-    # info hors flow (horaires, adresse, etc.)
-    if contains_any(msg, LEX.get("info_hors_flow", [])):
+    # Questions hors flow (horaires, adresse, etc.) — détectées via site_memory
+    if detect_site_intent(msg) or contains_any(msg, LEX.get("info_hors_flow", [])):
         return "info_hors_flow"
 
     return "pertinent"
@@ -323,17 +331,23 @@ def recadrage_hors_sujet(session):
 
 
 def recadrage_info_hors_flow(msg):
+    """Répond via site_memory.json. Fallback : anciennes variantes du YAML."""
+    intent = detect_site_intent(msg)
+    if intent and intent in SITE_RESPONSES:
+        return pick(SITE_RESPONSES[intent])
+
+    # Fallback YAML (compatibilité descendante)
     n = normalize(msg)
     infos = RECAD.get("info_hors_flow", {})
     if any(k in n for k in ["horaire", "ouvert", "ferme", "dispo"]):
-        return infos.get("horaires", "")
-    if any(k in n for k in ["adresse", "ou etes", "secteur", "zone", "intervenez", "ville", "deplac"]):
-        return infos.get("adresse", "")
+        return infos.get("horaires", pick(SITE_FALLBACK))
+    if any(k in n for k in ["adresse", "ou etes", "secteur", "zone", "ville", "deplac"]):
+        return infos.get("adresse", pick(SITE_FALLBACK))
     if any(k in n for k in ["garantie", "assurance", "decennale"]):
-        return infos.get("garantie", infos.get("generique", ""))
+        return infos.get("garantie", infos.get("generique", pick(SITE_FALLBACK)))
     if any(k in n for k in ["delai", "quand", "combien de temps"]):
-        return infos.get("delai", infos.get("generique", ""))
-    return infos.get("generique", "")
+        return infos.get("delai", infos.get("generique", pick(SITE_FALLBACK)))
+    return infos.get("generique", pick(SITE_FALLBACK))
 
 
 def recadrage_invalide(step_key):
@@ -359,28 +373,21 @@ def get_warmth(step_idx, data):
 
 
 # ---------------------------------------------------------
-#  SHORT-CIRCUIT : capter tout ce qu'on peut à chaque message
+#  SHORT-CIRCUIT
 # ---------------------------------------------------------
 def opportunistic_capture(session, msg):
-    """Avant traitement, on essaie de capter un téléphone/prénom même si
-    l'étape courante n'est pas là-dessus. L'utilisateur motivé qui lâche son
-    06 au 1er message ne doit PAS avoir à le redonner à l'étape 3."""
+    """Capte téléphone + signal d'urgence dès qu'ils apparaissent."""
     data = session["data"]
-
-    # téléphone
     if not data.get("telephone"):
         ph = extract_phone(msg)
         if ph:
             data["telephone"] = ph
-
-    # marqueur urgence (pour prioriser le rappel)
     if detect_urgent(msg):
         data["_urgent"] = True
 
 
 def advance_past_captured(session):
-    """Fait avancer le curseur de flow sur toutes les étapes dont la donnée
-    est déjà capturée (short-circuit)."""
+    """Avance le curseur sur toutes les étapes déjà remplies."""
     while session["step"] < len(FLOW):
         key = FLOW_KEYS[session["step"]]
         if session["data"].get(key):
@@ -474,7 +481,7 @@ def send_lead(data):
 def handle_message(user_id, message):
     n = normalize(message)
 
-    # Reset explicite (bonjour seul, reset, restart)
+    # Reset explicite
     if n in {"reset", "recommencer", "restart", "reinit"} or (
         is_greeting(message) and len(n.split()) <= 2
     ):
@@ -484,11 +491,28 @@ def handle_message(user_id, message):
     s = sessions.setdefault(user_id, _reset_session())
     s["msg_count"] += 1
 
-    # 🔥 Short-circuit : on capte tout ce qu'on peut
+    # 🔥 Short-circuit capture (tel + urgence)
     opportunistic_capture(s, message)
     advance_past_captured(s)
 
-    # Si on a téléphone + prénom + projet → on clôt direct
+    # 🔥 Short-circuit site_memory : question horaires / contact / zone / services
+    # → on répond IMMÉDIATEMENT puis on relance le flow
+    if not s["qualified"] and detect_site_intent(message) and s["step"] < len(FLOW):
+        # on vérifie qu'on n'est pas sur une étape où le message EST la réponse
+        # attendue (ex: l'utilisateur donne son téléphone, qui matcherait "contact")
+        current_step = FLOW_KEYS[s["step"]] if s["step"] < len(FLOW) else None
+        msg_is_answer = False
+        if current_step == "telephone" and validate_telephone(message):
+            msg_is_answer = True
+        if current_step == "prenom" and validate_prenom(message) and len(n.split()) <= 2:
+            msg_is_answer = True
+
+        if not msg_is_answer:
+            info = recadrage_info_hors_flow(message)
+            next_q = get_question(s["step"], s["data"])
+            return f"{info}\n{next_q}".strip()
+
+    # Qualification déjà complète ?
     if (s["data"].get("telephone")
             and s["data"].get("prenom")
             and s["data"].get("projet")
@@ -500,7 +524,7 @@ def handle_message(user_id, message):
             phone=COMPANY_PHONE,
         ).strip()
 
-    # FIN DE FLOW → mode libre
+    # Mode libre après qualification
     if s["qualified"] or s["step"] >= len(FLOW):
         if not s["qualified"]:
             s["qualified"] = True
@@ -509,7 +533,8 @@ def handle_message(user_id, message):
                 prenom=s["data"].get("prenom", "") or "",
                 phone=COMPANY_PHONE,
             ).strip()
-        # déjà qualifié : mode conversation libre
+        if detect_site_intent(message):
+            return recadrage_info_hors_flow(message)
         label = classify_message(message, step_idx=len(FLOW) - 1)
         if label == "info_hors_flow":
             return recadrage_info_hors_flow(message)
@@ -519,31 +544,27 @@ def handle_message(user_id, message):
     step_key = FLOW_KEYS[step_idx]
     label    = classify_message(message, step_idx)
 
-    # 🔥 intention devis explicite en étape projet → on capture + on pousse tel
+    # Intention devis explicite en étape projet
     if step_key == "projet" and detect_devis_intent(message) and not s["data"].get("projet"):
-        # on accepte le message comme projet (même vague, ex: "je veux un devis")
         s["data"]["projet"] = message.strip()
         s["step"] += 1
         advance_past_captured(s)
         next_q = get_question(s["step"], s["data"]) if s["step"] < len(FLOW) else ""
         return f"Très bien, je prépare ça tout de suite. {next_q}".strip()
 
-    # greeting en cours de flow → on relance la question courante
     if label == "greeting":
         return get_question(step_idx, s["data"])
 
-    # info hors flow → on répond brièvement puis on relance la question
+    # Info hors flow : on répond via site_memory puis on relance
     if label == "info_hors_flow":
         info = recadrage_info_hors_flow(message)
-        return f"{info} {get_question(step_idx, s['data'])}".strip()
+        next_q = get_question(step_idx, s["data"])
+        return f"{info}\n{next_q}".strip()
 
-    # invalide → on redemande avec un recadrage doux
     if label == "invalide":
         return f"{recadrage_invalide(step_key)} {get_question(step_idx, s['data'])}".strip()
 
-    # flou → recadrage ultra léger, on tente quand même de pousser
     if label == "flou":
-        # après 2 flous d'affilée sur le projet, on skippe et on demande le prénom
         s["off_topic_count"] = s.get("off_topic_count", 0) + 1
         if step_key == "projet" and s["off_topic_count"] >= 2:
             s["data"]["projet"] = message.strip() or "à préciser au rappel"
@@ -554,11 +575,10 @@ def handle_message(user_id, message):
             return f"Pas de souci, on précisera au téléphone. {next_q}".strip()
         return f"{pick(RECAD.get('flou', []))} {get_question(step_idx, s['data'])}".strip()
 
-    # pertinent → on enregistre et on avance
+    # Pertinent → enregistrement + avance
     value = message.strip()
 
     if step_key == "prenom":
-        # tente d'extraire un prénom propre depuis un texte libre
         extracted = extract_prenom(message)
         if extracted:
             value = extracted
@@ -572,18 +592,17 @@ def handle_message(user_id, message):
 
     if step_key == "surface":
         if is_skip(message):
-            value = ""  # bonus skippé, c'est OK
+            value = ""
         else:
             value = message.strip()
 
-    if value or step_key == "surface":  # surface peut être vide (skip)
+    if value or step_key == "surface":
         s["data"][step_key] = value
 
     s["step"] += 1
     s["off_topic_count"] = 0
     advance_past_captured(s)
 
-    # Fin de qualification
     if s["step"] >= len(FLOW):
         s["qualified"] = True
         send_lead(s["data"])
@@ -647,4 +666,3 @@ class handler(BaseHTTPRequestHandler):
 # Pour ne PAS perdre de leads sur la partie qualif :
 #   → Vercel KV (Redis managed), ou
 #   → state côté client (cookie signé renvoyé à chaque POST).
-# À faire avant tout passage en prod trafic réel.
