@@ -1,76 +1,235 @@
+"""
+Betty — ABC Peinture Déco
+Backend Vercel serverless (drop-in remplaçant de api/main.py)
+
+Ce qui change vs. la version actuelle :
+  - Le YAML est VRAIMENT chargé et piloté depuis ce fichier
+  - classify_message() : pertinent / flou / hors_sujet / info_hors_flow / greeting
+  - Validation par étape (téléphone, email, surface, prénom)
+  - Recadrages à variantes (jamais la même phrase 2x)
+  - LLM en fallback uniquement pour les cas « flou métier » (économie de tokens)
+  - Handover humain après 2 hors-sujet consécutifs
+"""
+
 import os
+import re
 import json
-import requests
+import random
+import unicodedata
+from pathlib import Path
 from http.server import BaseHTTPRequestHandler
 
+import yaml
+import requests
+
+# ---------------------------------------------------------
+#  CHARGEMENT DU YAML
+# ---------------------------------------------------------
+ROOT = Path(__file__).resolve().parent.parent   # repo root (api/ est à côté du yaml)
+YAML_PATH = ROOT / "betty_btp_abc.yaml"
+
+with open(YAML_PATH, "r", encoding="utf-8") as _f:
+    CFG = yaml.safe_load(_f)
+
+LEX          = CFG["lexique"]
+RECAD        = CFG["recadrages"]
+FLOW         = CFG["flow"]
+CLOSING_TPL  = CFG["closing"]
+MAX_OFFTOPIC = CFG["behavior"].get("max_off_topic_before_handover", 2)
+
+# index step -> entry
+FLOW_KEYS = [step["key"] for step in FLOW]
+
+# ---------------------------------------------------------
+#  CONFIG LLM (Together AI, inchangé)
+# ---------------------------------------------------------
 TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY", "")
-MODEL = os.getenv("LLM_MODEL", "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo")
+MODEL            = os.getenv("LLM_MODEL", "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo")
 
-# ===== FLOW QUALIFICATION =====
-# Ordre : projet → surface → delai → prenom → telephone → email
-FLOW = ["projet", "surface", "delai", "prenom", "telephone", "email"]
-
-QUESTIONS = {
-    "projet": "Bonjour ! Je suis Betty 👋 l'assistante d'ABC Peinture Déco. Pour préparer votre devis, quel type de travaux souhaitez-vous réaliser ?",
-    "surface": "Quelle surface approximative en m² ?",
-    "delai": "Vous souhaitez réaliser les travaux quand ?",
-    "prenom": "Parfait, j'ai bien noté votre projet 👍 Quel est votre prénom ?",
-    "telephone": "Votre numéro de téléphone ?",
-    "email": "Et votre adresse email pour recevoir le devis ?"
-}
-
-CLOSING_TEMPLATE = (
-    "Merci {prenom} ! Votre demande est bien enregistrée 🎉 "
-    "L'équipe d'ABC Peinture Déco vous rappelle rapidement pour finaliser votre devis."
-)
-
-GREETINGS = {"bonjour", "bonsoir", "salut", "hello", "hi", "coucou", "bjr", "bsr", "yo", "bj", "ok", "oui"}
-
+# Sessions en mémoire (⚠️ voir note en fin de fichier sur Vercel cold-start)
 sessions = {}
 
+GREETINGS = {
+    "bonjour", "bonsoir", "salut", "hello", "hi", "coucou",
+    "bjr", "bsr", "yo", "bj", "hey", "hola",
+}
 
-def is_greeting(message):
-    """Vérifie si le message est juste une salutation."""
-    clean = message.lower().strip().rstrip("!").rstrip(".").rstrip(",")
-    return clean in GREETINGS
-
-
-def get_question(key, data):
-    """Retourne la question, personnalisée avec le prénom si disponible."""
-    q = QUESTIONS[key]
-    if "{prenom}" in q and "prenom" in data:
-        q = q.format(prenom=data["prenom"])
-    return q
-
-
-# ===== JSON =====
-def json_response(handler, payload):
-    body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
-    handler.send_response(200)
-    handler.send_header("Content-Type", "application/json")
-    handler.send_header("Access-Control-Allow-Origin", "*")
-    handler.end_headers()
-    handler.wfile.write(body)
+# ---------------------------------------------------------
+#  HELPERS
+# ---------------------------------------------------------
+def normalize(txt: str) -> str:
+    txt = (txt or "").lower().strip()
+    txt = unicodedata.normalize("NFD", txt)
+    txt = "".join(c for c in txt if unicodedata.category(c) != "Mn")
+    return re.sub(r"\s+", " ", txt)
 
 
-# ===== LLM =====
-def call_llm(message, context):
+def contains_any(txt: str, keywords) -> bool:
+    n = normalize(txt)
+    return any(normalize(k) in n for k in keywords)
+
+
+def pick(variants):
+    if isinstance(variants, str):
+        return variants
+    return random.choice(variants)
+
+
+def is_greeting(msg: str) -> bool:
+    n = normalize(msg).rstrip("!.,?").strip()
+    return n in GREETINGS
+
+
+# ---------------------------------------------------------
+#  VALIDATEURS par type
+# ---------------------------------------------------------
+def validate_telephone(msg: str) -> bool:
+    digits = re.sub(r"\D", "", msg)
+    return 9 <= len(digits) <= 13
+
+
+def validate_email(msg: str) -> bool:
+    return bool(re.match(r"^[^\s@]+@[^\s@]+\.[^\s@]{2,}$", msg.strip()))
+
+
+def validate_surface(msg: str) -> bool:
+    # Au moins un chiffre OU un mot type "pièce/salon/chambre..."
+    if re.search(r"\d", msg):
+        return True
+    return contains_any(msg, ["piece", "salon", "chambre", "cuisine", "couloir", "bureau"])
+
+
+def validate_prenom(msg: str) -> bool:
+    n = normalize(msg)
+    # prénom simple : 2-30 caractères lettres/tirets, pas de chiffres
+    return bool(re.match(r"^[a-zàâçéèêëîïôûùüÿñæœ\- ]{2,30}$", n)) and not re.search(r"\d", n)
+
+
+def validate_free_text(msg: str) -> bool:
+    return len(normalize(msg)) >= 2
+
+
+def validate_free_text_metier(msg: str) -> bool:
+    """Étape projet : doit toucher de près ou de loin au métier."""
+    return contains_any(msg, LEX["metier"]) or len(normalize(msg)) >= 4
+
+
+VALIDATORS = {
+    "telephone":          validate_telephone,
+    "email":              validate_email,
+    "surface":            validate_surface,
+    "prenom":             validate_prenom,
+    "free_text":          validate_free_text,
+    "free_text_metier":   validate_free_text_metier,
+}
+
+
+# ---------------------------------------------------------
+#  CLASSIFICATION
+# ---------------------------------------------------------
+def classify_message(msg: str, step_idx: int) -> str:
+    """
+    Retourne une étiquette :
+      - 'greeting'       : juste une salutation
+      - 'hors_sujet'     : clairement hors métier (steak, blague, météo…)
+      - 'info_hors_flow' : pertinent mais pas la question posée
+      - 'pertinent'      : validable pour l'étape en cours
+      - 'invalide'       : bon domaine mais format incorrect (ex: tel sans chiffres)
+      - 'flou'           : incompréhensible
+    """
+    n = normalize(msg)
+
+    if not n or len(n) < 1:
+        return "flou"
+
+    if is_greeting(msg):
+        return "greeting"
+
+    # hors-sujet explicite
+    if contains_any(msg, LEX["hors_sujet"]):
+        return "hors_sujet"
+
+    # question hors-flow mais utile
+    if contains_any(msg, LEX["info_hors_flow"]):
+        return "info_hors_flow"
+
+    # validation spécifique à l'étape
+    step      = FLOW[step_idx]
+    validator = VALIDATORS.get(step.get("validate", "free_text"), validate_free_text)
+
+    if validator(msg):
+        return "pertinent"
+
+    # format attendu connu mais mal formé → 'invalide' (pas 'flou')
+    if step["key"] in {"telephone", "email", "surface", "prenom"}:
+        return "invalide"
+
+    return "flou"
+
+
+# ---------------------------------------------------------
+#  RECADRAGES
+# ---------------------------------------------------------
+def recadrage_hors_sujet(session):
+    session["off_topic_count"] = session.get("off_topic_count", 0) + 1
+    if session["off_topic_count"] >= MAX_OFFTOPIC:
+        session["off_topic_count"] = 0
+        return pick(RECAD["handover"])
+    return pick(RECAD["hors_sujet"])
+
+
+def recadrage_info_hors_flow(msg):
+    n = normalize(msg)
+    if any(k in n for k in ["horaire", "ouvert", "ferme"]):
+        return RECAD["info_hors_flow"]["horaires"]
+    if any(k in n for k in ["contact", "telephone", "appeler", "numero", "rappel"]):
+        return RECAD["info_hors_flow"]["contact"]
+    if any(k in n for k in ["adresse", "ou etes", "secteur", "zone", "intervenez"]):
+        return RECAD["info_hors_flow"]["adresse"]
+    return RECAD["info_hors_flow"]["generique"]
+
+
+def recadrage_invalide(step_key):
+    variants = RECAD["invalide"].get(step_key)
+    if variants:
+        return pick(variants)
+    return pick(RECAD["flou"])
+
+
+# ---------------------------------------------------------
+#  QUESTION BUILDER (avec prénom)
+# ---------------------------------------------------------
+def get_question(step_idx, data):
+    step = FLOW[step_idx]
+    q = step["question"]
+    return q.format(prenom=data.get("prenom", ""))
+
+
+def get_warmth(step_idx, data):
+    step = FLOW[step_idx]
+    w = step.get("warmth", "") or ""
+    return w.format(prenom=data.get("prenom", ""))
+
+
+# ---------------------------------------------------------
+#  LLM (fallback pour cas flous métier, phase post-qualif)
+# ---------------------------------------------------------
+def call_llm(message, data):
+    if not TOGETHER_API_KEY:
+        return ("Je suis là pour vous aider ! Vous pouvez aussi appeler le 02 43 75 98 18 "
+                "pour échanger directement avec un conseiller.")
     try:
-        context_str = ""
-        if context.get("projet"):
-            context_str += f"- Projet : {context['projet']}\n"
-        if context.get("surface"):
-            context_str += f"- Surface : {context['surface']}\n"
-        if context.get("delai"):
-            context_str += f"- Délai souhaité : {context['delai']}\n"
-        if context.get("prenom"):
-            context_str += f"- Prénom client : {context['prenom']}\n"
+        ctx_lines = []
+        for k in ("projet", "surface", "delai", "prenom"):
+            if data.get(k):
+                ctx_lines.append(f"- {k} : {data[k]}")
+        ctx = "\n".join(ctx_lines) or "(aucun)"
 
         r = requests.post(
             "https://api.together.xyz/v1/chat/completions",
             headers={
                 "Authorization": f"Bearer {TOGETHER_API_KEY}",
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
             },
             json={
                 "model": MODEL,
@@ -78,125 +237,145 @@ def call_llm(message, context):
                     {
                         "role": "system",
                         "content": (
-                            "Tu es Betty, assistante commerciale pour ABC Peinture Déco au Mans (Sarthe).\n"
-                            "Tu réponds aux questions clients de façon naturelle, chaleureuse et concise.\n"
-                            "Tu utilises le prénom du client quand il est disponible.\n"
-                            "Réponses courtes, max 2-3 phrases. Une seule question à la fois si besoin."
-                        )
+                            "Tu es Betty, assistante commerciale d'ABC Peinture Déco au Mans (Sarthe). "
+                            "Ton rôle : répondre chaleureusement, en 1 à 2 phrases maximum, orienté action "
+                            "(devis ou rappel au 02 43 75 98 18). Jamais robotique. Pas de jargon."
+                        ),
                     },
                     {
                         "role": "user",
-                        "content": (
-                            f"Contexte du projet client :\n{context_str}\n\n"
-                            f"Question du client : {message}\n\n"
-                            "Réponds simplement et chaleureusement."
-                        )
-                    }
+                        "content": f"Contexte client :\n{ctx}\n\nMessage : {message}",
+                    },
                 ],
-                "temperature": 0.7,
-                "max_tokens": 180
+                "temperature": 0.6,
+                "max_tokens": 150,
             },
-            timeout=20
+            timeout=15,
         )
-        return r.json()["choices"][0]["message"]["content"]
-
+        return r.json()["choices"][0]["message"]["content"].strip()
     except Exception:
-        return (
-            "Je suis là pour vous aider ! N'hésitez pas à appeler le 02 43 75 98 18 "
-            "si vous préférez échanger directement."
-        )
+        return ("Je préfère que mon équipe vous réponde directement sur ce point. "
+                "Appelez-nous au 02 43 75 98 18 ou laissez-moi votre numéro, on vous rappelle.")
 
 
-# ===== HANDLER =====
+# ---------------------------------------------------------
+#  LOGIQUE CENTRALE
+# ---------------------------------------------------------
+def handle_message(user_id, message):
+    s = sessions.setdefault(user_id, {
+        "step": 0,
+        "data": {},
+        "qualified": False,
+        "off_topic_count": 0,
+    })
+
+    # ===== FIN DE FLOW : on est en mode libre =====
+    if s["qualified"]:
+        label = classify_message(message, step_idx=len(FLOW) - 1)
+        if label == "hors_sujet":
+            return recadrage_hors_sujet(s)
+        if label == "info_hors_flow":
+            return recadrage_info_hors_flow(message)
+        return call_llm(message, s["data"])
+
+    step_idx = s["step"]
+    label    = classify_message(message, step_idx)
+
+    # 1) salutation au démarrage → pose la première question
+    if label == "greeting":
+        return get_question(step_idx, s["data"])
+
+    # 2) hors-sujet → recadrer sans avancer
+    if label == "hors_sujet":
+        return recadrage_hors_sujet(s) + "\n\n" + get_question(step_idx, s["data"])
+
+    # 3) question hors-flow utile → répondre puis relancer l'étape
+    if label == "info_hors_flow":
+        return recadrage_info_hors_flow(message) + "\n\n" + get_question(step_idx, s["data"])
+
+    # 4) format invalide (tel/email/surface/prénom) → corriger sans avancer
+    if label == "invalide":
+        return recadrage_invalide(FLOW[step_idx]["key"]) + "\n\n" + get_question(step_idx, s["data"])
+
+    # 5) flou → demander reformulation sans avancer
+    if label == "flou":
+        return pick(RECAD["flou"]) + "\n\n" + get_question(step_idx, s["data"])
+
+    # 6) pertinent → on enregistre et on avance
+    step_key = FLOW_KEYS[step_idx]
+    value    = message.strip()
+    if step_key == "prenom":
+        value = value.capitalize()
+    if step_key == "telephone":
+        value = re.sub(r"\D", "", value)   # on garde uniquement les chiffres
+
+    s["data"][step_key] = value
+    s["step"] += 1
+    s["off_topic_count"] = 0
+
+    # FIN de qualification
+    if s["step"] >= len(FLOW):
+        s["qualified"] = True
+        return CLOSING_TPL.format(prenom=s["data"].get("prenom", "")).strip()
+
+    warmth = get_warmth(step_idx, s["data"])
+    next_q = get_question(s["step"], s["data"])
+    return f"{warmth}{next_q}".strip()
+
+
+# ---------------------------------------------------------
+#  HANDLER HTTP (Vercel serverless)
+# ---------------------------------------------------------
+def _json(handler, payload, status=200):
+    body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+    handler.send_response(status)
+    handler.send_header("Content-Type", "application/json")
+    handler.send_header("Access-Control-Allow-Origin", "*")
+    handler.send_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
+    handler.send_header("Access-Control-Allow-Headers", "Content-Type")
+    handler.end_headers()
+    handler.wfile.write(body)
+
+
 class handler(BaseHTTPRequestHandler):
 
     def do_OPTIONS(self):
-        return json_response(self, {"ok": True})
+        _json(self, {"ok": True})
 
     def do_GET(self):
-        return json_response(self, {"ok": True})
+        _json(self, {"ok": True, "bot": CFG["identity"]["name"]})
 
     def do_POST(self):
         try:
-            length = int(self.headers.get("Content-Length", 0))
-            body = self.rfile.read(length)
-            data = json.loads(body.decode("utf-8"))
+            length  = int(self.headers.get("Content-Length", 0))
+            body    = self.rfile.read(length) if length else b"{}"
+            payload = json.loads(body.decode("utf-8"))
+            message = (payload.get("message") or "").strip()
+            if not message:
+                return _json(self, {"response": "Je n'ai rien reçu 🤔 Pouvez-vous réessayer ?"})
 
-            message = data.get("message", "").strip()
-            user_id = self.client_address[0]
+            # session_id : à remplacer par un vrai cookie/JWT en prod
+            user_id = payload.get("session_id") or self.client_address[0]
 
-            # Initialise la session
-            if user_id not in sessions:
-                sessions[user_id] = {
-                    "step": 0,
-                    "data": {},
-                    "qualified": False
-                }
-
-            s = sessions[user_id]
-
-            # ===== PHASE 1 : QUALIFICATION =====
-            if not s["qualified"]:
-                step = s["step"]
-
-                # Si c'est une salutation en début de conversation → on répond chaleureusement
-                # sans enregistrer le message comme donnée
-                if step == 0 and is_greeting(message):
-                    return json_response(self, {
-                        "response": QUESTIONS["projet"]
-                    })
-
-                key = FLOW[step]
-
-                # Normalise le prénom
-                if key == "prenom":
-                    message = message.strip().capitalize()
-
-                s["data"][key] = message
-                s["step"] += 1
-
-                # Micro-réactions chaleureuses après chaque étape
-                warmth = ""
-                if key == "prenom":
-                    warmth = f"Enchanté {message} ! "
-                elif key == "projet":
-                    warmth = "Super, j'ai noté ! "
-                elif key == "surface":
-                    warmth = "Merci ! "
-                elif key == "delai":
-                    warmth = "Parfait ! "
-                elif key == "telephone":
-                    warmth = "Noté 👍 "
-
-                # Encore des infos à demander
-                if s["step"] < len(FLOW):
-                    next_key = FLOW[s["step"]]
-                    next_q = get_question(next_key, s["data"])
-                    response = (warmth + next_q) if warmth else next_q
-                    return json_response(self, {"response": response})
-
-                # FIN qualification → message de closing
-                s["qualified"] = True
-                prenom = s["data"].get("prenom", "")
-                closing = (
-                    CLOSING_TEMPLATE.format(prenom=prenom)
-                    if prenom
-                    else (
-                        "Merci ! Votre demande est bien enregistrée 🎉 "
-                        "L'équipe d'ABC Peinture Déco vous rappelle rapidement."
-                    )
-                )
-                return json_response(self, {"response": closing})
-
-            # ===== PHASE 2 : RÉPONSES INTELLIGENTES =====
-            reply = call_llm(message, s["data"])
-            return json_response(self, {"response": reply})
+            reply = handle_message(user_id, message)
+            return _json(self, {"response": reply})
 
         except Exception as e:
-            return json_response(self, {
-                "response": (
-                    "Une petite erreur s'est glissée ! "
-                    "Appelez-nous au 02 43 75 98 18, on sera ravis de vous aider."
-                ),
-                "debug": str(e)
+            return _json(self, {
+                "response": ("Petit bug de mon côté 😅 Appelez-nous au 02 43 75 98 18, "
+                             "on s'en occupe tout de suite."),
+                "debug": str(e),
             })
+
+
+# ---------------------------------------------------------
+#  ⚠️  NOTE PROD — À lire
+# ---------------------------------------------------------
+# Vercel serverless redémarre le process entre les requêtes → `sessions = {}`
+# ne survit pas aux cold starts. Deux options :
+#
+#   A) Vercel KV (Redis managed) : 2 lignes à ajouter, 0 config.
+#   B) Passer le state dans le client (cookie signé) et le POST.
+#
+# Tant que tu es en phase démo / maquette, la mémoire process suffit.
+# En prod réelle, bascule sur A ou B sous 24h sinon tu perdras des leads.
