@@ -316,10 +316,13 @@ def handle_message(user_id, message):
      
     n = normalize(message)
 
-    # 🔥 vrai match robuste
-   if any(n.startswith(g) for g in GREETINGS) or n in {"reset", "recommencer", "restart"}:
+    # 🔥 RESET ROBUSTE
+    if any(n.startswith(g) for g in GREETINGS) or n in {"reset", "recommencer", "restart"}:
+    
+       # reset session
        sessions[user_id] = _reset_session()
-       s = sessions[user_id]
+
+       # 🔥 CRITIQUE : STOP ICI
        return get_question(0, {})
 
     # ===== FIN DE FLOW : on est en mode libre =====
