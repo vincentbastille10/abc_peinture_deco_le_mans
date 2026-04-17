@@ -179,48 +179,35 @@ VALIDATORS = {
 #  CLASSIFICATION
 # ---------------------------------------------------------
 def classify_message(msg: str, step_idx: int) -> str:
-    """
-    Retourne une étiquette :
-      - 'greeting'       : juste une salutation
-      - 'hors_sujet'     : clairement hors métier (steak, blague, météo…)
-      - 'info_hors_flow' : pertinent mais pas la question posée
-      - 'pertinent'      : validable pour l'étape en cours
-      - 'invalide'       : bon domaine mais format incorrect (ex: tel sans chiffres)
-      - 'flou'           : incompréhensible
-    """
     n = normalize(msg)
 
-    if not n or len(n) < 1:
+    if not n:
         return "flou"
 
     if is_greeting(msg):
         return "greeting"
 
-    # hors-sujet explicite
-    if contains_any(msg, LEX["hors_sujet"]):
-        return "hors_sujet"
+    step      = FLOW[step_idx]
+    step_key  = step["key"]
+    validator = VALIDATORS.get(step.get("validate", "free_text"), validate_free_text)
 
-    # question hors-flow mais utile
+    # 🔥 1. PRIORITÉ : format attendu (tel, email, etc.)
+    if step_key in {"telephone", "email", "surface", "prenom"}:
+        if validator(msg):
+            return "pertinent"
+        else:
+            return "invalide"
+
+    # 🔥 2. QUESTIONS UTILES
     if contains_any(msg, LEX["info_hors_flow"]):
         return "info_hors_flow"
 
-    # validation spécifique à l'étape
-    step      = FLOW[step_idx]
-    validator = VALIDATORS.get(step.get("validate", "free_text"), validate_free_text)
+    # 🔥 3. DEMANDE PRO
+    if looks_like_pro_request(msg):
+        return "pertinent" if step_key == "projet" else "info_hors_flow"
 
-    # 🧠 1. check sens métier AVANT validation
-    if not contains_any(msg, LEX["metier"]):
-        return "hors_sujet"
-
-    # 🧠 2. ensuite seulement validation
-    if validator(msg):
-        return "pertinent"
-
-    # format attendu connu mais mal formé → 'invalide' (pas 'flou')
-    if step["key"] in {"telephone", "email", "surface", "prenom"}:
-        return "invalide"
-
-    return "flou"
+    # 🔥 4. TOUT LE RESTE = hors sujet
+    return "hors_sujet"
 
 
 # ---------------------------------------------------------
