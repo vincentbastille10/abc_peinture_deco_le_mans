@@ -1,0 +1,72 @@
+ {
+  "identity": {
+    "company_name": "ABC Peinture Déco",
+    "city": "Le Mans",
+    "phone": "0243759818"
+  },
+
+  "horaires": {
+    "short": "On intervient du lundi au vendredi 👍",
+    "full": "Du lundi au vendredi de 8h à 18h"
+  },
+
+  "zone": {
+    "short": "On intervient sur Le Mans et alentours 👍",
+    "full": "Le Mans et toute la Sarthe"
+  },
+
+  "services": [
+    "peinture intérieure",
+    "peinture extérieure",
+    "ravalement de façade",
+    "rénovation",
+    "enduit",
+    "revêtement mural"
+  ],
+
+  "intent_map": {
+    "horaires": ["horaire", "ouvert", "ferme", "heure", "dispo"],
+    "contact": ["telephone", "numero", "appeler", "rappel"],
+    "zone": ["ou", "adresse", "ville", "secteur", "zone"],
+    "services": ["service", "travaux", "prestation", "faites", "proposez"]
+  },
+
+  "responses": {
+    "horaires": [
+      "On intervient du lundi au vendredi 👍",
+      "On est disponibles en semaine 👍"
+    ],
+
+    "contact": [
+      "Vous pouvez appeler au 02 43 75 98 18 👍",
+      "Je peux vous faire rappeler rapidement 👍"
+    ],
+
+    "zone": [
+      "On intervient sur Le Mans et alentours 👍",
+      "On se déplace sur toute la Sarthe 👍"
+    ],
+
+    "services": [
+      "On fait peinture intérieure, extérieure et façade 👍",
+      "On s’occupe de tous vos travaux de peinture 👍"
+    ],
+
+    "fallback": [
+      "Je vous dis 👍",
+      "Je regarde ça 👍"
+    ]
+  },
+
+  "conversion": {
+    "devis": [
+      "Je peux vous faire un devis rapide 👍",
+      "On peut voir ça rapidement ensemble 👍"
+    ],
+
+    "push_phone": [
+      "Je vous fais rappeler rapidement 👍",
+      "Un artisan peut vous rappeler dans la journée 👍"
+    ]
+  }
+} 
