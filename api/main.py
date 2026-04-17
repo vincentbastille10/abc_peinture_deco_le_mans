@@ -18,6 +18,7 @@ import random
 import unicodedata
 from pathlib import Path
 from http.server import BaseHTTPRequestHandler
+from difflib import SequenceMatcher
 
 import yaml
 import requests
