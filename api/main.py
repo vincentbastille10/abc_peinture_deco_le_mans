@@ -308,6 +308,30 @@ def _reset_session():
     return {"step": 0, "data": {}, "qualified": False, "off_topic_count": 0}
 
 
+def send_lead(data):
+    webhook_url = os.getenv("LEAD_WEBHOOK_URL", "")
+    if not webhook_url:
+        return
+
+    clean_data = {
+        "projet": (data.get("projet") or "").strip(),
+        "surface": (data.get("surface") or "").strip(),
+        "delai": (data.get("delai") or "").strip(),
+        "prenom": (data.get("prenom") or "").strip(),
+        "telephone": re.sub(r"\D", "", (data.get("telephone") or "").strip()),
+        "email": (data.get("email") or "").strip(),
+    }
+
+    try:
+        requests.post(
+            webhook_url,
+            json={"source": "betty", "data": clean_data},
+            timeout=3,
+        )
+    except Exception:
+        return
+
+
 def handle_message(user_id, message):
     n = normalize(message)
 
@@ -365,6 +389,7 @@ def handle_message(user_id, message):
     # FIN de qualification
     if s["step"] >= len(FLOW):
         s["qualified"] = True
+        send_lead(s["data"])
         return CLOSING_TPL.format(prenom=s["data"].get("prenom", "")).strip()
 
     warmth = get_warmth(step_idx, s["data"])
