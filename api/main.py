@@ -313,11 +313,14 @@ def handle_message(user_id, message):
 
     # ===== RESET explicite : user dit "bonjour" / "reset" =====
     # Évite les sessions fantômes qui piègent l'utilisateur à une étape avancée.
-    n = normalize(message).rstrip("!.,?").strip()
-    if n in GREETINGS or n in {"reset", "recommencer", "restart"}:
-        sessions[user_id] = _reset_session()
-        s = sessions[user_id]
-        return get_question(0, {})
+     
+    n = normalize(message)
+
+    # 🔥 vrai match robuste
+   if any(n.startswith(g) for g in GREETINGS) or n in {"reset", "recommencer", "restart"}:
+       sessions[user_id] = _reset_session()
+       s = sessions[user_id]
+       return get_question(0, {})
 
     # ===== FIN DE FLOW : on est en mode libre =====
     if s["qualified"]:
