@@ -102,7 +102,17 @@ def validate_surface(msg: str) -> bool:
 def validate_prenom(msg: str) -> bool:
     n = normalize(msg)
     # prénom simple : 2-30 caractères lettres/tirets, pas de chiffres
-    return bool(re.match(r"^[a-zàâçéèêëîïôûùüÿñæœ\- ]{2,30}$", n)) and not re.search(r"\d", n)
+    if not re.match(r"^[a-zàâçéèêëîïôûùüÿñæœ\- ]{2,30}$", n):
+        return False
+    if re.search(r"\d", n):
+        return False
+    # refuse "aaa", "zzz" etc (3+ fois le même caractère consécutif)
+    if re.search(r"(.)\1{2,}", n):
+        return False
+    # refuse les messages qui contiennent un mot hors-sujet
+    if contains_any(n, LEX["hors_sujet"]):
+        return False
+    return True
 
 
 def validate_free_text(msg: str) -> bool:
@@ -110,8 +120,10 @@ def validate_free_text(msg: str) -> bool:
 
 
 def validate_free_text_metier(msg: str) -> bool:
-    """Étape projet : doit toucher de près ou de loin au métier."""
-    return contains_any(msg, LEX["metier"]) or len(normalize(msg)) >= 4
+    """Étape projet : DOIT contenir un mot métier.
+    Plus de fallback sur la longueur sinon on accepte n'importe quoi.
+    """
+    return contains_any(msg, LEX["metier"])
 
 
 VALIDATORS = {
@@ -261,13 +273,20 @@ def call_llm(message, data):
 # ---------------------------------------------------------
 #  LOGIQUE CENTRALE
 # ---------------------------------------------------------
+def _reset_session():
+    return {"step": 0, "data": {}, "qualified": False, "off_topic_count": 0}
+
+
 def handle_message(user_id, message):
-    s = sessions.setdefault(user_id, {
-        "step": 0,
-        "data": {},
-        "qualified": False,
-        "off_topic_count": 0,
-    })
+    s = sessions.setdefault(user_id, _reset_session())
+
+    # ===== RESET explicite : user dit "bonjour" / "reset" =====
+    # Évite les sessions fantômes qui piègent l'utilisateur à une étape avancée.
+    n = normalize(message).rstrip("!.,?").strip()
+    if n in GREETINGS or n in {"reset", "recommencer", "restart"}:
+        sessions[user_id] = _reset_session()
+        s = sessions[user_id]
+        return get_question(0, {})
 
     # ===== FIN DE FLOW : on est en mode libre =====
     if s["qualified"]:
@@ -281,7 +300,7 @@ def handle_message(user_id, message):
     step_idx = s["step"]
     label    = classify_message(message, step_idx)
 
-    # 1) salutation au démarrage → pose la première question
+    # 1) salutation au démarrage → pose la première question (déjà géré au-dessus)
     if label == "greeting":
         return get_question(step_idx, s["data"])
 
