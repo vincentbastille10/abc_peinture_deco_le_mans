@@ -67,9 +67,47 @@ def normalize(txt: str) -> str:
 
 def contains_any(txt: str, keywords) -> bool:
     n = normalize(txt)
-    return any(normalize(k) in n for k in keywords)
+    tokens = re.findall(r"[a-z0-9]+", n)
 
+    for token in tokens:
+        for kw in keywords:
+            nkw = normalize(kw)
 
+            # match exact
+            if nkw == token:
+                return True
+
+            # match tolérant fautes (🔥 clé)
+            if abs(len(token) - len(nkw)) <= 2:
+                if SequenceMatcher(None, token, nkw).ratio() >= 0.84:
+                    return True
+
+    return False
+
+def looks_like_pro_request(msg: str) -> bool:
+    n = normalize(msg)
+
+    # présence chiffre → souvent surface / volume / chantier
+    if re.search(r"\d", n):
+        return True
+
+    # mots métier (avec tolérance fautes)
+    if contains_any(n, LEX["metier"]):
+        return True
+
+    # patterns pro
+    patterns = [
+        r"devis",
+        r"chantier",
+        r"travaux",
+        r"renov",
+        r"peindre",
+        r"intervention",
+        r"planning",
+    ]
+
+    return any(re.search(p, n) for p in patterns)
+  
 def pick(variants):
     if isinstance(variants, str):
         return variants
