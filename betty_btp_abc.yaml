@@ -1,6 +1,7 @@
 # =========================================================
 #  Betty — ABC Peinture Déco (Le Mans, Sarthe)
-#  Version PRO — ciblage professionnels uniquement
+#  VERSION CONVERSION — flow court, orienté rappel rapide
+#  Objectif unique : prénom + téléphone + projet
 # =========================================================
 
 identity:
@@ -10,144 +11,365 @@ identity:
   location: "Le Mans, Sarthe"
 
 behavior:
-  tone: "professionnel, direct, efficace, humain"
+  tone: "chaleureux, direct, efficace, rassurant"
   max_sentences: 2
-  max_off_topic_before_handover: 2
+  max_off_topic_before_handover: 3
 
 # ---------------------------------------------------------
-#  LEXIQUE — orienté B2B chantier / pro
+#  LEXIQUE — massif, avec fautes clavier courantes
 # ---------------------------------------------------------
 lexique:
   metier:
-    # activité
+    # peinture / corps de métier
     - peinture
     - peintre
+    - peindre
     - repeindre
-    - renovation
-    - travaux
-    - chantier
-    - ravalement
-    - enduit
-    - facade
-    - plafond
-    - mur
+    - repeint
+    - repeinture
+    - peintres
+    - peinte
+    - pienture          # faute
+    - peintur           # faute
+    - peintue           # faute
+    - pinture           # faute
+    - peimture          # faute
 
-    # contexte pro
+    # rénovation
+    - renovation
+    - renover
+    - rénover
+    - renover           # sans accent
+    - renov
+    - renouv
+    - refaire
+    - refait
+    - refection
+    - rehab
+    - rehabilitation
+    - remettre a neuf
+    - remise a neuf
+    - rafraichir
+    - rafraichissement
+
+    # travaux
+    - travaux
+    - travail
+    - chantier
+    - chantiers
+    - ouvrage
+    - prestation
+    - prestations
+    - intervention
+    - interventions
+    - mission
+    - boulot
+    - taf
+    - trvx              # raccourci
+    - trav              # faute
+
+    # surfaces / éléments
+    - mur
+    - murs
+    - murale
+    - plafond
+    - plafonds
+    - sol
+    - sols
+    - facade
+    - façade
+    - facades
+    - faccade           # faute
+    - enduit
+    - enduits
+    - crepi
+    - crépi
+    - boiserie
+    - boiseries
+    - porte
+    - portes
+    - fenetre
+    - fenêtre
+    - volet
+    - volets
+    - radiateur
+    - radiateurs
+    - escalier
+    - escaliers
+    - poutre
+    - poutres
+    - cloison
+    - cloisons
+    - placo
+    - placoplatre
+    - plaque de platre
+
+    # pièces / lieux
+    - salon
+    - salle
+    - sejour
+    - séjour
+    - chambre
+    - chambres
+    - cuisine
+    - sdb
+    - salle de bain
+    - salle de bains
+    - wc
+    - toilette
+    - toilettes
+    - couloir
+    - entree
+    - entrée
+    - garage
+    - cave
+    - grenier
+    - combles
+    - buanderie
+    - dressing
+    - terrasse
+    - balcon
+    - jardin
+    - piece
+    - pièce
+    - pieces
+    - piece a vivre
+    - bureau
+    - bureaux
     - local
+    - locaux
     - commerce
     - boutique
-    - bureau
+    - magasin
     - immeuble
     - batiment
-    - chantier
+    - bâtiment
+    - villa
+    - maison
+    - appart
+    - appartement
+    - appartt           # faute
+    - apart             # faute
+    - studio
+    - duplex
     - copropriete
+    - copropriété
     - syndic
     - entreprise
-    - magasin
+    - atelier
+    - hangar
+    - restaurant
+    - cabinet
+    - agence
 
-    # besoin pro
+    # besoins / demandes
     - devis
+    - devi              # faute
+    - dévis             # faute
+    - deviss            # faute
     - tarif
+    - tarifs
+    - prix
+    - cout
+    - coût
+    - combien
     - estimation
+    - estimer
+    - chiffrage
+    - chiffrer
+    - budget
     - appel d offre
-    - prestation
-    - intervention
+    - appel d offres
+    - ao
+    - etude
+    - étude
+    - projet
+    - projets
+    - besoin
+    - besoins
+    - demande
+    - demandes
+    - info
+    - infos
+    - information
+    - informations
+    - rappel
+    - rappeler
+    - rappelez
+    - contacter
+    - joindre
     - planning
     - delai
+    - délai
+    - delais
+    - planif
+    - urgence
+    - urgent
 
     # problèmes terrain
     - fissure
+    - fissures
+    - fissuré
+    - fissure
     - humidite
+    - humidité
+    - moisi
+    - moisissure
+    - moisissures
     - tache
+    - taches
+    - degat
+    - degats
+    - dégât
+    - dégâts
     - degradation
+    - dégradation
     - usure
-    - renovation
+    - abime
+    - abîmé
+    - jauni
+    - jaunie
+    - sale
+    - fuite
+    - infiltration
+    - infiltrations
+
+    # types de finition / produits
+    - mat
+    - satin
+    - satine
+    - satiné
+    - brillant
+    - laque
+    - laqué
+    - velours
+    - glycero
+    - glycéro
+    - acrylique
+    - vernis
+    - lasure
+    - papier peint
+    - tapisserie
+    - decoration
+    - décoration
+    - deco
+    - déco
 
   info_hors_flow:
+    - horaire
     - horaires
     - ouvert
+    - ouverture
     - ferme
+    - fermé
+    - fermeture
+    - dispo
+    - disponibilite
+    - disponibilité
     - adresse
+    - ou etes
+    - ou etes vous
+    - localisation
     - zone
     - secteur
     - intervention
+    - deplacement
+    - déplacement
+    - ville
+    - departement
+    - département
+    - sarthe
+    - mans
+    - le mans
+    - 72
     - delai
+    - délai
+    - quand
     - garantie
     - assurance
     - decennale
+    - décennale
+    - siret
+    - avis
+    - note
+    - google
+    - facebook
 
 # ---------------------------------------------------------
-#  FLOW — orienté client pro uniquement
+#  FLOW — 3 étapes + 1 bonus
+#  Ordre : projet → prénom → téléphone → (surface/délai bonus)
 # ---------------------------------------------------------
 flow:
   - key: projet
-    question: "Bonjour, Betty à l’appareil 👋 Pour préparer votre devis, pouvez-vous me décrire votre projet de travaux ?"
-    validate: free_text_metier
-    warmth: "Très bien 👍 "
-
-  - key: surface
-    question: "Sur quelle surface ou type de bâtiment porte l’intervention ? (m², local, immeuble, etc.)"
-    validate: surface
-    warmth: "Parfait 👍 Cela me permet d’affiner l’estimation. "
-
-  - key: delai
-    question: "Quel est votre délai ou planning souhaité pour ce chantier ?"
-    validate: free_text
-    warmth: "Très bien 👍 "
+    question: "Bonjour, Betty d'ABC Peinture Déco 👋 Dites-moi en un mot sur quel projet vous avez besoin d'un devis."
+    validate: projet
+    warmth: "Très bien, je note. "
 
   - key: prenom
-    question: "Je peux avoir votre prénom pour le suivi du dossier ?"
+    question: "Parfait. Je vous appelle comment ?"
     validate: prenom
-    warmth: "Merci {prenom}. "
+    warmth: "Enchantée {prenom} 👍 "
 
   - key: telephone
-    question: "Quel numéro pour vous rappeler rapidement ?"
+    question: "Le meilleur numéro pour qu'un artisan vous rappelle aujourd'hui, {prenom} ?"
     validate: telephone
-    warmth: "Noté 👍 "
+    warmth: "Noté, merci {prenom}. "
 
-  - key: email
-    question: "Et votre email pour vous envoyer le devis détaillé ?"
-    validate: email
+  - key: surface
+    question: "Dernière question (facultative) : une idée de la surface ou du délai souhaité ? (sinon répondez simplement 'non')"
+    validate: surface
     warmth: ""
 
 # ---------------------------------------------------------
-#  CLOSING — orienté business / réactivité
+#  CLOSING — confirmation + réassurance + urgence
 # ---------------------------------------------------------
 closing: >
-  Merci {prenom}. Votre demande est bien prise en compte.
-
-  Un responsable vous rappelle sous 24h pour valider votre besoin et établir le devis.
-
-  📞 Si votre demande est urgente, contactez directement le 02 43 75 98 18.
+  Parfait {prenom}, c'est noté ✅ Un artisan d'ABC Peinture Déco vous rappelle
+  dans la journée (sous 24h max) pour préparer votre devis.
+  📞 Besoin immédiat ? Appelez directement le {phone}.
 
 # ---------------------------------------------------------
-#  RECADRAGES — filtre particulier + recentrage pro
+#  RECADRAGES — doux, variés, toujours orientés conversion
 # ---------------------------------------------------------
 recadrages:
+
+  # Hors sujet : on ne juge pas, on recentre gentiment
   hors_sujet:
-    - "Je suis l’assistante d’ABC Peinture Déco, nous intervenons uniquement sur des projets professionnels. Avez-vous une demande en lien avec un chantier ou un local ?"
-    - "Je peux vous aider uniquement pour des travaux de peinture ou rénovation à usage professionnel. Pouvez-vous préciser votre besoin ?"
-    - "Nous travaillons exclusivement avec des professionnels. Votre demande concerne-t-elle un chantier ou un bâtiment ?"
+    - "Je m'occupe uniquement des demandes de travaux (peinture, rénovation). On revient à votre projet ?"
+    - "Je ne peux vous aider que sur un projet de peinture ou rénovation. Dites-moi votre besoin en un mot 👍"
+    - "Pour qu'un artisan puisse vous rappeler, j'ai besoin de savoir rapidement ce que vous souhaitez faire."
+    - "On reste sur votre projet de travaux pour que je puisse vous organiser un rappel rapide 🙂"
 
+  # Flou : on relance positivement sans bloquer
   flou:
-    - "Pouvez-vous préciser votre demande ? Par exemple le type de chantier ou de surface concernée."
-    - "Je n’ai pas assez d’éléments. Pouvez-vous décrire votre projet de manière plus précise ?"
+    - "Pas de souci, dites-moi simplement : peinture, rénovation, façade… de quoi s'agit-il ?"
+    - "En quelques mots, c'est quoi le besoin ? (ex : repeindre un salon, ravaler une façade, rénover un local…)"
+    - "Donnez-moi juste le type de travaux, même vite fait, je m'occupe du reste 👍"
+    - "Pas besoin de détails, un mot suffit : peinture, façade, rénovation, autre ?"
 
+  # Questions légitimes hors flow : on répond COURT puis on relance
   info_hors_flow:
-    horaires: "Nous intervenons du lundi au vendredi. Je peux continuer à préparer votre devis si vous le souhaitez."
-    contact:  "Vous pouvez joindre directement le 02 43 75 98 18. Je peux aussi enregistrer votre demande ici."
-    adresse:  "Nous intervenons sur Le Mans et la Sarthe. Votre chantier est dans cette zone ?"
-    generique: "Je transmets l'information à l'équipe. On peut avancer sur votre devis en parallèle."
+    horaires: "Nous intervenons du lundi au vendredi, devis gratuit."
+    contact:  "Vous pouvez nous joindre au 02 43 75 98 18, ou me laisser votre numéro, on vous rappelle."
+    adresse:  "On intervient sur Le Mans et toute la Sarthe (72)."
+    delai:    "Les délais dépendent du chantier, un artisan vous précisera ça au rappel."
+    garantie: "Nous sommes assurés décennale, tout est couvert."
+    generique: "Bonne question, un artisan vous répondra précisément au rappel."
 
+  # Validation échouée : doux + réassurance
   invalide:
     telephone:
-      - "Merci de fournir un numéro valide (10 chiffres)."
-    email:
-      - "Merci de vérifier votre adresse email (format nom@domaine.fr)."
-    surface:
-      - "Même une estimation suffit (ex : 200 m², local commercial, immeuble)."
+      - "Un numéro à 10 chiffres suffit (ex : 06 12 34 56 78), c'est juste pour qu'on vous rappelle 🙂"
+      - "Pour organiser le rappel, il me faut un numéro valide (10 chiffres)."
+      - "Petit souci avec le numéro, vous pouvez me le redonner ? (format 06 ou 07, 10 chiffres)"
     prenom:
-      - "Merci de me donner simplement votre prénom."
+      - "Juste votre prénom suffit 👍"
+      - "Comment dois-je vous appeler ? (prénom uniquement)"
+    surface:
+      - "Pas d'inquiétude, même 'non' ou 'je ne sais pas' me va."
 
+  # Handover : après 3 messages hors sujet, on pousse le téléphone direct
   handover:
-    - "Je vais transmettre votre demande à un responsable. Pouvez-vous me laisser votre numéro pour un rappel rapide ?"
+    - "Le plus simple : laissez-moi votre numéro, un artisan vous rappelle et répond à toutes vos questions 📞"
+    - "Pour aller plus vite, donnez-moi votre numéro — on vous rappelle dans l'heure."
+    - "Un appel est plus efficace : votre numéro, et on s'occupe du reste."
