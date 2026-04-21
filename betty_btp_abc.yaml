@@ -1,7 +1,9 @@
 # =========================================================
 #  Betty — ABC Peinture Déco (Le Mans, Sarthe)
-#  VERSION CONVERSION — flow court, orienté rappel rapide
-#  Objectif unique : prénom + téléphone + projet
+#  VERSION CONVERSION v2 — flow court, orienté rappel rapide
+#  Objectif unique : projet + prénom + téléphone (3 étapes max)
+#  Email SUPPRIMÉ du flow obligatoire
+#  Particuliers ET pros acceptés
 # =========================================================
 
 identity:
@@ -17,6 +19,7 @@ behavior:
 
 # ---------------------------------------------------------
 #  LEXIQUE — massif, avec fautes clavier courantes
+#  Utilisé pour détection de pertinence (permissive)
 # ---------------------------------------------------------
 lexique:
   metier:
@@ -29,17 +32,16 @@ lexique:
     - repeinture
     - peintres
     - peinte
-    - pienture          # faute
-    - peintur           # faute
-    - peintue           # faute
-    - pinture           # faute
-    - peimture          # faute
+    - pienture
+    - peintur
+    - peintue
+    - pinture
+    - peimture
 
     # rénovation
     - renovation
     - renover
     - rénover
-    - renover           # sans accent
     - renov
     - renouv
     - refaire
@@ -65,8 +67,8 @@ lexique:
     - mission
     - boulot
     - taf
-    - trvx              # raccourci
-    - trav              # faute
+    - trvx
+    - trav
 
     # surfaces / éléments
     - mur
@@ -79,7 +81,7 @@ lexique:
     - facade
     - façade
     - facades
-    - faccade           # faute
+    - faccade
     - enduit
     - enduits
     - crepi
@@ -104,7 +106,7 @@ lexique:
     - placoplatre
     - plaque de platre
 
-    # pièces / lieux
+    # pièces / lieux (particuliers ET pros)
     - salon
     - salle
     - sejour
@@ -148,8 +150,8 @@ lexique:
     - maison
     - appart
     - appartement
-    - appartt           # faute
-    - apart             # faute
+    - appartt
+    - apart
     - studio
     - duplex
     - copropriete
@@ -164,9 +166,9 @@ lexique:
 
     # besoins / demandes
     - devis
-    - devi              # faute
-    - dévis             # faute
-    - deviss            # faute
+    - devi
+    - dévis
+    - deviss
     - tarif
     - tarifs
     - prix
@@ -210,7 +212,6 @@ lexique:
     - fissure
     - fissures
     - fissuré
-    - fissure
     - humidite
     - humidité
     - moisi
@@ -267,12 +268,10 @@ lexique:
     - disponibilite
     - disponibilité
     - adresse
-    - ou etes
     - ou etes vous
     - localisation
     - zone
     - secteur
-    - intervention
     - deplacement
     - déplacement
     - ville
@@ -282,9 +281,6 @@ lexique:
     - mans
     - le mans
     - 72
-    - delai
-    - délai
-    - quand
     - garantie
     - assurance
     - decennale
@@ -296,17 +292,18 @@ lexique:
     - facebook
 
 # ---------------------------------------------------------
-#  FLOW — 3 étapes + 1 bonus
+#  FLOW — 3 étapes obligatoires + 1 bonus facultatif
 #  Ordre : projet → prénom → téléphone → (surface/délai bonus)
+#  EMAIL SUPPRIMÉ — le téléphone seul suffit
 # ---------------------------------------------------------
 flow:
   - key: projet
-    question: "Bonjour, Betty d'ABC Peinture Déco 👋 Dites-moi en un mot sur quel projet vous avez besoin d'un devis."
+    question: "Bonjour, Betty d'ABC Peinture Déco 👋 Dites-moi en quelques mots sur quel projet vous avez besoin d'un devis ?"
     validate: projet
     warmth: "Très bien, je note. "
 
   - key: prenom
-    question: "Parfait. Je vous appelle comment ?"
+    question: "Je vous appelle comment ?"
     validate: prenom
     warmth: "Enchantée {prenom} 👍 "
 
@@ -316,60 +313,55 @@ flow:
     warmth: "Noté, merci {prenom}. "
 
   - key: surface
-    question: "Dernière question (facultative) : une idée de la surface ou du délai souhaité ? (sinon répondez simplement 'non')"
+    question: "Une idée de la surface ou du délai souhaité ? (facultatif — répondez 'non' pour passer)"
     validate: surface
     warmth: ""
 
 # ---------------------------------------------------------
-#  CLOSING — confirmation + réassurance + urgence
+#  CLOSING — confirmation + réassurance + urgence douce
 # ---------------------------------------------------------
 closing: >
   Parfait {prenom}, c'est noté ✅ Un artisan d'ABC Peinture Déco vous rappelle
-  dans la journée (sous 24h max) pour préparer votre devis.
+  dans la journée (sous 24h max) pour préparer votre devis gratuitement.
   📞 Besoin immédiat ? Appelez directement le {phone}.
 
 # ---------------------------------------------------------
-#  RECADRAGES — doux, variés, toujours orientés conversion
+#  RECADRAGES — doux, variés, jamais répétitifs
 # ---------------------------------------------------------
 recadrages:
 
-  # Hors sujet : on ne juge pas, on recentre gentiment
   hors_sujet:
-    - "Je m'occupe uniquement des demandes de travaux (peinture, rénovation). On revient à votre projet ?"
+    - "Je m'occupe uniquement des demandes de travaux (peinture, rénovation, façade…). On revient à votre projet ?"
     - "Je ne peux vous aider que sur un projet de peinture ou rénovation. Dites-moi votre besoin en un mot 👍"
     - "Pour qu'un artisan puisse vous rappeler, j'ai besoin de savoir rapidement ce que vous souhaitez faire."
     - "On reste sur votre projet de travaux pour que je puisse vous organiser un rappel rapide 🙂"
 
-  # Flou : on relance positivement sans bloquer
   flou:
     - "Pas de souci, dites-moi simplement : peinture, rénovation, façade… de quoi s'agit-il ?"
     - "En quelques mots, c'est quoi le besoin ? (ex : repeindre un salon, ravaler une façade, rénover un local…)"
     - "Donnez-moi juste le type de travaux, même vite fait, je m'occupe du reste 👍"
-    - "Pas besoin de détails, un mot suffit : peinture, façade, rénovation, autre ?"
+    - "Pas besoin de détails, un mot suffit : peinture, façade, rénovation, déco ?"
 
-  # Questions légitimes hors flow : on répond COURT puis on relance
   info_hors_flow:
-    horaires: "Nous intervenons du lundi au vendredi, devis gratuit."
-    contact:  "Vous pouvez nous joindre au 02 43 75 98 18, ou me laisser votre numéro, on vous rappelle."
-    adresse:  "On intervient sur Le Mans et toute la Sarthe (72)."
-    delai:    "Les délais dépendent du chantier, un artisan vous précisera ça au rappel."
-    garantie: "Nous sommes assurés décennale, tout est couvert."
-    generique: "Bonne question, un artisan vous répondra précisément au rappel."
+    horaires:  "Nous intervenons du lundi au vendredi — devis gratuit sous 24h."
+    contact:   "Vous pouvez nous joindre au 02 43 75 98 18, ou me laisser votre numéro et on vous rappelle."
+    adresse:   "On intervient sur Le Mans et toute la Sarthe (72)."
+    delai:     "Les délais dépendent du chantier — un artisan vous précisera ça au rappel."
+    garantie:  "Nous sommes assurés décennale, tout chantier est couvert."
+    generique: "Bonne question — un artisan vous répondra précisément au rappel 👍"
 
-  # Validation échouée : doux + réassurance
   invalide:
     telephone:
-      - "Un numéro à 10 chiffres suffit (ex : 06 12 34 56 78), c'est juste pour qu'on vous rappelle 🙂"
-      - "Pour organiser le rappel, il me faut un numéro valide (10 chiffres)."
-      - "Petit souci avec le numéro, vous pouvez me le redonner ? (format 06 ou 07, 10 chiffres)"
+      - "Un numéro à 10 chiffres suffit (ex : 06 12 34 56 78), c'est juste pour vous rappeler 🙂"
+      - "Pour organiser le rappel, il me faut un numéro valide — format 06 ou 07, 10 chiffres."
+      - "Petit souci avec le numéro, vous pouvez me le redonner ?"
     prenom:
       - "Juste votre prénom suffit 👍"
-      - "Comment dois-je vous appeler ? (prénom uniquement)"
+      - "Comment dois-je vous appeler ?"
     surface:
-      - "Pas d'inquiétude, même 'non' ou 'je ne sais pas' me va."
+      - "Pas d'inquiétude, même 'non' ou 'je ne sais pas' me va parfaitement."
 
-  # Handover : après 3 messages hors sujet, on pousse le téléphone direct
   handover:
     - "Le plus simple : laissez-moi votre numéro, un artisan vous rappelle et répond à toutes vos questions 📞"
     - "Pour aller plus vite, donnez-moi votre numéro — on vous rappelle dans l'heure."
-    - "Un appel est plus efficace : votre numéro, et on s'occupe du reste."
+    - "Un appel sera plus efficace : votre numéro, et on s'occupe du reste."
