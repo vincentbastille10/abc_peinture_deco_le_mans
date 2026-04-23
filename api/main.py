@@ -107,9 +107,7 @@ DEVIS_WORDS = {
 #  HELPERS TEXTE
 # ---------------------------------------------------------
 
-@app.before_request
-def off():
-    return "Maintenance", 503
+
   
 def normalize(txt: str) -> str:
     """Minuscule, sans accents, sans double espaces."""
