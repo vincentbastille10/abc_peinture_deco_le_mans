@@ -1,8 +1,25 @@
 {
+  "version": 2,
   "routes": [
-    { "src": "/", "dest": "/index.html" },
-    { "src": "/chat", "dest": "/chat.html" },
-    { "src": "/static/(.*)", "dest": "/static/$1" },
-    { "src": "/api/(.*)", "dest": "/api/main.py" }
+    {
+      "src": "^/$",
+      "dest": "/index.html"
+    },
+    {
+      "src": "^/chat$",
+      "dest": "/chat.html"
+    },
+    {
+      "src": "^/peintre-le-mans$",
+      "dest": "/peintre-le-mans.html"
+    },
+    {
+      "src": "^/static/(.*)$",
+      "dest": "/static/$1"
+    },
+    {
+      "src": "^/api/(.*)$",
+      "dest": "/api/main.py"
+    }
   ]
 }
