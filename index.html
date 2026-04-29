@@ -186,7 +186,6 @@
     }
 
     .tel-badge:hover { background: rgba(255,255,255,.09); }
-
     .tel-badge svg { opacity: .6; }
 
     .btn {
@@ -252,60 +251,66 @@
       min-height: 200vh;
       width: 100%;
       overflow: clip;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
 
+    /* Couche 0 — fond blanc */
     .hero-bg {
       position: absolute;
       inset: 0;
-
-      /* fond blanc */
+      z-index: 0;
       background-color: #ffffff;
+    }
 
-      /* ciel */
+    /* Couche 1 — image ciel */
+    .hero-sky {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
       background-image: url("/static/ciel.jpg");
       background-size: cover;
       background-position: center;
+    }
 
-      z-index: 0;
-
+    /* Couche 2 — logo ABC */
+    .hero-logo {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
       display: flex;
       align-items: center;
       justify-content: center;
+      pointer-events: none;
     }
 
-    .hero-bg img {
+    .hero-logo img {
       width: 100%;
       height: 100%;
       object-fit: contain;
       object-position: center;
-      background-color: #ffffff;
       display: block;
     }
- 
-    
+
+    /* Couche 3 — overlay sombre */
     .hero-overlay {
       position: absolute;
       inset: 0;
-      z-index: 1;
+      z-index: 3;
       pointer-events: none;
-      background:
-        linear-gradient(to bottom,
-          rgba(9,17,31,.2) 0%,
-          rgba(9,17,31,.4) 60%,
-          rgba(9,17,31,.85) 100%);
+      background: linear-gradient(to bottom,
+        rgba(9,17,31,.2) 0%,
+        rgba(9,17,31,.4) 60%,
+        rgba(9,17,31,.85) 100%);
     }
 
+    /* Couche 4 — contenu texte */
     .hero-content-section {
+      position: relative;
+      z-index: 4;
       min-height: 100vh;
       padding-top: calc(var(--topbar-offset) + 44px);
       padding-bottom: 52px;
       display: flex;
       align-items: flex-end;
-      position: relative;
-      z-index: 2;
       opacity: 0;
       transform: translateY(40px);
       transition: opacity .6s ease, transform .6s ease;
@@ -487,7 +492,7 @@
       left: 50%;
       bottom: 20px;
       transform: translateX(-50%);
-      z-index: 2;
+      z-index: 10;
       font-size: 30px;
       line-height: 1;
       color: rgba(238,240,245,.82);
@@ -561,9 +566,7 @@
       margin-top: 2px;
     }
 
-    .cookie-banner-copy {
-      min-width: 0;
-    }
+    .cookie-banner-copy { min-width: 0; }
 
     .cookie-banner-actions {
       display: inline-flex;
@@ -713,8 +716,6 @@
       align-items: center;
     }
 
-    .positioning-left {}
-
     .positioning-stats {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -744,10 +745,7 @@
       margin-bottom: 6px;
     }
 
-    .pos-stat span {
-      font-size: 13px;
-      color: var(--muted);
-    }
+    .pos-stat span { font-size: 13px; color: var(--muted); }
 
     .positioning-pillars {
       display: grid;
@@ -786,15 +784,9 @@
       letter-spacing: -.02em;
     }
 
-    .pillar p {
-      font-size: 15px;
-      color: var(--muted);
-      line-height: 1.55;
-    }
+    .pillar p { font-size: 15px; color: var(--muted); line-height: 1.55; }
 
     /* ─── MARCHÉ / UNIVERS CLIENT ─── */
-    .market-section {}
-
     .market-intro {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -830,10 +822,7 @@
       min-height: 88px;
     }
 
-    .market-logo-cell:hover {
-      background: var(--surface-2);
-      color: var(--muted);
-    }
+    .market-logo-cell:hover { background: var(--surface-2); color: var(--muted); }
 
     .market-statement {
       margin-top: 40px;
@@ -843,17 +832,8 @@
       border: 1px solid rgba(200,169,110,.18);
     }
 
-    .market-statement p {
-      font-size: 17px;
-      color: rgba(238,240,245,.82);
-      line-height: 1.6;
-      font-weight: 300;
-    }
-
-    .market-statement strong {
-      color: var(--gold-light);
-      font-weight: 600;
-    }
+    .market-statement p { font-size: 17px; color: rgba(238,240,245,.82); line-height: 1.6; font-weight: 300; }
+    .market-statement strong { color: var(--gold-light); font-weight: 600; }
 
     /* ─── SERVICES ─── */
     .services-bg {
@@ -923,11 +903,7 @@
       line-height: 1.1;
     }
 
-    .service-card p {
-      font-size: 15px;
-      color: var(--muted);
-      line-height: 1.6;
-    }
+    .service-card p { font-size: 15px; color: var(--muted); line-height: 1.6; }
 
     /* ─── MÉTHODE ─── */
     .method-grid {
@@ -936,9 +912,7 @@
       gap: 24px;
     }
 
-    .method-step {
-      position: relative;
-    }
+    .method-step { position: relative; }
 
     .method-step-num {
       font-family: var(--font-display);
@@ -960,11 +934,7 @@
       line-height: 1.1;
     }
 
-    .method-step p {
-      font-size: 15px;
-      color: var(--muted);
-      line-height: 1.6;
-    }
+    .method-step p { font-size: 15px; color: var(--muted); line-height: 1.6; }
 
     .method-connector {
       position: absolute;
@@ -1023,9 +993,7 @@
       letter-spacing: -.03em;
     }
 
-    .reas-list {
-      padding: 8px 0;
-    }
+    .reas-list { padding: 8px 0; }
 
     .reas-row {
       display: flex;
@@ -1063,11 +1031,7 @@
       margin-top: 3px;
     }
 
-    .reas-right {
-      display: flex;
-      flex-direction: column;
-      gap: 28px;
-    }
+    .reas-right { display: flex; flex-direction: column; gap: 28px; }
 
     .reas-highlight {
       flex: 1;
@@ -1080,11 +1044,7 @@
       gap: 20px;
     }
 
-    .reas-highlight-item {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
+    .reas-highlight-item { display: flex; align-items: center; gap: 16px; }
 
     .reas-highlight-icon {
       width: 44px;
@@ -1098,17 +1058,8 @@
     }
 
     .reas-highlight-icon svg { color: var(--gold); }
-
-    .reas-highlight-text strong {
-      display: block;
-      font-size: 16px;
-      font-weight: 600;
-    }
-
-    .reas-highlight-text span {
-      font-size: 14px;
-      color: var(--muted);
-    }
+    .reas-highlight-text strong { display: block; font-size: 16px; font-weight: 600; }
+    .reas-highlight-text span { font-size: 14px; color: var(--muted); }
 
     /* ─── HORAIRES ─── */
     .hours-grid {
@@ -1129,18 +1080,8 @@
     }
 
     .hour-row:hover { background: var(--surface-2); }
-
-    .hour-day {
-      flex: 0 0 180px;
-      font-weight: 600;
-      font-size: 15px;
-    }
-
-    .hour-time {
-      color: var(--muted);
-      font-size: 15px;
-      flex: 1;
-    }
+    .hour-day { flex: 0 0 180px; font-weight: 600; font-size: 15px; }
+    .hour-time { color: var(--muted); font-size: 15px; flex: 1; }
 
     .hour-closed {
       display: inline-block;
@@ -1161,11 +1102,7 @@
       gap: 28px;
     }
 
-    .contact-cards {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
+    .contact-cards { display: flex; flex-direction: column; gap: 16px; }
 
     .contact-card {
       border-radius: var(--radius-lg);
@@ -1175,10 +1112,7 @@
       transition: background .2s, border-color .2s;
     }
 
-    .contact-card:hover {
-      background: var(--surface-2);
-      border-color: rgba(255,255,255,.14);
-    }
+    .contact-card:hover { background: var(--surface-2); border-color: rgba(255,255,255,.14); }
 
     .contact-card-label {
       font-size: 11px;
@@ -1198,16 +1132,8 @@
       margin-bottom: 6px;
     }
 
-    .contact-card p {
-      font-size: 15px;
-      color: var(--muted);
-    }
-
-    .contact-card a {
-      color: var(--cerulean-light);
-      text-decoration: underline;
-      text-underline-offset: 3px;
-    }
+    .contact-card p { font-size: 15px; color: var(--muted); }
+    .contact-card a { color: var(--cerulean-light); text-decoration: underline; text-underline-offset: 3px; }
 
     .cta-card {
       border-radius: var(--radius-lg);
@@ -1219,12 +1145,7 @@
       gap: 14px;
     }
 
-    .cta-card p {
-      font-size: 16px;
-      color: var(--muted);
-      line-height: 1.55;
-    }
-
+    .cta-card p { font-size: 16px; color: var(--muted); line-height: 1.55; }
     .cta-card .btn { width: 100%; }
 
     .map-container {
@@ -1256,8 +1177,6 @@
       margin-bottom: 48px;
     }
 
-    .footer-brand {}
-
     .footer-logo {
       font-family: var(--font-display);
       font-size: 24px;
@@ -1284,19 +1203,8 @@
       margin-bottom: 18px;
     }
 
-    .footer-col ul {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .footer-col ul li a {
-      font-size: 14px;
-      color: var(--muted);
-      transition: color .18s;
-    }
-
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-col ul li a { font-size: 14px; color: var(--muted); transition: color .18s; }
     .footer-col ul li a:hover { color: var(--text); }
 
     .footer-bottom {
@@ -1308,18 +1216,8 @@
       gap: 20px;
     }
 
-    .footer-legal {
-      font-size: 13px;
-      color: var(--dim);
-      line-height: 1.6;
-    }
-
-    .footer-siren {
-      font-size: 12.5px;
-      color: var(--dim);
-      text-align: right;
-      line-height: 1.6;
-    }
+    .footer-legal { font-size: 13px; color: var(--dim); line-height: 1.6; }
+    .footer-siren { font-size: 12.5px; color: var(--dim); text-align: right; line-height: 1.6; }
 
     /* ─── DIVIDERS ─── */
     .section-divider {
@@ -1350,69 +1248,20 @@
       .topbar-inner { height: auto; padding: 14px 0; flex-wrap: wrap; }
       .topbar-actions { flex-wrap: wrap; gap: 8px; }
       .hero { min-height: 210vh; }
-      .cookie-banner {
-        padding: 0 10px max(10px, env(safe-area-inset-bottom));
-        max-height: 100px;
-      }
-      .cookie-banner-panel {
-        max-height: 100px;
-        min-height: 88px;
-        flex-direction: column;
-        align-items: stretch;
-        gap: 8px;
-        padding: 10px 12px;
-      }
-      .cookie-banner-copy {
-        text-align: center;
-      }
-      .cookie-banner-text {
-        font-size: 13px;
-        line-height: 1.35;
-      }
-      .cookie-banner-betty {
-        margin-top: 1px;
-        font-size: 11.5px;
-      }
-      .cookie-banner-actions {
-        width: 100%;
-        margin-left: 0;
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 6px;
-        padding-right: 0;
-      }
-      .cookie-btn,
-      .cookie-link {
-        width: 100%;
-        text-align: center;
-      }
-      .cookie-btn {
-        height: 33px;
-      }
-      .hero-content-section {
-        padding-top: calc(var(--topbar-offset) + 24px);
-        align-items: flex-end;
-      }
-      .hero-content-inner {
-        grid-template-columns: 1fr;
-        gap: 24px;
-      }
+      .cookie-banner { padding: 0 10px max(10px, env(safe-area-inset-bottom)); max-height: 100px; }
+      .cookie-banner-panel { max-height: 100px; min-height: 88px; flex-direction: column; align-items: stretch; gap: 8px; padding: 10px 12px; }
+      .cookie-banner-copy { text-align: center; }
+      .cookie-banner-text { font-size: 13px; line-height: 1.35; }
+      .cookie-banner-betty { margin-top: 1px; font-size: 11.5px; }
+      .cookie-banner-actions { width: 100%; margin-left: 0; display: grid; grid-template-columns: 1fr; gap: 6px; padding-right: 0; }
+      .cookie-btn, .cookie-link { width: 100%; text-align: center; }
+      .cookie-btn { height: 33px; }
+      .hero-content-section { padding-top: calc(var(--topbar-offset) + 24px); align-items: flex-end; }
+      .hero-content-inner { grid-template-columns: 1fr; gap: 24px; }
       .hero-betty { max-width: 100%; }
-      .betty-wrapper {
-        margin-top: 20px;
-        padding: 0 12px;
-      }
-
-      .betty-wrapper > * {
-        max-width: 100%;
-      }
-
-      .betty-wrapper iframe,
-      .betty-wrapper .betty,
-      .betty-wrapper .chatbot {
-        max-width: 100%;
-        height: 60vh;
-      }
+      .betty-wrapper { margin-top: 20px; padding: 0 12px; }
+      .betty-wrapper > * { max-width: 100%; }
+      .betty-wrapper iframe, .betty-wrapper .betty, .betty-wrapper .chatbot { max-width: 100%; height: 60vh; }
       .trust-items { flex-direction: column; gap: 0; }
       .trust-item { width: 100%; border-right: none; border-bottom: 1px solid var(--line); }
       .trust-item:last-child { border-bottom: none; }
@@ -1427,15 +1276,10 @@
     }
 
     @media (max-width: 520px) {
-      .hero-content-section {
-        min-height: 100vh;
-        padding-bottom: 36px;
-      }
+      .hero-content-section { min-height: 100vh; padding-bottom: 36px; }
       .hero-ctas { flex-direction: column; }
       .hero-ctas .btn { width: 100%; justify-content: center; }
-      .hero-betty {
-        width: 100%;
-      }
+      .hero-betty { width: 100%; }
       .market-logos-grid { grid-template-columns: repeat(2, 1fr); }
       .reas-key { flex: 0 0 130px; }
     }
@@ -1457,11 +1301,7 @@
       "addressRegion": "Sarthe",
       "addressCountry": "FR"
     },
-    "geo": {
-      "@type": "GeoCoordinates",
-      "latitude": 47.99,
-      "longitude": 0.17
-    },
+    "geo": { "@type": "GeoCoordinates", "latitude": 47.99, "longitude": 0.17 },
     "areaServed": [
       { "@type": "City", "name": "Le Mans" },
       { "@type": "City", "name": "La Chapelle-Saint-Aubin" },
@@ -1479,9 +1319,7 @@
       { "@type": "OpeningHoursSpecification", "dayOfWeek": "Friday", "opens": "09:00", "closes": "12:00" },
       { "@type": "OpeningHoursSpecification", "dayOfWeek": "Friday", "opens": "13:00", "closes": "16:00" }
     ],
-    "sameAs": [
-      "https://www.pagesjaunes.fr/pros/55586368"
-    ]
+    "sameAs": ["https://www.pagesjaunes.fr/pros/55586368"]
   }
   </script>
 </head>
@@ -1522,41 +1360,52 @@
 
     <!-- ════════════════ HERO ════════════════ -->
     <section class="hero" aria-label="Logo ABC Peinture Déco en plein écran">
-      <div class="hero-bg">
-        <img src="/static/abc_gris2.webp" alt="ABC Peinture Déco" class="hero-img">
-      </div>
-      <div class="hero-overlay" aria-hidden="true"></div>
-      <div class="scroll-indicator" aria-hidden="true">↓</div>
 
+      <!-- Couche 0 : fond blanc -->
+      <div class="hero-bg"></div>
+
+      <!-- Couche 1 : image ciel -->
+      <div class="hero-sky"></div>
+
+      <!-- Couche 2 : logo ABC -->
+      <div class="hero-logo">
+        <img src="/static/abc_gris2.webp" alt="ABC Peinture Déco" />
+      </div>
+
+      <!-- Couche 3 : overlay sombre -->
+      <div class="hero-overlay" aria-hidden="true"></div>
+
+      <!-- Couche 4 : contenu texte -->
       <div class="hero-content-section" aria-labelledby="hero-headline">
         <div class="hero-content-inner hero-inner">
           <div class="hero-text-block">
-          <div class="hero-badge reveal">
-            <div class="hero-badge-dot" aria-hidden="true"></div>
-            <span class="hero-badge-text">Peinture professionnelle · Sarthe · 72</span>
+            <div class="hero-badge reveal">
+              <div class="hero-badge-dot" aria-hidden="true"></div>
+              <span class="hero-badge-text">Peinture professionnelle · Sarthe · 72</span>
+            </div>
+
+            <h1 class="hero-headline reveal reveal-delay-1" id="hero-headline">
+              L'entreprise de peinture<br>
+              <em>de référence</em><br>
+              au Mans.
+            </h1>
+
+            <p class="hero-sub reveal reveal-delay-2">
+              ABC Peinture Déco intervient sur vos locaux professionnels et chantiers résidentiels en Sarthe. Peinture intérieure et extérieure, revêtements, plâtrerie et vitrerie — avec la méthode et la rigueur qu'exigent les environnements exigeants.
+            </p>
+
+            <div class="hero-ctas reveal reveal-delay-3">
+              <a class="btn btn-gold btn-large" href="tel:0243759818">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.62 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9a16 16 0 0 0 6.09 6.09l1.96-1.94a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                Appeler maintenant
+              </a>
+              <a class="btn btn-outline btn-large" href="#contact">Demander un devis</a>
+            </div>
           </div>
-
-          <h1 class="hero-headline reveal reveal-delay-1" id="hero-headline">
-            L'entreprise de peinture<br>
-            <em>de référence</em><br>
-            au Mans.
-          </h1>
-
-          <p class="hero-sub reveal reveal-delay-2">
-            ABC Peinture Déco intervient sur vos locaux professionnels et chantiers résidentiels en Sarthe. Peinture intérieure et extérieure, revêtements, plâtrerie et vitrerie — avec la méthode et la rigueur qu'exigent les environnements exigeants.
-          </p>
-
-          <div class="hero-ctas reveal reveal-delay-3">
-            <a class="btn btn-gold btn-large" href="tel:0243759818">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.62 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9a16 16 0 0 0 6.09 6.09l1.96-1.94a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-              Appeler maintenant
-            </a>
-            <a class="btn btn-outline btn-large" href="#contact">Demander un devis</a>
-          </div>
-        </div>
-
         </div>
       </div>
+
+      <div class="scroll-indicator" aria-hidden="true">↓</div>
     </section>
 
     <div class="betty-wrapper reveal reveal-delay-4">
@@ -2085,7 +1934,7 @@
     aria-label="Préférences cookies">
     <div class="cookie-banner-panel">
       <div class="cookie-banner-copy">
-        <p class="cookie-banner-text">Nous utilisons des cookies pour améliorer votre expérience et mesurer l’audience.</p>
+        <p class="cookie-banner-text">Nous utilisons des cookies pour améliorer votre expérience et mesurer l'audience.</p>
         <p class="cookie-banner-betty" id="cookie-betty-hint" hidden>Besoin de comprendre pourquoi ? Demandez à Betty 🙂</p>
       </div>
       <div class="cookie-banner-actions">
@@ -2121,7 +1970,6 @@
       } else {
         heroContent?.classList.remove('is-visible');
       }
-
       if (window.scrollY > 80) {
         scrollIndicator?.classList.add('is-hidden');
       } else {
