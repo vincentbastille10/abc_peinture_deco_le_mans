@@ -275,7 +275,15 @@
       background-color: #ffffff;
       display: block;
     }
+    .hero-bg::before {
+      content: "";
+      position: absolute;
+      inset: 0;
 
+      background: url("/static/ciel.jpg") center/cover no-repeat;
+
+      z-index: 0;
+    }
     .hero-overlay {
       position: absolute;
       inset: 0;
