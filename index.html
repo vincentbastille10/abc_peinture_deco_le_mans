@@ -260,11 +260,20 @@
     .hero-bg {
       position: absolute;
       inset: 0;
+
+      /* fond blanc */
+      background-color: #ffffff;
+
+      /* ciel */
+      background-image: url("/static/ciel.jpg");
+      background-size: cover;
+      background-position: center;
+
       z-index: 0;
+
       display: flex;
       align-items: center;
       justify-content: center;
-      background-color: #ffffff;
     }
 
     .hero-bg img {
@@ -275,15 +284,8 @@
       background-color: #ffffff;
       display: block;
     }
-    .hero-bg::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-
-      background: url("/static/ciel.jpg") center/cover no-repeat;
-
-      z-index: -1;
-    }
+ 
+    
     .hero-overlay {
       position: absolute;
       inset: 0;
