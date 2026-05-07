@@ -4,9 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>ABC Peinture Déco | Entreprise de peinture professionnelle au Mans & Sarthe</title>
-  <meta name="description" content="ABC Peinture Déco, entreprise de peinture professionnelle au Mans et en Sarthe. Peinture intérieure, extérieure, revêtements sols et murs, plâtrerie et vitrerie pour locaux professionnels et particuliers. Assurance décennale GAN. Devis rapide." />
-  <meta name="keywords" content="peintre Le Mans, entreprise peinture Le Mans, peinture Sarthe, peinture 72, peinture locaux professionnels Le Mans, rénovation peinture Le Mans, revêtements sols murs Sarthe, peintre professionnel Sarthe, ABC Peinture Déco" />
+  <title>ABC Peinture Déco | Peinture professionnelle, grands comptes & rénovation au Mans</title>
+  <meta name="description" content="ABC Peinture Déco, entreprise de peinture professionnelle au Mans et en Sarthe. Équipe d'une dizaine de personnes, références grands comptes, peinture, revêtements sols et murs, ravalement, plâtrerie, menuiseries intérieures. Devis rapide." />
+  <meta name="keywords" content="peintre Le Mans, entreprise peinture Le Mans, peinture Sarthe, peinture 72, peinture locaux professionnels Le Mans, rénovation peinture Le Mans, revêtements sols murs Sarthe, peintre professionnel Sarthe, ABC Peinture Déco, peinture grands comptes, ravalement Sarthe, La Chapelle-Saint-Aubin, rénovation locaux professionnels" />
 
   <meta property="og:title" content="ABC Peinture Déco | Entreprise de peinture professionnelle au Mans & Sarthe" />
   <meta property="og:description" content="Peinture intérieure, extérieure, revêtements sols et murs, plâtrerie, vitrerie. Locaux professionnels & particuliers. Présence au Mans, La Chapelle-Saint-Aubin, Sarthe." />
@@ -1283,6 +1283,268 @@
       .market-logos-grid { grid-template-columns: repeat(2, 1fr); }
       .reas-key { flex: 0 0 130px; }
     }
+
+    /* ─── CLIENTS SECTION ─── */
+    .clients-section {
+      background: var(--ink);
+      border-top: 1px solid var(--line);
+    }
+
+    .clients-logo-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 14px;
+    }
+
+    .clients-logo-card {
+      min-height: 112px;
+      padding: 22px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.96);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-card);
+      transition: transform .2s, box-shadow .2s;
+    }
+
+    .clients-logo-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 48px rgba(0,0,0,.36);
+    }
+
+    .clients-logo-card img {
+      max-width: 100%;
+      max-height: 68px;
+      object-fit: contain;
+    }
+
+    .clients-logo-card.text-only {
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 700;
+      color: #222;
+      text-align: center;
+      line-height: 1.3;
+    }
+
+    .clients-note {
+      margin-top: 36px;
+      padding: 22px 28px;
+      border-radius: var(--radius-md);
+      background: rgba(255,255,255,.04);
+      border: 1px solid var(--line);
+    }
+
+    .clients-note p {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    @media (max-width: 1100px) { .clients-logo-grid { grid-template-columns: repeat(4, 1fr); } }
+    @media (max-width: 768px)  { .clients-logo-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 520px)  { .clients-logo-grid { grid-template-columns: repeat(2, 1fr); } }
+
+    /* ─── KEY FIGURES SECTION ─── */
+    .key-figures {
+      background: var(--ink-2);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .kf-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      background: var(--line);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      margin-bottom: 56px;
+    }
+
+    .kf-card {
+      background: var(--surface);
+      padding: 32px 28px;
+      transition: background .2s;
+    }
+
+    .kf-card:hover { background: var(--surface-2); }
+
+    .kf-value {
+      font-family: var(--font-display);
+      font-size: 40px;
+      font-weight: 800;
+      letter-spacing: -.04em;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .kf-value span.gold { color: var(--gold-light); }
+
+    .kf-label {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .timeline {
+      position: relative;
+      padding-left: 28px;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 8px;
+      bottom: 8px;
+      width: 2px;
+      background: linear-gradient(180deg, var(--gold), transparent);
+      border-radius: 99px;
+    }
+
+    .timeline-item {
+      position: relative;
+      padding: 0 0 28px 32px;
+    }
+
+    .timeline-item:last-child { padding-bottom: 0; }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -6px;
+      top: 6px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--gold);
+      border: 2px solid var(--ink-2);
+    }
+
+    .timeline-year {
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .timeline-desc {
+      font-size: 15px;
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    @media (max-width: 768px) { .kf-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 520px) { .kf-grid { grid-template-columns: 1fr; } }
+
+    /* ─── ECO SECTION ─── */
+    .eco-section {
+      background: var(--ink);
+      border-top: 1px solid var(--line);
+    }
+
+    .eco-cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+      background: var(--line);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      margin-bottom: 28px;
+    }
+
+    .eco-card {
+      background: var(--surface);
+      padding: 32px 24px;
+      transition: background .2s;
+    }
+
+    .eco-card:hover { background: var(--surface-2); }
+
+    .eco-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: rgba(61,214,180,.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+
+    .eco-icon svg { color: #3dd6b4; }
+
+    .eco-card h3 {
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -.02em;
+      margin-bottom: 8px;
+    }
+
+    .eco-card p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+    .eco-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px;
+      border-radius: 999px;
+      background: rgba(61,214,180,.1);
+      border: 1px solid rgba(61,214,180,.25);
+      font-size: 13px;
+      font-weight: 600;
+      color: #3dd6b4;
+      letter-spacing: .04em;
+    }
+
+    @media (max-width: 768px) { .eco-cards { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 520px) { .eco-cards { grid-template-columns: 1fr; } }
+
+    /* ─── PARTNERS SECTION ─── */
+    .partners-section {
+      background: var(--ink-2);
+      border-top: 1px solid var(--line);
+    }
+
+    .partners-logo-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+    }
+
+    .partner-logo-card {
+      min-height: 96px;
+      padding: 18px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.92);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,.18);
+      transition: transform .2s, box-shadow .2s;
+    }
+
+    .partner-logo-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 32px rgba(0,0,0,.28);
+    }
+
+    .partner-logo-card img {
+      max-width: 100%;
+      max-height: 56px;
+      object-fit: contain;
+    }
+
+    @media (max-width: 1100px) { .partners-logo-grid { grid-template-columns: repeat(4, 1fr); } }
+    @media (max-width: 768px)  { .partners-logo-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 520px)  { .partners-logo-grid { grid-template-columns: repeat(2, 1fr); } }
   </style>
 
   <script type="application/ld+json">
@@ -1291,6 +1553,8 @@
     "@type": "LocalBusiness",
     "name": "ABC Peinture Déco",
     "legalName": "ABC Peinture Déco SARL",
+    "foundingDate": "2013",
+    "founder": { "@type": "Person", "name": "Anthony Berge" },
     "telephone": "+33243759818",
     "identifier": { "@type": "PropertyValue", "name": "SIREN", "value": "793751249" },
     "address": {
@@ -1305,9 +1569,10 @@
     "areaServed": [
       { "@type": "City", "name": "Le Mans" },
       { "@type": "City", "name": "La Chapelle-Saint-Aubin" },
-      { "@type": "AdministrativeArea", "name": "Sarthe" }
+      { "@type": "AdministrativeArea", "name": "Sarthe" },
+      { "@type": "Country", "name": "France" }
     ],
-    "description": "Entreprise de peinture professionnelle au Mans et en Sarthe. Peinture intérieure et extérieure, revêtements sols et murs, plâtrerie et vitrerie. Interventions sur locaux professionnels et chantiers résidentiels.",
+    "description": "Entreprise de peinture professionnelle au Mans et en Sarthe. Peinture intérieure et extérieure, revêtements sols et murs, enduits décoratifs, ravalement, plâtrerie, menuiseries intérieures. Équipe d'une dizaine de personnes, références grands comptes, interventions en Sarthe et dans toute la France.",
     "openingHoursSpecification": [
       { "@type": "OpeningHoursSpecification", "dayOfWeek": "Monday", "opens": "09:00", "closes": "12:00" },
       { "@type": "OpeningHoursSpecification", "dayOfWeek": "Monday", "opens": "13:00", "closes": "16:00" },
@@ -1340,9 +1605,10 @@
 
       <nav class="topbar-nav" aria-label="Navigation principale">
         <a href="#services">Prestations</a>
+        <a href="#clients">Références</a>
+        <a href="#chiffres">Chiffres</a>
         <a href="#methode">Notre méthode</a>
         <a href="#entreprise">Entreprise</a>
-        <a href="#horaires">Horaires</a>
         <a href="#contact">Contact</a>
       </nav>
 
@@ -1385,13 +1651,13 @@
             </div>
 
             <h1 class="hero-headline reveal reveal-delay-1" id="hero-headline">
-              L'entreprise de peinture<br>
-              <em>de référence</em><br>
+              Entreprise de peinture<br>
+              <em>pour professionnels & grands comptes</em><br>
               au Mans.
             </h1>
 
             <p class="hero-sub reveal reveal-delay-2">
-              ABC Peinture Déco intervient sur vos locaux professionnels et chantiers résidentiels en Sarthe. Peinture intérieure et extérieure, revêtements, plâtrerie et vitrerie — avec la méthode et la rigueur qu'exigent les environnements exigeants.
+              ABC Peinture Déco accompagne commerces, enseignes, bureaux, collectivités et particuliers exigeants. Une équipe d'une dizaine de professionnels, basée en Sarthe, capable d'intervenir localement et partout en France.
             </p>
 
             <div class="hero-ctas reveal reveal-delay-3">
@@ -1430,20 +1696,20 @@
         <div class="trust-items">
           <div class="trust-item">
             <div class="trust-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
             </div>
             <div class="trust-text">
-              <strong>Assurance décennale GAN</strong>
-              <span>Garantie et couverture professionnelle</span>
+              <strong>Équipe d'une dizaine de professionnels</strong>
+              <span>Organisation structurée pour les chantiers exigeants</span>
             </div>
           </div>
           <div class="trust-item">
             <div class="trust-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
             </div>
             <div class="trust-text">
-              <strong>+ de 20 ans d'expérience</strong>
-              <span>SARL créée en juin 2013, métier maîtrisé</span>
+              <strong>Jusqu'à 1,55 M€ de CA annuel</strong>
+              <span>Référence issue de l'exercice 2023-2024</span>
             </div>
           </div>
           <div class="trust-item">
@@ -1451,17 +1717,17 @@
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
             </div>
             <div class="trust-text">
-              <strong>Le Mans & Sarthe</strong>
-              <span>Présence locale, intervention rapide</span>
+              <strong>Sarthe & France entière</strong>
+              <span>Chantiers principalement en Sarthe, déplacements nationaux possibles</span>
             </div>
           </div>
           <div class="trust-item">
             <div class="trust-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
             </div>
             <div class="trust-text">
-              <strong>Devis rapide & gratuit</strong>
-              <span>Réponse sous 24h</span>
+              <strong>Grands comptes clients</strong>
+              <span>Enseignes, institutions, commerces et sites professionnels</span>
             </div>
           </div>
         </div>
@@ -1563,10 +1829,170 @@
           <div class="market-logo-cell">Particuliers Exigeants</div>
         </div>
 
-        <div style="margin-top:20px; padding:20px 28px; border-radius:12px; background:rgba(255,255,255,.03); border:1px solid var(--line);">
-          <p style="font-size:13px; color:var(--dim); line-height:1.6;">
-            Ces catégories représentent les types d'environnements professionnels pour lesquels ABC Peinture Déco est organisée et équipée. Elles illustrent notre positionnement, non des références client contractuellement attestées.
-          </p>
+      </div>
+    </section>
+
+    <!-- ════════════════ CLIENTS ════════════════ -->
+    <section class="clients-section" id="clients" aria-labelledby="clients-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="label-eyebrow reveal">Références clients</span>
+          <h2 class="section-h reveal reveal-delay-1" id="clients-title">Ils nous font confiance</h2>
+          <p class="section-lead reveal reveal-delay-2">Des enseignes nationales, institutions, commerces, sites professionnels et acteurs locaux ont confié leurs chantiers à ABC Peinture Déco.</p>
+        </div>
+
+        <div class="clients-logo-grid">
+          <div class="clients-logo-card reveal reveal-delay-1">
+            <img src="/static/tony_client_districenter.webp" alt="DistriCenter" loading="lazy" />
+          </div>
+          <div class="clients-logo-card reveal reveal-delay-1">
+            <img src="/static/tony_client_cocopa.webp" alt="Socopa" loading="lazy" />
+          </div>
+          <div class="clients-logo-card reveal reveal-delay-2 text-only">
+            <span>exess</span>
+          </div>
+          <div class="clients-logo-card reveal reveal-delay-2">
+            <img src="/static/tony_client_sfic.webp" alt="FFB" loading="lazy" />
+          </div>
+          <div class="clients-logo-card reveal reveal-delay-2">
+            <img src="/static/tony_client_engie.webp" alt="Engie Ineo" loading="lazy" />
+          </div>
+          <div class="clients-logo-card reveal reveal-delay-3 text-only">
+            <span>K1 Speed</span>
+          </div>
+          <div class="clients-logo-card reveal reveal-delay-1">
+            <img src="/static/tony_client_inalta.webp" alt="Inalta" loading="lazy" />
+          </div>
+          <div class="clients-logo-card reveal reveal-delay-2 text-only">
+            <span>Vénizi'O</span>
+          </div>
+          <div class="clients-logo-card reveal reveal-delay-2 text-only">
+            <span>Cougnaud</span>
+          </div>
+          <div class="clients-logo-card reveal reveal-delay-2">
+            <img src="/static/tony_client_toyota.webp" alt="Toyota" loading="lazy" />
+          </div>
+          <div class="clients-logo-card reveal reveal-delay-3 text-only">
+            <span>Autorelli</span>
+          </div>
+          <div class="clients-logo-card reveal reveal-delay-3 text-only">
+            <span>BMW · Mini</span>
+          </div>
+          <div class="clients-logo-card reveal reveal-delay-1 text-only">
+            <span>Peugeot</span>
+          </div>
+          <div class="clients-logo-card reveal reveal-delay-1">
+            <img src="/static/tony_clientalpina.webp" alt="Apolis Automobiles" loading="lazy" />
+          </div>
+          <div class="clients-logo-card reveal reveal-delay-2 text-only">
+            <span>J. Bervas Automobiles</span>
+          </div>
+          <div class="clients-logo-card reveal reveal-delay-2">
+            <img src="/static/tony_client_assurance.webp" alt="Assurance Maladie" loading="lazy" />
+          </div>
+          <div class="clients-logo-card reveal reveal-delay-2 text-only">
+            <span>Noblessa Cuisines</span>
+          </div>
+          <div class="clients-logo-card reveal reveal-delay-3 text-only">
+            <span>Tréma</span>
+          </div>
+          <div class="clients-logo-card reveal reveal-delay-1 text-only">
+            <span>O2</span>
+          </div>
+          <div class="clients-logo-card reveal reveal-delay-1">
+            <img src="/static/tony_client_interma.webp" alt="Intermarché Hyper Nogent-le-Rotrou" loading="lazy" />
+          </div>
+          <div class="clients-logo-card reveal reveal-delay-2 text-only">
+            <span>Foussier</span>
+          </div>
+          <div class="clients-logo-card reveal reveal-delay-2 text-only">
+            <span>La Chapelle<br>Saint-Aubin</span>
+          </div>
+          <div class="clients-logo-card reveal reveal-delay-2">
+            <img src="/static/tony_client_clinique.webp" alt="Clinique du Pré" loading="lazy" />
+          </div>
+          <div class="clients-logo-card reveal reveal-delay-3">
+            <img src="/static/tony_client_crédit.webp" alt="Crédit Agricole Anjou Maine" loading="lazy" />
+          </div>
+          <div class="clients-logo-card reveal reveal-delay-1">
+            <img src="/static/tony_client_residence.webp" alt="Résidence Étudiante du Mans" loading="lazy" />
+          </div>
+          <div class="clients-logo-card reveal reveal-delay-1 text-only">
+            <span>LG Traiteur</span>
+          </div>
+          <div class="clients-logo-card reveal reveal-delay-2 text-only">
+            <span>Privilège<br>Équitation</span>
+          </div>
+          <div class="clients-logo-card reveal reveal-delay-2 text-only">
+            <span>Stade Rennais<br>Roazhon Park</span>
+          </div>
+          <div class="clients-logo-card reveal reveal-delay-3">
+            <img src="/static/tony_client_arcpus.webp" alt="Apolis Automobiles" loading="lazy" />
+          </div>
+        </div>
+
+        <div class="clients-note reveal">
+          <p>Références issues de la présentation commerciale ABC Peinture Déco 2026. Ces références illustrent la capacité d'ABC Peinture Déco à intervenir sur des environnements professionnels exigeants : enseignes, bureaux, commerces, équipements, institutions et sites recevant du public.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════ CHIFFRES CLÉS ════════════════ -->
+    <section class="key-figures" id="chiffres" aria-labelledby="chiffres-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="label-eyebrow reveal">Chiffres clés</span>
+          <h2 class="section-h reveal reveal-delay-1" id="chiffres-title">Une entreprise solide,<br>structurée et en croissance.</h2>
+          <p class="section-lead reveal reveal-delay-2">ABC Peinture Déco s'appuie sur une activité régulière, une équipe opérationnelle et des références de chantier significatives.</p>
+        </div>
+
+        <div class="kf-grid">
+          <div class="kf-card reveal reveal-delay-1">
+            <div class="kf-value">~10</div>
+            <div class="kf-label">Personnes dans l'équipe opérationnelle</div>
+          </div>
+          <div class="kf-card reveal reveal-delay-2">
+            <div class="kf-value"><span class="gold">1,55 M€</span></div>
+            <div class="kf-label">CA 2023-2024 — meilleur exercice</div>
+          </div>
+          <div class="kf-card reveal reveal-delay-3">
+            <div class="kf-value">1,11 M€</div>
+            <div class="kf-label">CA 2024-2025</div>
+          </div>
+          <div class="kf-card reveal reveal-delay-1">
+            <div class="kf-value"><span class="gold">2013</span></div>
+            <div class="kf-label">Reprise par Anthony Berge</div>
+          </div>
+          <div class="kf-card reveal reveal-delay-2">
+            <div class="kf-value">France</div>
+            <div class="kf-label">Déplacements possibles partout en France</div>
+          </div>
+          <div class="kf-card reveal reveal-delay-3">
+            <div class="kf-value">Sarthe</div>
+            <div class="kf-label">Base principale des chantiers — département 72</div>
+          </div>
+        </div>
+
+        <div class="reveal reveal-delay-1">
+          <div class="label-eyebrow" style="margin-bottom:24px;">Notre histoire</div>
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="timeline-year">2013</div>
+              <div class="timeline-desc">Rachat d'ABC Peinture Déco à Alençon par Anthony Berge</div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-year">2014 – 2019</div>
+              <div class="timeline-desc">Société basée rue de Sardaigne au Mans (72)</div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-year">2019</div>
+              <div class="timeline-desc">Installation à La Chapelle-Saint-Aubin — locaux actuels</div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-year">Aujourd'hui</div>
+              <div class="timeline-desc">Équipe d'une dizaine de personnes, chantiers en Sarthe et déplacements en France</div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -1682,6 +2108,55 @@
       </div>
     </section>
 
+    <!-- ════════════════ DÉMARCHE RESPONSABLE ════════════════ -->
+    <section class="eco-section" id="demarche-responsable" aria-labelledby="eco-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="label-eyebrow reveal">Démarche responsable</span>
+          <h2 class="section-h reveal reveal-delay-1" id="eco-title">Recyclage des revêtements de sol<br>et économie circulaire.</h2>
+          <p class="section-lead reveal reveal-delay-2">ABC Peinture Déco s'inscrit dans une logique responsable avec le recyclage des revêtements de sol — vinyle, linoleum compact et moquette — via le programme ReStart Tarkett.</p>
+        </div>
+
+        <div class="eco-cards">
+          <div class="eco-card reveal reveal-delay-1">
+            <div class="eco-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            </div>
+            <h3>Collecte</h3>
+            <p>Récupération des revêtements usagés sur les chantiers concernés — vinyle, linoleum, moquette</p>
+          </div>
+          <div class="eco-card reveal reveal-delay-2">
+            <div class="eco-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+            </div>
+            <h3>Tri & séparation</h3>
+            <p>Séparation des composants pour permettre leur valorisation dans les filières adaptées</p>
+          </div>
+          <div class="eco-card reveal reveal-delay-3">
+            <div class="eco-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+            </div>
+            <h3>Recyclage</h3>
+            <p>Réintégration dans des filières adaptées, notamment pour les dalles textiles via Aquafil</p>
+          </div>
+          <div class="eco-card reveal reveal-delay-4">
+            <div class="eco-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            </div>
+            <h3>Traçabilité</h3>
+            <p>Fourniture possible d'un certificat de traçabilité selon les programmes partenaires</p>
+          </div>
+        </div>
+
+        <div class="reveal reveal-delay-2">
+          <div class="eco-badge">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Programme ReStart Tarkett — Certificat 2023 · Convention n° 2023_459
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- ════════════════ RÉASSURANCE ENTREPRISE ════════════════ -->
     <section class="reassurance-bg" aria-labelledby="entreprise-title" id="entreprise">
       <div class="container">
@@ -1715,7 +2190,11 @@
               </div>
               <div class="reas-row">
                 <div class="reas-key">Gérant</div>
-                <div class="reas-val">Antony Berge<span>Représentant légal</span></div>
+                <div class="reas-val">Anthony Berge<span>Dirigeant depuis 2013</span></div>
+              </div>
+              <div class="reas-row">
+                <div class="reas-key">Capital social</div>
+                <div class="reas-val">15 000 €<span>SARL au capital de 15 000 €</span></div>
               </div>
               <div class="reas-row">
                 <div class="reas-key">Code NAF</div>
@@ -1734,6 +2213,15 @@
 
           <div class="reas-right">
             <div class="reas-highlight reveal reveal-delay-2">
+              <div class="reas-highlight-item">
+                <div class="reas-highlight-icon">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </div>
+                <div class="reas-highlight-text">
+                  <strong>Équipe d'une dizaine de personnes</strong>
+                  <span>Chantiers principalement en Sarthe, déplacements France entière</span>
+                </div>
+              </div>
               <div class="reas-highlight-item">
                 <div class="reas-highlight-icon">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
@@ -1815,6 +2303,59 @@
               <div class="hour-day">Dimanche</div>
               <div class="hour-time"><span class="hour-closed">Fermé</span></div>
             </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════ PARTENAIRES ════════════════ -->
+    <section class="partners-section" id="partenaires" aria-labelledby="partners-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="label-eyebrow reveal">Partenaires</span>
+          <h2 class="section-h reveal reveal-delay-1" id="partners-title">Des fournisseurs et partenaires reconnus.</h2>
+          <p class="section-lead reveal reveal-delay-2">ABC Peinture Déco s'appuie sur des partenaires spécialisés pour proposer des matériaux, peintures et revêtements adaptés aux exigences de chaque chantier.</p>
+        </div>
+
+        <div class="partners-logo-grid">
+          <div class="partner-logo-card reveal reveal-delay-1">
+            <img src="/static/tony_partner_objectflor.webp" alt="Objectflor" loading="lazy" />
+          </div>
+          <div class="partner-logo-card reveal reveal-delay-1">
+            <img src="/static/tony_partner_gerflor.webp" alt="Gerflor" loading="lazy" />
+          </div>
+          <div class="partner-logo-card reveal reveal-delay-2">
+            <img src="/static/tony_partner_ege.webp" alt="Ege" loading="lazy" />
+          </div>
+          <div class="partner-logo-card reveal reveal-delay-2">
+            <img src="/static/tony_partner_tarket.webp" alt="Tarkett" loading="lazy" />
+          </div>
+          <div class="partner-logo-card reveal reveal-delay-3">
+            <img src="/static/tony_partner_servi.webp" alt="Servi Couleurs" loading="lazy" />
+          </div>
+          <div class="partner-logo-card reveal reveal-delay-1">
+            <img src="/static/tony_partner_sikken.webp" alt="Sikkens Solutions" loading="lazy" />
+          </div>
+          <div class="partner-logo-card reveal reveal-delay-2">
+            <img src="/static/tony_partner_solmur.webp" alt="Solmur" loading="lazy" />
+          </div>
+          <div class="partner-logo-card reveal reveal-delay-2">
+            <img src="/static/tony_partner_grassin.webp" alt="Grassin Décors" loading="lazy" />
+          </div>
+          <div class="partner-logo-card reveal reveal-delay-3">
+            <img src="/static/tony_partner_prisma.webp" alt="PrismaDécor" loading="lazy" />
+          </div>
+          <div class="partner-logo-card reveal reveal-delay-3">
+            <img src="/static/tony_partner_celtique.webp" alt="La Celtique" loading="lazy" />
+          </div>
+          <div class="partner-logo-card reveal reveal-delay-1">
+            <img src="/static/tony_client_sfic.webp" alt="SFIC" loading="lazy" />
+          </div>
+          <div class="partner-logo-card reveal reveal-delay-2">
+            <img src="/static/tony_partner_chausson.webp" alt="Chausson Matériaux" loading="lazy" />
+          </div>
+          <div class="partner-logo-card reveal reveal-delay-3">
+            <img src="/static/tony_partner_kiloutou.webp" alt="Kiloutou" loading="lazy" />
           </div>
         </div>
       </div>
@@ -1914,7 +2455,7 @@
 
       <div class="footer-bottom">
         <div class="footer-legal">
-          <strong style="color:var(--text);">ABC Peinture Déco</strong> — SARL · SIREN 793 751 249 · Gérant : Antony Berge<br>
+          <strong style="color:var(--text);">ABC Peinture Déco</strong> — SARL au capital de 15 000 € · SIREN 793 751 249 · Dirigeant : Anthony Berge<br>
           13-15 Rue Albert Einstein, 72650 La Chapelle-Saint-Aubin · Activité : Travaux de peinture et vitrerie (NAF 43.34Z)<br>
           Assurance décennale GAN
         </div>
