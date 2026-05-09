@@ -253,7 +253,6 @@
       overflow: clip;
     }
 
-    /* Couche 0 — fond blanc */
     .hero-bg {
       position: absolute;
       inset: 0;
@@ -261,7 +260,6 @@
       background-color: #ffffff;
     }
 
-    /* Couche 1 — image ciel */
     .hero-sky {
       position: absolute;
       inset: 0;
@@ -271,7 +269,6 @@
       background-position: center;
     }
 
-    /* Couche 2 — logo ABC */
     .hero-logo {
       position: absolute;
       inset: 0;
@@ -290,7 +287,6 @@
       display: block;
     }
 
-    /* Couche 3 — overlay sombre */
     .hero-overlay {
       position: absolute;
       inset: 0;
@@ -302,7 +298,6 @@
         rgba(9,17,31,.85) 100%);
     }
 
-    /* Couche 4 — contenu texte */
     .hero-content-section {
       position: relative;
       z-index: 4;
@@ -1284,67 +1279,126 @@
       .reas-key { flex: 0 0 130px; }
     }
 
-    /* ─── CLIENTS SECTION ─── */
+    /* ─── CLIENTS — MARQUEE (remplace l'ancienne grille) ─── */
     .clients-section {
       background: var(--ink);
       border-top: 1px solid var(--line);
+      overflow: hidden;
     }
 
-    .clients-logo-grid {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
+    /* Bandeau pleine largeur avec fondu gauche/droite */
+    .clients-marquee-outer {
+      position: relative;
+      overflow: hidden;
+      -webkit-mask-image: linear-gradient(
+        to right,
+        transparent 0%,
+        #000 7%,
+        #000 93%,
+        transparent 100%
+      );
+      mask-image: linear-gradient(
+        to right,
+        transparent 0%,
+        #000 7%,
+        #000 93%,
+        transparent 100%
+      );
+    }
+
+    /* Track animé */
+    .clients-marquee-track {
+      display: flex;
       gap: 14px;
+      width: max-content;
+      animation: clients-scroll 54s linear infinite;
+      will-change: transform;
     }
 
-    .clients-logo-card {
-      min-height: 112px;
-      padding: 22px;
-      border-radius: 18px;
-      background: rgba(255,255,255,.96);
+    /* Pause globale au survol de la bande */
+    .clients-marquee-outer:hover .clients-marquee-track {
+      animation-play-state: paused;
+    }
+
+    @keyframes clients-scroll {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* Carte individuelle */
+    .client-card {
+      flex-shrink: 0;
+      width: 160px;
+      height: 88px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid rgba(255, 255, 255, 0.06);
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: var(--shadow-card);
-      transition: transform .2s, box-shadow .2s;
+      padding: 14px 16px;
+      cursor: default;
+      transition: transform .22s cubic-bezier(.22,1,.36,1), box-shadow .22s ease;
     }
 
-    .clients-logo-card:hover {
+    .client-card:hover {
       transform: translateY(-3px);
-      box-shadow: 0 16px 48px rgba(0,0,0,.36);
+      box-shadow: 0 12px 32px rgba(0,0,0,.36);
     }
 
-    .clients-logo-card img {
-      max-width: 100%;
-      max-height: 68px;
+    /* Logo — jamais étiré */
+    .client-card img {
+      max-width: 112px;
+      max-height: 50px;
+      width: auto;
+      height: auto;
       object-fit: contain;
+      display: block;
     }
 
-    .clients-logo-card.text-only {
+    /* Texte pour les références sans logo */
+    .client-card-text {
       font-family: var(--font-display);
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 700;
-      color: #222;
+      color: #1a1a2e;
       text-align: center;
       line-height: 1.3;
+      user-select: none;
+      letter-spacing: .01em;
     }
 
-    .clients-note {
+    /* Note de bas de section */
+    .clients-marquee-note {
       margin-top: 36px;
-      padding: 22px 28px;
+      padding: 18px 24px;
       border-radius: var(--radius-md);
-      background: rgba(255,255,255,.04);
+      background: rgba(255,255,255,.03);
       border: 1px solid var(--line);
+      max-width: 760px;
     }
 
-    .clients-note p {
-      font-size: 14px;
+    .clients-marquee-note p {
+      font-size: 13.5px;
       color: var(--muted);
-      line-height: 1.7;
+      line-height: 1.65;
     }
 
-    @media (max-width: 1100px) { .clients-logo-grid { grid-template-columns: repeat(4, 1fr); } }
-    @media (max-width: 768px)  { .clients-logo-grid { grid-template-columns: repeat(3, 1fr); } }
-    @media (max-width: 520px)  { .clients-logo-grid { grid-template-columns: repeat(2, 1fr); } }
+    /* Mobile */
+    @media (max-width: 768px) {
+      .client-card {
+        width: 134px;
+        height: 76px;
+        padding: 12px;
+        border-radius: 10px;
+      }
+      .client-card img {
+        max-width: 90px;
+        max-height: 40px;
+      }
+      .client-card-text { font-size: 11px; }
+      .clients-marquee-track { gap: 10px; animation-duration: 42s; }
+    }
 
     /* ─── KEY FIGURES SECTION ─── */
     .key-figures {
@@ -1627,21 +1681,15 @@
     <!-- ════════════════ HERO ════════════════ -->
     <section class="hero" aria-label="Logo ABC Peinture Déco en plein écran">
 
-      <!-- Couche 0 : fond blanc -->
       <div class="hero-bg"></div>
-
-      <!-- Couche 1 : image ciel -->
       <div class="hero-sky"></div>
 
-      <!-- Couche 2 : logo ABC -->
       <div class="hero-logo">
         <img src="/static/abc_gris2.webp" alt="ABC Peinture Déco" />
       </div>
 
-      <!-- Couche 3 : overlay sombre -->
       <div class="hero-overlay" aria-hidden="true"></div>
 
-      <!-- Couche 4 : contenu texte -->
       <div class="hero-content-section" aria-labelledby="hero-headline">
         <div class="hero-content-inner hero-inner">
           <div class="hero-text-block">
@@ -1832,7 +1880,7 @@
       </div>
     </section>
 
-    <!-- ════════════════ CLIENTS ════════════════ -->
+    <!-- ════════════════ CLIENTS — MARQUEE ════════════════ -->
     <section class="clients-section" id="clients" aria-labelledby="clients-title">
       <div class="container">
         <div class="section-header">
@@ -1840,98 +1888,189 @@
           <h2 class="section-h reveal reveal-delay-1" id="clients-title">Ils nous font confiance</h2>
           <p class="section-lead reveal reveal-delay-2">Des enseignes nationales, institutions, commerces, sites professionnels et acteurs locaux ont confié leurs chantiers à ABC Peinture Déco.</p>
         </div>
+      </div>
 
-        <div class="clients-logo-grid">
-          <div class="clients-logo-card reveal reveal-delay-1">
+      <!-- Bande pleine largeur — hors container pour déborder bord à bord -->
+      <div class="clients-marquee-outer" role="marquee" aria-label="Défilement des références clients">
+        <div class="clients-marquee-track">
+
+          <!-- ══ SÉRIE 1 ══ -->
+          <div class="client-card">
             <img src="/static/tony_client_districenter.webp" alt="DistriCenter" loading="lazy" />
           </div>
-          <div class="clients-logo-card reveal reveal-delay-1">
+          <div class="client-card">
             <img src="/static/tony_client_cocopa.webp" alt="Socopa" loading="lazy" />
           </div>
-          <div class="clients-logo-card reveal reveal-delay-2 text-only">
-            <span>exess</span>
+          <div class="client-card">
+            <span class="client-card-text">exess</span>
           </div>
-          <div class="clients-logo-card reveal reveal-delay-2">
-            <img src="/static/tony_client_sfic.webp" alt="FFB" loading="lazy" />
+          <div class="client-card">
+            <img src="/static/tony_client_sfic.webp" alt="SFIC" loading="lazy" />
           </div>
-          <div class="clients-logo-card reveal reveal-delay-2">
+          <div class="client-card">
             <img src="/static/tony_client_engie.webp" alt="Engie Ineo" loading="lazy" />
           </div>
-          <div class="clients-logo-card reveal reveal-delay-3 text-only">
-            <span>K1 Speed</span>
+          <div class="client-card">
+            <span class="client-card-text">K1 Speed</span>
           </div>
-          <div class="clients-logo-card reveal reveal-delay-1">
+          <div class="client-card">
             <img src="/static/tony_client_inalta.webp" alt="Inalta" loading="lazy" />
           </div>
-          <div class="clients-logo-card reveal reveal-delay-2 text-only">
-            <span>Vénizi'O</span>
+          <div class="client-card">
+            <span class="client-card-text">Vénizi'O</span>
           </div>
-          <div class="clients-logo-card reveal reveal-delay-2 text-only">
-            <span>Cougnaud</span>
+          <div class="client-card">
+            <span class="client-card-text">Cougnaud</span>
           </div>
-          <div class="clients-logo-card reveal reveal-delay-2">
+          <div class="client-card">
             <img src="/static/tony_client_toyota.webp" alt="Toyota" loading="lazy" />
           </div>
-          <div class="clients-logo-card reveal reveal-delay-3 text-only">
-            <span>Autorelli</span>
+          <div class="client-card">
+            <span class="client-card-text">Autorelli</span>
           </div>
-          <div class="clients-logo-card reveal reveal-delay-3 text-only">
-            <span>BMW · Mini</span>
+          <div class="client-card">
+            <span class="client-card-text">BMW · Mini</span>
           </div>
-          <div class="clients-logo-card reveal reveal-delay-1 text-only">
-            <span>Peugeot</span>
+          <div class="client-card">
+            <span class="client-card-text">Peugeot</span>
           </div>
-          <div class="clients-logo-card reveal reveal-delay-1">
+          <div class="client-card">
             <img src="/static/tony_clientalpina.webp" alt="Apolis Automobiles" loading="lazy" />
           </div>
-          <div class="clients-logo-card reveal reveal-delay-2 text-only">
-            <span>J. Bervas Automobiles</span>
+          <div class="client-card">
+            <span class="client-card-text">J. Bervas<br>Automobiles</span>
           </div>
-          <div class="clients-logo-card reveal reveal-delay-2">
+          <div class="client-card">
             <img src="/static/tony_client_assurance.webp" alt="Assurance Maladie" loading="lazy" />
           </div>
-          <div class="clients-logo-card reveal reveal-delay-2 text-only">
-            <span>Noblessa Cuisines</span>
+          <div class="client-card">
+            <span class="client-card-text">Noblessa<br>Cuisines</span>
           </div>
-          <div class="clients-logo-card reveal reveal-delay-3 text-only">
-            <span>Tréma</span>
+          <div class="client-card">
+            <span class="client-card-text">Tréma</span>
           </div>
-          <div class="clients-logo-card reveal reveal-delay-1 text-only">
-            <span>O2</span>
+          <div class="client-card">
+            <span class="client-card-text">O2</span>
           </div>
-          <div class="clients-logo-card reveal reveal-delay-1">
-            <img src="/static/tony_client_interma.webp" alt="Intermarché Hyper Nogent-le-Rotrou" loading="lazy" />
+          <div class="client-card">
+            <img src="/static/tony_client_interma.webp" alt="Intermarché" loading="lazy" />
           </div>
-          <div class="clients-logo-card reveal reveal-delay-2 text-only">
-            <span>Foussier</span>
+          <div class="client-card">
+            <span class="client-card-text">Foussier</span>
           </div>
-          <div class="clients-logo-card reveal reveal-delay-2 text-only">
-            <span>La Chapelle<br>Saint-Aubin</span>
+          <div class="client-card">
+            <span class="client-card-text">La Chapelle<br>Saint-Aubin</span>
           </div>
-          <div class="clients-logo-card reveal reveal-delay-2">
+          <div class="client-card">
             <img src="/static/tony_client_clinique.webp" alt="Clinique du Pré" loading="lazy" />
           </div>
-          <div class="clients-logo-card reveal reveal-delay-3">
-            <img src="/static/tony_client_crédit.webp" alt="Crédit Agricole Anjou Maine" loading="lazy" />
+          <div class="client-card">
+            <span class="client-card-text">LG Traiteur</span>
           </div>
-          <div class="clients-logo-card reveal reveal-delay-1">
+          <div class="client-card">
+            <span class="client-card-text">Privilège<br>Équitation</span>
+          </div>
+          <div class="client-card">
+            <span class="client-card-text">Stade Rennais<br>Roazhon Park</span>
+          </div>
+          <div class="client-card">
+            <img src="/static/tony_client_arcpus.webp" alt="Arcpus" loading="lazy" />
+          </div>
+          <div class="client-card">
             <img src="/static/tony_client_residence.webp" alt="Résidence Étudiante du Mans" loading="lazy" />
           </div>
-          <div class="clients-logo-card reveal reveal-delay-1 text-only">
-            <span>LG Traiteur</span>
-          </div>
-          <div class="clients-logo-card reveal reveal-delay-2 text-only">
-            <span>Privilège<br>Équitation</span>
-          </div>
-          <div class="clients-logo-card reveal reveal-delay-2 text-only">
-            <span>Stade Rennais<br>Roazhon Park</span>
-          </div>
-          <div class="clients-logo-card reveal reveal-delay-3">
-            <img src="/static/tony_client_arcpus.webp" alt="Apolis Automobiles" loading="lazy" />
-          </div>
-        </div>
 
-        <div class="clients-note reveal">
+          <!-- ══ SÉRIE 2 — doublon exact pour défilement infini ══ -->
+          <div class="client-card">
+            <img src="/static/tony_client_districenter.webp" alt="DistriCenter" loading="lazy" />
+          </div>
+          <div class="client-card">
+            <img src="/static/tony_client_cocopa.webp" alt="Socopa" loading="lazy" />
+          </div>
+          <div class="client-card">
+            <span class="client-card-text">exess</span>
+          </div>
+          <div class="client-card">
+            <img src="/static/tony_client_sfic.webp" alt="SFIC" loading="lazy" />
+          </div>
+          <div class="client-card">
+            <img src="/static/tony_client_engie.webp" alt="Engie Ineo" loading="lazy" />
+          </div>
+          <div class="client-card">
+            <span class="client-card-text">K1 Speed</span>
+          </div>
+          <div class="client-card">
+            <img src="/static/tony_client_inalta.webp" alt="Inalta" loading="lazy" />
+          </div>
+          <div class="client-card">
+            <span class="client-card-text">Vénizi'O</span>
+          </div>
+          <div class="client-card">
+            <span class="client-card-text">Cougnaud</span>
+          </div>
+          <div class="client-card">
+            <img src="/static/tony_client_toyota.webp" alt="Toyota" loading="lazy" />
+          </div>
+          <div class="client-card">
+            <span class="client-card-text">Autorelli</span>
+          </div>
+          <div class="client-card">
+            <span class="client-card-text">BMW · Mini</span>
+          </div>
+          <div class="client-card">
+            <span class="client-card-text">Peugeot</span>
+          </div>
+          <div class="client-card">
+            <img src="/static/tony_clientalpina.webp" alt="Apolis Automobiles" loading="lazy" />
+          </div>
+          <div class="client-card">
+            <span class="client-card-text">J. Bervas<br>Automobiles</span>
+          </div>
+          <div class="client-card">
+            <img src="/static/tony_client_assurance.webp" alt="Assurance Maladie" loading="lazy" />
+          </div>
+          <div class="client-card">
+            <span class="client-card-text">Noblessa<br>Cuisines</span>
+          </div>
+          <div class="client-card">
+            <span class="client-card-text">Tréma</span>
+          </div>
+          <div class="client-card">
+            <span class="client-card-text">O2</span>
+          </div>
+          <div class="client-card">
+            <img src="/static/tony_client_interma.webp" alt="Intermarché" loading="lazy" />
+          </div>
+          <div class="client-card">
+            <span class="client-card-text">Foussier</span>
+          </div>
+          <div class="client-card">
+            <span class="client-card-text">La Chapelle<br>Saint-Aubin</span>
+          </div>
+          <div class="client-card">
+            <img src="/static/tony_client_clinique.webp" alt="Clinique du Pré" loading="lazy" />
+          </div>
+          <div class="client-card">
+            <span class="client-card-text">LG Traiteur</span>
+          </div>
+          <div class="client-card">
+            <span class="client-card-text">Privilège<br>Équitation</span>
+          </div>
+          <div class="client-card">
+            <span class="client-card-text">Stade Rennais<br>Roazhon Park</span>
+          </div>
+          <div class="client-card">
+            <img src="/static/tony_client_arcpus.webp" alt="Arcpus" loading="lazy" />
+          </div>
+          <div class="client-card">
+            <img src="/static/tony_client_residence.webp" alt="Résidence Étudiante du Mans" loading="lazy" />
+          </div>
+
+        </div><!-- /clients-marquee-track -->
+      </div><!-- /clients-marquee-outer -->
+
+      <div class="container">
+        <div class="clients-marquee-note reveal">
           <p>Références issues de la présentation commerciale ABC Peinture Déco 2026. Ces références illustrent la capacité d'ABC Peinture Déco à intervenir sur des environnements professionnels exigeants : enseignes, bureaux, commerces, équipements, institutions et sites recevant du public.</p>
         </div>
       </div>
