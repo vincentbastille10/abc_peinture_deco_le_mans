@@ -68,8 +68,8 @@ SITE_FALLBACK  = SITE_RESPONSES.get("fallback", ["Je regarde ça 👍"])
 #  CONFIG LLM (Together AI) — mode libre post-qualification
 # ---------------------------------------------------------
 TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY", "")
-# On hardcode le modèle pour éviter le bug LLM_MODEL Vercel
-MODEL = "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo"
+MODEL = os.getenv("LLM_MODEL", "meta-llama/Llama-3.3-70B-Instruct-Turbo-Free")
+DEBUG_BETTY = os.getenv("DEBUG_BETTY", "0").lower() in {"1", "true", "yes", "on"}
 
 # Sessions en mémoire (voir note prod en bas)
 sessions: dict = {}
@@ -107,8 +107,6 @@ DEVIS_WORDS = {
 #  HELPERS TEXTE
 # ---------------------------------------------------------
 
-
-  
 def normalize(txt: str) -> str:
     """Minuscule, sans accents, sans double espaces."""
     txt = (txt or "").lower().strip()
@@ -184,19 +182,15 @@ PHONE_RE = re.compile(
 
 def extract_phone(msg: str):
     """Extrait un numéro FR valide depuis n'importe quel texte."""
-    # Nettoyage brut
     candidate = re.sub(r"[^\d+]", "", msg)
     if candidate.startswith("+33"):
         candidate = "0" + candidate[3:]
     elif candidate.startswith("0033"):
         candidate = "0" + candidate[4:]
-    # Cas 9 chiffres sans le 0 initial
     if len(candidate) == 9 and candidate.isdigit():
         candidate = "0" + candidate
-    # Validation 10 chiffres commençant par 0
     if len(candidate) == 10 and candidate.startswith("0") and candidate.isdigit():
         return candidate
-    # Regex fallback sur le texte original
     m = PHONE_RE.search(msg)
     if m:
         return re.sub(r"\D", "", m.group(0))[:10]
@@ -205,7 +199,6 @@ def extract_phone(msg: str):
 
 def extract_prenom(msg: str):
     """Extrait un prénom probable d'un message libre."""
-    # Patterns explicites ("je m'appelle X", "c'est X", etc.)
     patterns = [
         r"(?:je m['' ]?appelle|je suis|c['' ]?est|moi c['' ]?est|mon prenom est|mon prénom est)\s+([a-zàâçéèêëîïôûùüÿñæœ\-]{2,30})",
     ]
@@ -213,13 +206,10 @@ def extract_prenom(msg: str):
         m = re.search(p, normalize(msg))
         if m:
             return m.group(1).capitalize()
-    # Message court = probablement juste le prénom
     tokens = re.findall(r"[A-Za-zàâçéèêëîïôûùüÿñæœ\-]{2,30}", msg)
     if len(tokens) == 1 and not contains_any(tokens[0], LEX.get("metier", [])):
         return tokens[0].capitalize()
-    # Prénom composé (deux tokens courts)
     if len(tokens) == 2 and all(len(t) >= 2 for t in tokens):
-        # On prend les deux si ça ne ressemble pas à un projet
         combined = tokens[0].capitalize() + "-" + tokens[1].capitalize()
         if not contains_any(msg, LEX.get("metier", [])):
             return combined
@@ -243,31 +233,22 @@ def validate_telephone(msg: str) -> bool:
 
 
 def validate_surface(msg: str) -> bool:
-    """Toujours vrai — étape bonus, on n'est jamais bloquant."""
     return True
 
 
 def validate_prenom(msg: str) -> bool:
-    """Accepte les prénoms simples, composés, avec accents, pseudos courts."""
     n = normalize(msg)
     if not n:
         return False
-    # Pas de chiffres dans un prénom
     if re.search(r"\d", n):
         return False
-    # Pas de répétitions absurdes (aaaa, zzzz)
     if re.search(r"(.)\1{3,}", n):
         return False
     letters = re.findall(r"[a-zàâçéèêëîïôûùüÿñæœ]", n)
-    return 2 <= len(letters) <= 60  # Élargi pour les prénoms composés
+    return 2 <= len(letters) <= 60
 
 
 def validate_projet(msg: str) -> bool:
-    """
-    Très permissif — on ne bloque jamais sur le projet.
-    On accepte n'importe quel texte de 2+ caractères non-vide.
-    La qualification humaine se fait au rappel téléphonique.
-    """
     n = normalize(msg)
     if len(n) < 2:
         return False
@@ -282,9 +263,9 @@ def validate_free_text(msg: str) -> bool:
 
 VALIDATORS = {
     "telephone": validate_telephone,
-    "surface":   validate_surface,
-    "prenom":    validate_prenom,
-    "projet":    validate_projet,
+    "surface": validate_surface,
+    "prenom": validate_prenom,
+    "projet": validate_projet,
     "free_text": validate_free_text,
 }
 
@@ -293,7 +274,6 @@ VALIDATORS = {
 #  DÉTECTION INTENTION HORS-FLOW (site_memory + YAML)
 # ---------------------------------------------------------
 def detect_site_intent(msg: str):
-    """Retourne la clé d'intention (horaires, contact, zone…) ou None."""
     if not SITE_INTENTS:
         return None
     n = normalize(msg)
@@ -311,7 +291,6 @@ def detect_site_intent(msg: str):
 
 
 def detect_info_hors_flow(msg: str) -> bool:
-    """Détecte les questions légitimes qui ne sont pas une étape du flow."""
     return bool(detect_site_intent(msg) or contains_any(msg, LEX.get("info_hors_flow", [])))
 
 
@@ -319,10 +298,6 @@ def detect_info_hors_flow(msg: str) -> bool:
 #  CLASSIFICATION DU MESSAGE
 # ---------------------------------------------------------
 def classify_message(msg: str, step_idx: int) -> str:
-    """
-    Retourne : greeting | pertinent | invalide | flou | info_hors_flow
-    NB : hors_sujet n'existe plus — on ne rejette plus de leads.
-    """
     n = normalize(msg)
     if not n:
         return "flou"
@@ -333,31 +308,20 @@ def classify_message(msg: str, step_idx: int) -> str:
     step_key = step["key"]
     validator = VALIDATORS.get(step.get("validate", "free_text"), validate_free_text)
 
-    # Étape téléphone : binaire (valide ou invalide)
     if step_key == "telephone":
         return "pertinent" if validator(msg) else "invalide"
-
-    # Étape prénom : valide ou demande de reformulation douce
     if step_key == "prenom":
         return "pertinent" if validator(msg) else "invalide"
-
-    # Étape surface : toujours accepté (bonus facultatif)
     if step_key == "surface":
         return "pertinent"
-
-    # Étape projet : très permissive
     if step_key == "projet":
-        # Question hors-flow répond AVANT de classifier comme flou
         if detect_info_hors_flow(msg):
             return "info_hors_flow"
         if validator(msg):
             return "pertinent"
         return "flou"
-
-    # Fallback
     if detect_info_hors_flow(msg):
         return "info_hors_flow"
-
     return "pertinent"
 
 
@@ -373,12 +337,10 @@ def recadrage_hors_sujet(session: dict) -> str:
 
 
 def recadrage_info_hors_flow(msg: str) -> str:
-    """Répond via site_memory.json d'abord, puis fallback YAML."""
     intent = detect_site_intent(msg)
     if intent and intent in SITE_RESPONSES:
         return pick(SITE_RESPONSES[intent])
 
-    # Fallback YAML (compatibilité)
     n = normalize(msg)
     infos = RECAD.get("info_hors_flow", {})
     if any(k in n for k in ["horaire", "ouvert", "ferme", "dispo"]):
@@ -417,7 +379,6 @@ def get_warmth(step_idx: int, data: dict) -> str:
 #  SHORT-CIRCUIT — capture opportuniste téléphone + urgence
 # ---------------------------------------------------------
 def opportunistic_capture(session: dict, msg: str) -> None:
-    """Si un téléphone apparaît dans n'importe quel message, on le capture."""
     data = session["data"]
     if not data.get("telephone"):
         ph = extract_phone(msg)
@@ -428,7 +389,6 @@ def opportunistic_capture(session: dict, msg: str) -> None:
 
 
 def advance_past_captured(session: dict) -> None:
-    """Avance le curseur sur toutes les étapes déjà remplies (short-circuit)."""
     while session["step"] < len(FLOW):
         key = FLOW_KEYS[session["step"]]
         if session["data"].get(key):
@@ -444,41 +404,53 @@ def call_llm(message: str, data: dict) -> str:
     if not TOGETHER_API_KEY:
         return (f"Je transmets votre message à l'équipe. "
                 f"Pour un retour immédiat, appelez le {COMPANY_PHONE}.")
+
+    ctx_lines = []
+    for k in ("projet", "surface", "prenom", "telephone"):
+        if data.get(k):
+            ctx_lines.append(f"- {k} : {data[k]}")
+    ctx = "\n".join(ctx_lines) or "(aucun contexte)"
+    r = requests.post(
+        "https://api.together.xyz/v1/chat/completions",
+        headers={
+            "Authorization": f"Bearer {TOGETHER_API_KEY}",
+            "Content-Type": "application/json",
+        },
+        json={
+            "model": MODEL,
+            "messages": [
+                {
+                    "role": "system",
+                    "content": (
+                        f"Tu es Betty, assistante d'ABC Peinture Déco (Le Mans). "
+                        f"Tu réponds en 1 à 2 phrases max, ton chaleureux et direct. "
+                        f"Tu orientes toujours vers un rappel rapide au {COMPANY_PHONE}. "
+                        f"Jamais robotique, jamais de liste à puces."
+                    ),
+                },
+                {"role": "user", "content": f"Contexte client :\n{ctx}\n\nMessage : {message}"},
+            ],
+            "temperature": 0.6,
+            "max_tokens": 120,
+        },
+        timeout=10,
+    )
+    if not r.ok:
+        raise RuntimeError(f"Together API error {r.status_code}: {r.text[:500]}")
+    data_json = r.json()
+    return data_json["choices"][0]["message"]["content"].strip()
+
+
+def test_llm_call() -> dict:
     try:
-        ctx_lines = []
-        for k in ("projet", "surface", "prenom", "telephone"):
-            if data.get(k):
-                ctx_lines.append(f"- {k} : {data[k]}")
-        ctx = "\n".join(ctx_lines) or "(aucun contexte)"
-        r = requests.post(
-            "https://api.together.xyz/v1/chat/completions",
-            headers={
-                "Authorization": f"Bearer {TOGETHER_API_KEY}",
-                "Content-Type": "application/json",
-            },
-            json={
-                "model": MODEL,
-                "messages": [
-                    {
-                        "role": "system",
-                        "content": (
-                            f"Tu es Betty, assistante d'ABC Peinture Déco (Le Mans). "
-                            f"Tu réponds en 1 à 2 phrases max, ton chaleureux et direct. "
-                            f"Tu orientes toujours vers un rappel rapide au {COMPANY_PHONE}. "
-                            f"Jamais robotique, jamais de liste à puces."
-                        ),
-                    },
-                    {"role": "user", "content": f"Contexte client :\n{ctx}\n\nMessage : {message}"},
-                ],
-                "temperature": 0.6,
-                "max_tokens": 120,
-            },
-            timeout=10,
-        )
-        return r.json()["choices"][0]["message"]["content"].strip()
-    except Exception:
-        return (f"Laissez-moi votre numéro, un artisan vous rappelle dans la journée. "
-                f"Ou appelez directement le {COMPANY_PHONE}.")
+        answer = call_llm("Réponds uniquement: OK LLM", {})
+        return {"ok": True, "model": MODEL, "has_key": bool(TOGETHER_API_KEY), "answer": answer}
+    except Exception as e:
+        print("ERREUR ABC TEST_LLM:", repr(e), flush=True)
+        payload = {"ok": False, "model": MODEL, "has_key": bool(TOGETHER_API_KEY), "error": repr(e)}
+        if not DEBUG_BETTY:
+            payload["error"] = "hidden; set DEBUG_BETTY=1 to expose details"
+        return payload
 
 
 # ---------------------------------------------------------
@@ -495,18 +467,16 @@ def _reset_session() -> dict:
 
 
 def send_lead(data: dict) -> None:
-    """Envoie le lead au webhook configuré (LEAD_WEBHOOK_URL)."""
     webhook_url = os.getenv("LEAD_WEBHOOK_URL", "")
     if not webhook_url:
         return
     clean_data = {
-        "projet":    (data.get("projet") or "").strip(),
-        "surface":   (data.get("surface") or "").strip(),
-        "prenom":    (data.get("prenom") or "").strip(),
+        "projet": (data.get("projet") or "").strip(),
+        "surface": (data.get("surface") or "").strip(),
+        "prenom": (data.get("prenom") or "").strip(),
         "telephone": re.sub(r"\D", "", (data.get("telephone") or "").strip()),
-        "urgent":    bool(data.get("_urgent")),
-        # email supprimé du flow — champ vide pour rétrocompatibilité CRM
-        "email":     "",
+        "urgent": bool(data.get("_urgent")),
+        "email": "",
     }
     try:
         requests.post(
@@ -524,7 +494,6 @@ def send_lead(data: dict) -> None:
 def handle_message(user_id: str, message: str) -> str:
     n = normalize(message)
 
-    # Reset explicite ou salutation simple → on repart au début
     is_simple_greeting = is_greeting(message) and len(n.split()) <= 2
     is_reset_cmd = n in {"reset", "recommencer", "restart", "reinit"}
     if is_reset_cmd or is_simple_greeting:
@@ -534,11 +503,9 @@ def handle_message(user_id: str, message: str) -> str:
     s = sessions.setdefault(user_id, _reset_session())
     s["msg_count"] += 1
 
-    # ── Short-circuit : capture téléphone + urgence partout ──
     opportunistic_capture(s, message)
     advance_past_captured(s)
 
-    # ── Qualification déjà complète ? ──
     def _is_qualified(data):
         return (data.get("telephone") and data.get("prenom") and data.get("projet"))
 
@@ -550,7 +517,6 @@ def handle_message(user_id: str, message: str) -> str:
             phone=COMPANY_PHONE,
         ).strip()
 
-    # ── Mode libre post-qualification ──
     if s["qualified"] or s["step"] >= len(FLOW):
         if not s["qualified"]:
             s["qualified"] = True
@@ -566,8 +532,6 @@ def handle_message(user_id: str, message: str) -> str:
     step_idx = s["step"]
     step_key = FLOW_KEYS[step_idx]
 
-    # ── Réponse rapide aux questions hors-flow (horaires, zone…) ──
-    # On vérifie qu'on n'est pas en train de confondre avec la réponse attendue
     is_phone_step = step_key == "telephone" and validate_telephone(message)
     is_prenom_step = step_key == "prenom" and validate_prenom(message) and len(n.split()) <= 2
     if detect_info_hors_flow(message) and not is_phone_step and not is_prenom_step:
@@ -577,7 +541,6 @@ def handle_message(user_id: str, message: str) -> str:
 
     label = classify_message(message, step_idx)
 
-    # ── Intent devis explicite à l'étape projet → on accepte sans bloquer ──
     if step_key == "projet" and detect_devis_intent(message) and not s["data"].get("projet"):
         s["data"]["projet"] = message.strip()
         s["step"] += 1
@@ -603,7 +566,6 @@ def handle_message(user_id: str, message: str) -> str:
     if label == "flou":
         s["off_topic_count"] = s.get("off_topic_count", 0) + 1
         if step_key == "projet":
-            # Après 2 flous sur le projet, on accepte tel quel et on avance
             if s["off_topic_count"] >= 2:
                 s["data"]["projet"] = message.strip() or "à préciser au rappel"
                 s["step"] += 1
@@ -615,13 +577,11 @@ def handle_message(user_id: str, message: str) -> str:
                     return CLOSING_TPL.format(prenom=s["data"].get("prenom") or "", phone=COMPANY_PHONE).strip()
                 next_q = get_question(s["step"], s["data"])
                 return f"Pas de souci, on précisera au téléphone. {next_q}".strip()
-        # Handover si trop de flous consécutifs
         if s["off_topic_count"] >= MAX_OFFTOPIC:
             s["off_topic_count"] = 0
             return pick(RECAD.get("handover", [f"Laissez-moi votre numéro, on vous rappelle au {COMPANY_PHONE}."]))
         return f"{pick(RECAD.get('flou', ['En quelques mots, quel est votre besoin ?']))} {get_question(step_idx, s['data'])}".strip()
 
-    # ── Label "pertinent" → on enregistre et on avance ──
     value = message.strip()
 
     if step_key == "prenom":
@@ -636,7 +596,6 @@ def handle_message(user_id: str, message: str) -> str:
     if step_key == "surface":
         value = "" if is_skip(message) else message.strip()
 
-    # On enregistre (y compris surface vide = étape skippée)
     if value or step_key == "surface":
         s["data"][step_key] = value
 
@@ -644,7 +603,6 @@ def handle_message(user_id: str, message: str) -> str:
     s["off_topic_count"] = 0
     advance_past_captured(s)
 
-    # Qualification atteinte ?
     if _is_qualified(s["data"]) and not s["qualified"]:
         s["qualified"] = True
         send_lead(s["data"])
@@ -682,13 +640,15 @@ def _json_response(handler, payload: dict, status: int = 200) -> None:
 
 class handler(BaseHTTPRequestHandler):
     def log_message(self, format, *args):
-        pass  # Silence les logs HTTP verbeux
+        pass
 
     def do_OPTIONS(self):
         _json_response(self, {"ok": True})
 
     def do_GET(self):
-        _json_response(self, {"ok": True, "bot": CFG["identity"]["name"]})
+        if self.path.startswith("/api/test_llm") or self.path.startswith("/test_llm"):
+            return _json_response(self, test_llm_call(), 200)
+        _json_response(self, {"ok": True, "bot": CFG["identity"]["name"], "model": MODEL, "has_key": bool(TOGETHER_API_KEY)})
 
     def do_POST(self):
         try:
@@ -707,13 +667,18 @@ class handler(BaseHTTPRequestHandler):
             return _json_response(self, {"response": reply})
 
         except Exception as e:
-            return _json_response(self, {
+            print("ERREUR ABC BETTY:", repr(e), flush=True)
+            payload = {
                 "response": (
                     f"Petit bug de mon côté, désolée 😅 "
                     f"Appelez-nous directement au {COMPANY_PHONE}, on s'en occupe tout de suite."
-                ),
-                "debug": str(e),
-            })
+                )
+            }
+            if DEBUG_BETTY:
+                payload["debug"] = repr(e)
+                payload["model"] = MODEL
+                payload["has_key"] = bool(TOGETHER_API_KEY)
+            return _json_response(self, payload, 500)
 
 
 # ---------------------------------------------------------
