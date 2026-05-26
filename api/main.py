@@ -1,24 +1,6 @@
 """
 Betty — ABC Peinture Déco
 Backend Vercel serverless — VERSION CONVERSION v2
-
-CHANGEMENTS CLÉS vs version précédente :
-  1. Flow réduit à 3 étapes (projet → prénom → téléphone) + 1 bonus facultatif
-  2. EMAIL SUPPRIMÉ du flow obligatoire
-  3. Short-circuit téléphone : capturé dès le 1er message où il apparaît
-  4. validate_projet très permissif — on ne bloque JAMAIS sur le projet
-  5. Particuliers ET pros acceptés (pas de rejet "hors cible")
-  6. Validation prénom assouplie (prénoms composés, accents, pseudos)
-  7. Recadrages variés tirés au hasard (jamais répétitifs)
-  8. site_memory.json pour répondre aux questions hors-flow (horaires, zone, etc.)
-  9. LLM (Together AI) réservé au mode libre post-qualification
-  10. Sessions dict en mémoire — voir note prod sur Vercel KV en bas de fichier
-
-Structure repo attendue :
-  repo_root/
-    api/main.py            ← ce fichier
-    betty_btp_abc.yaml     ← YAML config
-    site_memory.json       ← (optionnel) réponses aux questions hors-flow
 """
 import os
 import re
@@ -32,27 +14,20 @@ from difflib import SequenceMatcher
 import yaml
 import requests
 
-# ---------------------------------------------------------
-#  CHARGEMENT DU YAML
-# ---------------------------------------------------------
 ROOT = Path(__file__).resolve().parent.parent
 YAML_PATH = ROOT / "betty_btp_abc.yaml"
 
 with open(YAML_PATH, "r", encoding="utf-8") as _f:
     CFG = yaml.safe_load(_f)
 
-LEX           = CFG.get("lexique", {})
-RECAD         = CFG.get("recadrages", {})
-FLOW          = CFG.get("flow", [])
-CLOSING_TPL   = CFG.get("closing", "Merci {prenom}, on vous rappelle au {phone}.")
-MAX_OFFTOPIC  = CFG["behavior"].get("max_off_topic_before_handover", 3)
+LEX = CFG.get("lexique", {})
+RECAD = CFG.get("recadrages", {})
+FLOW = CFG.get("flow", [])
+CLOSING_TPL = CFG.get("closing", "Merci {prenom}, on vous rappelle au {phone}.")
+MAX_OFFTOPIC = CFG["behavior"].get("max_off_topic_before_handover", 3)
 COMPANY_PHONE = CFG["identity"].get("phone", "02 43 75 98 18")
-
 FLOW_KEYS = [step["key"] for step in FLOW]
 
-# ---------------------------------------------------------
-#  CHARGEMENT SITE_MEMORY (optionnel)
-# ---------------------------------------------------------
 SITE_MEMORY_PATH = ROOT / "site_memory.json"
 try:
     with open(SITE_MEMORY_PATH, "r", encoding="utf-8") as _f:
@@ -60,63 +35,30 @@ try:
 except Exception:
     SITE_MEM = {}
 
-SITE_INTENTS   = SITE_MEM.get("intent_map", {})
+SITE_INTENTS = SITE_MEM.get("intent_map", {})
 SITE_RESPONSES = SITE_MEM.get("responses", {})
-SITE_FALLBACK  = SITE_RESPONSES.get("fallback", ["Je regarde ça 👍"])
+SITE_FALLBACK = SITE_RESPONSES.get("fallback", ["Je regarde ça 👍"])
 
-# ---------------------------------------------------------
-#  CONFIG LLM (Together AI) — mode libre post-qualification
-# ---------------------------------------------------------
 TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY", "")
-MODEL = os.getenv("LLM_MODEL", "meta-llama/Llama-3.3-70B-Instruct-Turbo-Free")
-DEBUG_BETTY = os.getenv("DEBUG_BETTY", "0").lower() in {"1", "true", "yes", "on"}
+MODEL = os.getenv("LLM_MODEL", "meta-llama/Llama-3.3-70B-Instruct-Turbo")
+DEBUG_BETTY = str(os.getenv("DEBUG_BETTY", "0")).lower() in {"1", "true", "yes", "on"}
 
-# Sessions en mémoire (voir note prod en bas)
 sessions: dict = {}
 
-# ---------------------------------------------------------
-#  CONSTANTES LEXICALES
-# ---------------------------------------------------------
-GREETINGS = {
-    "bonjour", "bonsoir", "salut", "hello", "hi", "coucou",
-    "bjr", "bsr", "yo", "bj", "hey", "hola", "slt", "cc",
-    "bonjours", "salu", "salutation", "salutations",
-}
+GREETINGS = {"bonjour", "bonsoir", "salut", "hello", "hi", "coucou", "bjr", "bsr", "yo", "bj", "hey", "hola", "slt", "cc", "bonjours", "salu", "salutation", "salutations"}
+SKIP_WORDS = {"non", "rien", "skip", "passe", "passer", "plus tard", "je sais pas", "sais pas", "aucune idee", "aucune idée", "pas encore", "pas sur", "pas sûr", "nsp", "je ne sais pas", "peu importe", "ne sais pas"}
+URGENT_WORDS = {"urgent", "urgence", "vite", "rapide", "rapidement", "au plus vite", "asap", "immediat", "immédiat", "des que possible", "dès que possible", "tout de suite", "aujourd hui", "aujourdhui", "demain"}
+DEVIS_WORDS = {"devis", "tarif", "prix", "estimation", "cout", "coût", "combien", "budget", "chiffrage", "rappel", "rappeler", "me rappeler", "rappelez", "contact", "contacter"}
 
-SKIP_WORDS = {
-    "non", "rien", "skip", "passe", "passer", "plus tard",
-    "je sais pas", "sais pas", "aucune idee", "aucune idée",
-    "pas encore", "pas sur", "pas sûr", "nsp", "je ne sais pas",
-    "peu importe", "ne sais pas",
-}
-
-URGENT_WORDS = {
-    "urgent", "urgence", "vite", "rapide", "rapidement",
-    "au plus vite", "asap", "immediat", "immédiat",
-    "des que possible", "dès que possible", "tout de suite",
-    "aujourd hui", "aujourdhui", "demain",
-}
-
-DEVIS_WORDS = {
-    "devis", "tarif", "prix", "estimation", "cout", "coût",
-    "combien", "budget", "chiffrage", "rappel", "rappeler",
-    "me rappeler", "rappelez", "contact", "contacter",
-}
-
-# ---------------------------------------------------------
-#  HELPERS TEXTE
-# ---------------------------------------------------------
 
 def normalize(txt: str) -> str:
-    """Minuscule, sans accents, sans double espaces."""
-    txt = (txt or "").lower().strip()
+    txt = str(txt or "").lower().strip()
     txt = unicodedata.normalize("NFD", txt)
     txt = "".join(c for c in txt if unicodedata.category(c) != "Mn")
     return re.sub(r"\s+", " ", txt)
 
 
 def fuzzy_in(token: str, keyword: str) -> bool:
-    """Match tolérant aux fautes de frappe (ratio 0.80)."""
     token = normalize(token)
     keyword = normalize(keyword)
     if not token or not keyword:
@@ -127,14 +69,11 @@ def fuzzy_in(token: str, keyword: str) -> bool:
         if min(len(token), len(keyword)) >= 4:
             return True
     if abs(len(token) - len(keyword)) <= 2:
-        ratio = SequenceMatcher(None, token, keyword).ratio()
-        if ratio >= 0.80:
-            return True
+        return SequenceMatcher(None, token, keyword).ratio() >= 0.80
     return False
 
 
 def contains_any(txt: str, keywords) -> bool:
-    """Cherche si le texte contient au moins un mot du lexique (fuzzy)."""
     n = normalize(txt)
     tokens = re.findall(r"[a-z0-9']+", n)
     for token in tokens:
@@ -150,7 +89,6 @@ def contains_any(txt: str, keywords) -> bool:
 
 
 def pick(variants) -> str:
-    """Tire une variante au hasard parmi une liste (ou retourne la chaîne)."""
     if isinstance(variants, str):
         return variants
     if not variants:
@@ -159,29 +97,18 @@ def pick(variants) -> str:
 
 
 def is_greeting(msg: str) -> bool:
-    n = normalize(msg).rstrip("!.,?").strip()
-    return n in GREETINGS
+    return normalize(msg).rstrip("!.,?").strip() in GREETINGS
 
 
 def is_skip(msg: str) -> bool:
-    n = normalize(msg).rstrip("!.,?").strip()
-    if n in SKIP_WORDS:
-        return True
-    for w in SKIP_WORDS:
-        if n == w:
-            return True
-    return False
+    return normalize(msg).rstrip("!.,?").strip() in SKIP_WORDS
 
 
-# ---------------------------------------------------------
-#  EXTRACTEURS (short-circuit)
-# ---------------------------------------------------------
-PHONE_RE = re.compile(
-    r"(?:(?:\+33|0033|0)\s*[1-9](?:[\s.\-]*\d){8})"
-)
+PHONE_RE = re.compile(r"(?:(?:\+33|0033|0)\s*[1-9](?:[\s.\-]*\d){8})")
+
 
 def extract_phone(msg: str):
-    """Extrait un numéro FR valide depuis n'importe quel texte."""
+    msg = str(msg or "")
     candidate = re.sub(r"[^\d+]", "", msg)
     if candidate.startswith("+33"):
         candidate = "0" + candidate[3:]
@@ -198,10 +125,8 @@ def extract_phone(msg: str):
 
 
 def extract_prenom(msg: str):
-    """Extrait un prénom probable d'un message libre."""
-    patterns = [
-        r"(?:je m['' ]?appelle|je suis|c['' ]?est|moi c['' ]?est|mon prenom est|mon prénom est)\s+([a-zàâçéèêëîïôûùüÿñæœ\-]{2,30})",
-    ]
+    msg = str(msg or "")
+    patterns = [r"(?:je m['' ]?appelle|je suis|c['' ]?est|moi c['' ]?est|mon prenom est|mon prénom est)\s+([a-zàâçéèêëîïôûùüÿñæœ\-]{2,30})"]
     for p in patterns:
         m = re.search(p, normalize(msg))
         if m:
@@ -225,9 +150,6 @@ def detect_devis_intent(msg: str) -> bool:
     return contains_any(msg, list(DEVIS_WORDS))
 
 
-# ---------------------------------------------------------
-#  VALIDATEURS — intentionnellement permissifs
-# ---------------------------------------------------------
 def validate_telephone(msg: str) -> bool:
     return extract_phone(msg) is not None
 
@@ -238,11 +160,7 @@ def validate_surface(msg: str) -> bool:
 
 def validate_prenom(msg: str) -> bool:
     n = normalize(msg)
-    if not n:
-        return False
-    if re.search(r"\d", n):
-        return False
-    if re.search(r"(.)\1{3,}", n):
+    if not n or re.search(r"\d", n) or re.search(r"(.)\1{3,}", n):
         return False
     letters = re.findall(r"[a-zàâçéèêëîïôûùüÿñæœ]", n)
     return 2 <= len(letters) <= 60
@@ -250,29 +168,16 @@ def validate_prenom(msg: str) -> bool:
 
 def validate_projet(msg: str) -> bool:
     n = normalize(msg)
-    if len(n) < 2:
-        return False
-    if is_skip(msg):
-        return False
-    return True
+    return len(n) >= 2 and not is_skip(msg)
 
 
 def validate_free_text(msg: str) -> bool:
     return len(normalize(msg)) >= 1
 
 
-VALIDATORS = {
-    "telephone": validate_telephone,
-    "surface": validate_surface,
-    "prenom": validate_prenom,
-    "projet": validate_projet,
-    "free_text": validate_free_text,
-}
+VALIDATORS = {"telephone": validate_telephone, "surface": validate_surface, "prenom": validate_prenom, "projet": validate_projet, "free_text": validate_free_text}
 
 
-# ---------------------------------------------------------
-#  DÉTECTION INTENTION HORS-FLOW (site_memory + YAML)
-# ---------------------------------------------------------
 def detect_site_intent(msg: str):
     if not SITE_INTENTS:
         return None
@@ -294,20 +199,15 @@ def detect_info_hors_flow(msg: str) -> bool:
     return bool(detect_site_intent(msg) or contains_any(msg, LEX.get("info_hors_flow", [])))
 
 
-# ---------------------------------------------------------
-#  CLASSIFICATION DU MESSAGE
-# ---------------------------------------------------------
 def classify_message(msg: str, step_idx: int) -> str:
     n = normalize(msg)
     if not n:
         return "flou"
     if is_greeting(msg):
         return "greeting"
-
     step = FLOW[step_idx]
     step_key = step["key"]
     validator = VALIDATORS.get(step.get("validate", "free_text"), validate_free_text)
-
     if step_key == "telephone":
         return "pertinent" if validator(msg) else "invalide"
     if step_key == "prenom":
@@ -317,30 +217,16 @@ def classify_message(msg: str, step_idx: int) -> str:
     if step_key == "projet":
         if detect_info_hors_flow(msg):
             return "info_hors_flow"
-        if validator(msg):
-            return "pertinent"
-        return "flou"
+        return "pertinent" if validator(msg) else "flou"
     if detect_info_hors_flow(msg):
         return "info_hors_flow"
     return "pertinent"
-
-
-# ---------------------------------------------------------
-#  RECADRAGES
-# ---------------------------------------------------------
-def recadrage_hors_sujet(session: dict) -> str:
-    session["off_topic_count"] = session.get("off_topic_count", 0) + 1
-    if session["off_topic_count"] >= MAX_OFFTOPIC:
-        session["off_topic_count"] = 0
-        return pick(RECAD.get("handover", [f"Laissez-moi votre numéro, on vous rappelle au {COMPANY_PHONE}."]))
-    return pick(RECAD.get("hors_sujet", ["Revenons à votre projet 👍"]))
 
 
 def recadrage_info_hors_flow(msg: str) -> str:
     intent = detect_site_intent(msg)
     if intent and intent in SITE_RESPONSES:
         return pick(SITE_RESPONSES[intent])
-
     n = normalize(msg)
     infos = RECAD.get("info_hors_flow", {})
     if any(k in n for k in ["horaire", "ouvert", "ferme", "dispo"]):
@@ -361,9 +247,6 @@ def recadrage_invalide(step_key: str) -> str:
     return pick(RECAD.get("flou", ["Pouvez-vous préciser ?"]))
 
 
-# ---------------------------------------------------------
-#  QUESTION / WARMTH BUILDERS
-# ---------------------------------------------------------
 def get_question(step_idx: int, data: dict) -> str:
     step = FLOW[step_idx]
     return step["question"].format(prenom=data.get("prenom") or "")
@@ -371,13 +254,9 @@ def get_question(step_idx: int, data: dict) -> str:
 
 def get_warmth(step_idx: int, data: dict) -> str:
     step = FLOW[step_idx]
-    w = step.get("warmth") or ""
-    return w.format(prenom=data.get("prenom") or "")
+    return (step.get("warmth") or "").format(prenom=data.get("prenom") or "")
 
 
-# ---------------------------------------------------------
-#  SHORT-CIRCUIT — capture opportuniste téléphone + urgence
-# ---------------------------------------------------------
 def opportunistic_capture(session: dict, msg: str) -> None:
     data = session["data"]
     if not data.get("telephone"):
@@ -397,14 +276,9 @@ def advance_past_captured(session: dict) -> None:
             break
 
 
-# ---------------------------------------------------------
-#  LLM (Together AI) — mode libre post-qualification uniquement
-# ---------------------------------------------------------
 def call_llm(message: str, data: dict) -> str:
     if not TOGETHER_API_KEY:
-        return (f"Je transmets votre message à l'équipe. "
-                f"Pour un retour immédiat, appelez le {COMPANY_PHONE}.")
-
+        return f"Je transmets votre message à l'équipe. Pour un retour immédiat, appelez le {COMPANY_PHONE}."
     ctx_lines = []
     for k in ("projet", "surface", "prenom", "telephone"):
         if data.get(k):
@@ -412,22 +286,11 @@ def call_llm(message: str, data: dict) -> str:
     ctx = "\n".join(ctx_lines) or "(aucun contexte)"
     r = requests.post(
         "https://api.together.xyz/v1/chat/completions",
-        headers={
-            "Authorization": f"Bearer {TOGETHER_API_KEY}",
-            "Content-Type": "application/json",
-        },
+        headers={"Authorization": f"Bearer {TOGETHER_API_KEY}", "Content-Type": "application/json"},
         json={
             "model": MODEL,
             "messages": [
-                {
-                    "role": "system",
-                    "content": (
-                        f"Tu es Betty, assistante d'ABC Peinture Déco (Le Mans). "
-                        f"Tu réponds en 1 à 2 phrases max, ton chaleureux et direct. "
-                        f"Tu orientes toujours vers un rappel rapide au {COMPANY_PHONE}. "
-                        f"Jamais robotique, jamais de liste à puces."
-                    ),
-                },
+                {"role": "system", "content": f"Tu es Betty, assistante d'ABC Peinture Déco (Le Mans). Tu réponds en 1 à 2 phrases max, ton chaleureux et direct. Tu orientes toujours vers un rappel rapide au {COMPANY_PHONE}. Jamais robotique, jamais de liste à puces."},
                 {"role": "user", "content": f"Contexte client :\n{ctx}\n\nMessage : {message}"},
             ],
             "temperature": 0.6,
@@ -437,8 +300,7 @@ def call_llm(message: str, data: dict) -> str:
     )
     if not r.ok:
         raise RuntimeError(f"Together API error {r.status_code}: {r.text[:500]}")
-    data_json = r.json()
-    return data_json["choices"][0]["message"]["content"].strip()
+    return r.json()["choices"][0]["message"]["content"].strip()
 
 
 def test_llm_call() -> dict:
@@ -453,47 +315,25 @@ def test_llm_call() -> dict:
         return payload
 
 
-# ---------------------------------------------------------
-#  SESSION / LEAD
-# ---------------------------------------------------------
 def _reset_session() -> dict:
-    return {
-        "step": 0,
-        "data": {},
-        "qualified": False,
-        "off_topic_count": 0,
-        "msg_count": 0,
-    }
+    return {"step": 0, "data": {}, "qualified": False, "off_topic_count": 0, "msg_count": 0}
 
 
 def send_lead(data: dict) -> None:
     webhook_url = os.getenv("LEAD_WEBHOOK_URL", "")
     if not webhook_url:
         return
-    clean_data = {
-        "projet": (data.get("projet") or "").strip(),
-        "surface": (data.get("surface") or "").strip(),
-        "prenom": (data.get("prenom") or "").strip(),
-        "telephone": re.sub(r"\D", "", (data.get("telephone") or "").strip()),
-        "urgent": bool(data.get("_urgent")),
-        "email": "",
-    }
+    clean_data = {"projet": str(data.get("projet") or "").strip(), "surface": str(data.get("surface") or "").strip(), "prenom": str(data.get("prenom") or "").strip(), "telephone": re.sub(r"\D", "", str(data.get("telephone") or "").strip()), "urgent": bool(data.get("_urgent")), "email": ""}
     try:
-        requests.post(
-            webhook_url,
-            json={"source": "betty_abc_peinture", "data": clean_data},
-            timeout=3,
-        )
+        requests.post(webhook_url, json={"source": "betty_abc_peinture", "data": clean_data}, timeout=3)
     except Exception:
         pass
 
 
-# ---------------------------------------------------------
-#  LOGIQUE CENTRALE
-# ---------------------------------------------------------
 def handle_message(user_id: str, message: str) -> str:
+    user_id = str(user_id or "anonymous")
+    message = str(message or "")
     n = normalize(message)
-
     is_simple_greeting = is_greeting(message) and len(n.split()) <= 2
     is_reset_cmd = n in {"reset", "recommencer", "restart", "reinit"}
     if is_reset_cmd or is_simple_greeting:
@@ -502,45 +342,34 @@ def handle_message(user_id: str, message: str) -> str:
 
     s = sessions.setdefault(user_id, _reset_session())
     s["msg_count"] += 1
-
     opportunistic_capture(s, message)
     advance_past_captured(s)
 
     def _is_qualified(data):
-        return (data.get("telephone") and data.get("prenom") and data.get("projet"))
+        return data.get("telephone") and data.get("prenom") and data.get("projet")
 
     if _is_qualified(s["data"]) and not s["qualified"]:
         s["qualified"] = True
         send_lead(s["data"])
-        return CLOSING_TPL.format(
-            prenom=s["data"].get("prenom") or "",
-            phone=COMPANY_PHONE,
-        ).strip()
+        return CLOSING_TPL.format(prenom=s["data"].get("prenom") or "", phone=COMPANY_PHONE).strip()
 
     if s["qualified"] or s["step"] >= len(FLOW):
         if not s["qualified"]:
             s["qualified"] = True
             send_lead(s["data"])
-            return CLOSING_TPL.format(
-                prenom=s["data"].get("prenom") or "",
-                phone=COMPANY_PHONE,
-            ).strip()
+            return CLOSING_TPL.format(prenom=s["data"].get("prenom") or "", phone=COMPANY_PHONE).strip()
         if detect_info_hors_flow(message):
             return recadrage_info_hors_flow(message)
         return call_llm(message, s["data"])
 
     step_idx = s["step"]
     step_key = FLOW_KEYS[step_idx]
-
     is_phone_step = step_key == "telephone" and validate_telephone(message)
     is_prenom_step = step_key == "prenom" and validate_prenom(message) and len(n.split()) <= 2
     if detect_info_hors_flow(message) and not is_phone_step and not is_prenom_step:
-        info = recadrage_info_hors_flow(message)
-        next_q = get_question(step_idx, s["data"])
-        return f"{info}\n{next_q}".strip()
+        return f"{recadrage_info_hors_flow(message)}\n{get_question(step_idx, s['data'])}".strip()
 
     label = classify_message(message, step_idx)
-
     if step_key == "projet" and detect_devis_intent(message) and not s["data"].get("projet"):
         s["data"]["projet"] = message.strip()
         s["step"] += 1
@@ -549,56 +378,43 @@ def handle_message(user_id: str, message: str) -> str:
             s["qualified"] = True
             send_lead(s["data"])
             return CLOSING_TPL.format(prenom=s["data"].get("prenom") or "", phone=COMPANY_PHONE).strip()
-        next_q = get_question(s["step"], s["data"])
-        return f"Très bien, je note. {next_q}".strip()
+        return f"Très bien, je note. {get_question(s['step'], s['data'])}".strip()
 
     if label == "greeting":
         return get_question(step_idx, s["data"])
-
     if label == "info_hors_flow":
-        info = recadrage_info_hors_flow(message)
-        next_q = get_question(step_idx, s["data"])
-        return f"{info}\n{next_q}".strip()
-
+        return f"{recadrage_info_hors_flow(message)}\n{get_question(step_idx, s['data'])}".strip()
     if label == "invalide":
         return f"{recadrage_invalide(step_key)} {get_question(step_idx, s['data'])}".strip()
-
     if label == "flou":
         s["off_topic_count"] = s.get("off_topic_count", 0) + 1
-        if step_key == "projet":
-            if s["off_topic_count"] >= 2:
-                s["data"]["projet"] = message.strip() or "à préciser au rappel"
-                s["step"] += 1
-                s["off_topic_count"] = 0
-                advance_past_captured(s)
-                if s["step"] >= len(FLOW):
-                    s["qualified"] = True
-                    send_lead(s["data"])
-                    return CLOSING_TPL.format(prenom=s["data"].get("prenom") or "", phone=COMPANY_PHONE).strip()
-                next_q = get_question(s["step"], s["data"])
-                return f"Pas de souci, on précisera au téléphone. {next_q}".strip()
+        if step_key == "projet" and s["off_topic_count"] >= 2:
+            s["data"]["projet"] = message.strip() or "à préciser au rappel"
+            s["step"] += 1
+            s["off_topic_count"] = 0
+            advance_past_captured(s)
+            if s["step"] >= len(FLOW):
+                s["qualified"] = True
+                send_lead(s["data"])
+                return CLOSING_TPL.format(prenom=s["data"].get("prenom") or "", phone=COMPANY_PHONE).strip()
+            return f"Pas de souci, on précisera au téléphone. {get_question(s['step'], s['data'])}".strip()
         if s["off_topic_count"] >= MAX_OFFTOPIC:
             s["off_topic_count"] = 0
             return pick(RECAD.get("handover", [f"Laissez-moi votre numéro, on vous rappelle au {COMPANY_PHONE}."]))
         return f"{pick(RECAD.get('flou', ['En quelques mots, quel est votre besoin ?']))} {get_question(step_idx, s['data'])}".strip()
 
     value = message.strip()
-
     if step_key == "prenom":
         extracted = extract_prenom(message)
         value = extracted if extracted else value.split()[0].capitalize()
-
     if step_key == "telephone":
         ph = extract_phone(message)
         if ph:
             value = ph
-
     if step_key == "surface":
         value = "" if is_skip(message) else message.strip()
-
     if value or step_key == "surface":
         s["data"][step_key] = value
-
     s["step"] += 1
     s["off_topic_count"] = 0
     advance_past_captured(s)
@@ -606,27 +422,14 @@ def handle_message(user_id: str, message: str) -> str:
     if _is_qualified(s["data"]) and not s["qualified"]:
         s["qualified"] = True
         send_lead(s["data"])
-        return CLOSING_TPL.format(
-            prenom=s["data"].get("prenom") or "",
-            phone=COMPANY_PHONE,
-        ).strip()
-
+        return CLOSING_TPL.format(prenom=s["data"].get("prenom") or "", phone=COMPANY_PHONE).strip()
     if s["step"] >= len(FLOW):
         s["qualified"] = True
         send_lead(s["data"])
-        return CLOSING_TPL.format(
-            prenom=s["data"].get("prenom") or "",
-            phone=COMPANY_PHONE,
-        ).strip()
-
-    warmth = get_warmth(step_idx, s["data"])
-    next_q = get_question(s["step"], s["data"])
-    return f"{warmth}{next_q}".strip()
+        return CLOSING_TPL.format(prenom=s["data"].get("prenom") or "", phone=COMPANY_PHONE).strip()
+    return f"{get_warmth(step_idx, s['data'])}{get_question(s['step'], s['data'])}".strip()
 
 
-# ---------------------------------------------------------
-#  HANDLER HTTP (Vercel serverless)
-# ---------------------------------------------------------
 def _json_response(handler, payload: dict, status: int = 200) -> None:
     body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
     handler.send_response(status)
@@ -655,44 +458,18 @@ class handler(BaseHTTPRequestHandler):
             length = int(self.headers.get("Content-Length", 0))
             body = self.rfile.read(length) if length else b"{}"
             payload = json.loads(body.decode("utf-8"))
-            message = (payload.get("message") or "").strip()
-
+            message = str(payload.get("message") or payload.get("text") or "").strip()
             if not message:
-                return _json_response(self, {
-                    "response": "Je n'ai rien reçu 🤔 Pouvez-vous réessayer ?"
-                })
-
-            user_id = payload.get("session_id") or self.client_address[0]
+                return _json_response(self, {"response": "Je n'ai rien reçu 🤔 Pouvez-vous réessayer ?"})
+            raw_session_id = payload.get("session_id") or payload.get("sessionId") or self.client_address[0]
+            user_id = str(raw_session_id or "anonymous")
             reply = handle_message(user_id, message)
             return _json_response(self, {"response": reply})
-
         except Exception as e:
             print("ERREUR ABC BETTY:", repr(e), flush=True)
-            payload = {
-                "response": (
-                    f"Petit bug de mon côté, désolée 😅 "
-                    f"Appelez-nous directement au {COMPANY_PHONE}, on s'en occupe tout de suite."
-                )
-            }
+            payload = {"response": f"Petit bug de mon côté, désolée 😅 Appelez-nous directement au {COMPANY_PHONE}, on s'en occupe tout de suite."}
             if DEBUG_BETTY:
                 payload["debug"] = repr(e)
                 payload["model"] = MODEL
                 payload["has_key"] = bool(TOGETHER_API_KEY)
             return _json_response(self, payload, 500)
-
-
-# ---------------------------------------------------------
-#  NOTE PRODUCTION VERCEL
-# ---------------------------------------------------------
-# Le dict `sessions` ne survit pas aux cold-starts Vercel (serverless).
-# Pour les leads à fort trafic, deux solutions :
-#
-#   Option A — Vercel KV (Redis managé, ~0€ pour votre volume) :
-#     pip install vercel-kv
-#     Remplacer sessions[user_id] = ... par kv.set(user_id, json, ex=3600)
-#
-#   Option B — State côté client :
-#     Le front envoie session_state (JSON signé) à chaque POST
-#     Le backend n'a besoin d'aucun storage persistant
-#
-# Pour l'instant en demo/faible trafic, le dict en mémoire fonctionne.
