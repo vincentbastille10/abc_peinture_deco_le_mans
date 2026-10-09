@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+  <link rel="icon" type="image/svg+xml" href="/static/logo-abc.svg">
+  <meta name="theme-color" content="#09111f">
   <title>ABC Peinture Déco | Peinture professionnelle, grands comptes & rénovation au Mans</title>
   <meta name="description" content="ABC Peinture Déco, entreprise de peinture professionnelle au Mans et en Sarthe. Équipe d'une dizaine de personnes, références grands comptes, peinture, revêtements sols et murs, ravalement, plâtrerie, menuiseries intérieures. Devis rapide." />
   <meta name="keywords" content="peintre Le Mans, entreprise peinture Le Mans, peinture Sarthe, peinture 72, peinture locaux professionnels Le Mans, rénovation peinture Le Mans, revêtements sols murs Sarthe, peintre professionnel Sarthe, ABC Peinture Déco, peinture grands comptes, ravalement Sarthe, La Chapelle-Saint-Aubin, rénovation locaux professionnels" />
@@ -15,7 +17,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Krona+One&family=Cormorant+Garamond:wght@500;600;700&family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,300&display=swap" rel="stylesheet" />
 
   <style>
     :root {
@@ -27,20 +29,20 @@
       --text: #eef0f5;
       --muted: #8b98b4;
       --dim: #4d5d78;
-      --gold: #c8a96e;
-      --gold-light: #dfc08c;
-      --gold-dim: rgba(200,169,110,.18);
-      --cerulean: #3b7dc8;
-      --cerulean-light: #5b9de8;
+      --gold: #d95db0;
+      --gold-light: #e88cc6;
+      --gold-dim: rgba(217,93,176,.18);
+      --cerulean: #2a9fd6;
+      --cerulean-light: #4cb8e8;
       --white: #ffffff;
-      --red-corp: #8b1a2a;
+      --red-corp: #b83986;
       --shadow-deep: 0 32px 80px rgba(0,0,0,.48);
       --shadow-card: 0 8px 40px rgba(0,0,0,.28);
       --radius-xl: 28px;
       --radius-lg: 20px;
       --radius-md: 12px;
       --max: 1280px;
-      --topbar-offset: 76px;
+      --topbar-offset: 96px;
       --font-display: 'Syne', sans-serif;
       --font-body: 'DM Sans', sans-serif;
     }
@@ -95,7 +97,7 @@
     .topbar-inner {
       width: min(var(--max), calc(100% - 48px));
       margin: 0 auto;
-      height: 76px;
+      height: 96px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -128,6 +130,8 @@
     .logo-abc span.letter-a { color: var(--red-corp); }
     .logo-abc span.letter-b { color: var(--red-corp); }
     .logo-abc span.letter-c { color: var(--red-corp); }
+
+    .logo-svg { height: 56px; width: auto; display: block; }
 
     .logo-separator {
       width: 1px;
@@ -207,8 +211,8 @@
     }
 
     .btn-gold {
-      background: linear-gradient(135deg, #d4af74 0%, #a87d44 100%);
-      color: #1c1204;
+      background: linear-gradient(135deg, #b83986 0%, #8f1d5f 100%);
+      color: #fff;
       box-shadow: 0 8px 28px rgba(184,139,70,.28);
     }
 
@@ -235,14 +239,14 @@
     }
 
     .btn-cerulean {
-      background: linear-gradient(135deg, #4a8fd6 0%, #2a6ab0 100%);
+      background: linear-gradient(135deg, #4cb8e8 0%, #1f86b8 100%);
       color: #fff;
-      box-shadow: 0 8px 28px rgba(42,106,176,.28);
+      box-shadow: 0 8px 28px rgba(31,134,184,.28);
     }
 
     .btn-cerulean:hover {
       transform: translateY(-1px);
-      box-shadow: 0 12px 36px rgba(42,106,176,.38);
+      box-shadow: 0 12px 36px rgba(31,134,184,.38);
     }
 
     /* ─── HERO ─── */
@@ -322,8 +326,8 @@
       gap: 8px;
       padding: 6px 14px;
       border-radius: 999px;
-      background: rgba(200,169,110,.14);
-      border: 1px solid rgba(200,169,110,.3);
+      background: rgba(217,93,176,.14);
+      border: 1px solid rgba(217,93,176,.3);
       margin-bottom: 24px;
     }
 
@@ -494,8 +498,8 @@
     .cookie-btn:hover { transform: translateY(-1px); }
 
     .cookie-btn-primary {
-      background: linear-gradient(135deg, #d4af74 0%, #a87d44 100%);
-      color: #1c1204;
+      background: linear-gradient(135deg, #b83986 0%, #8f1d5f 100%);
+      color: #fff;
       box-shadow: 0 4px 16px rgba(184,139,70,.26);
     }
 
@@ -728,8 +732,8 @@
       margin-top: 40px;
       padding: 28px 32px;
       border-radius: var(--radius-lg);
-      background: linear-gradient(135deg, rgba(200,169,110,.1), rgba(59,125,200,.06));
-      border: 1px solid rgba(200,169,110,.18);
+      background: linear-gradient(135deg, rgba(217,93,176,.1), rgba(42,159,214,.06));
+      border: 1px solid rgba(217,93,176,.18);
     }
 
     .market-statement p { font-size: 17px; color: rgba(238,240,245,.82); line-height: 1.6; font-weight: 300; }
@@ -851,8 +855,8 @@
       display: inline-block;
       padding: 4px 12px;
       border-radius: 999px;
-      background: rgba(200,169,110,.12);
-      border: 1px solid rgba(200,169,110,.2);
+      background: rgba(217,93,176,.12);
+      border: 1px solid rgba(217,93,176,.2);
       font-size: 11px;
       font-weight: 700;
       letter-spacing: .14em;
@@ -936,8 +940,8 @@
     .reas-highlight {
       flex: 1;
       border-radius: var(--radius-xl);
-      border: 1px solid rgba(200,169,110,.22);
-      background: linear-gradient(135deg, rgba(200,169,110,.08), rgba(200,169,110,.03));
+      border: 1px solid rgba(217,93,176,.22);
+      background: linear-gradient(135deg, rgba(217,93,176,.08), rgba(217,93,176,.03));
       padding: 32px;
       display: flex;
       flex-direction: column;
@@ -950,7 +954,7 @@
       width: 44px;
       height: 44px;
       border-radius: 12px;
-      background: rgba(200,169,110,.14);
+      background: rgba(217,93,176,.14);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1497,6 +1501,84 @@
     @media (max-width: 1100px) { .partners-logo-grid { grid-template-columns: repeat(4, 1fr); } }
     @media (max-width: 768px)  { .partners-logo-grid { grid-template-columns: repeat(3, 1fr); } }
     @media (max-width: 520px)  { .partners-logo-grid { grid-template-columns: repeat(2, 1fr); } }
+
+    /* ─── HERO B2B : fourniture + application ─── */
+    .hero.hero-b2b { padding-top: 0 !important; min-height: 0 !important; }
+    .hero-b2b .hero-content-section {
+      opacity: 1;
+      transform: none;
+      min-height: 0 !important;
+      align-items: center;
+      padding-top: 48px;
+      padding-bottom: 72px;
+    }
+    .hero-b2b .hero-inner {
+      grid-template-columns: minmax(0,1.05fr) minmax(0,.95fr);
+      gap: 56px;
+      align-items: center;
+    }
+    .hero-b2b .hero-headline,
+    .hero-b2b .hero-sub,
+    .hero-b2b .hero-badge-text { text-shadow: none; }
+    .hero-b2b .hero-headline { font-family: var(--font-body); font-weight: 700; font-size: clamp(34px, 4vw, 58px); line-height: 1.06; letter-spacing: -.025em; }
+    .hero-b2b .hero-headline em { color: var(--gold-light); }
+    .hero-visual {
+      position: relative; width: 100%; max-width: 600px; justify-self: end;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+    }
+    .hero-visual figure { margin: 0; position: relative; overflow: hidden; border-radius: 16px; background: var(--surface); }
+    .hero-visual img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+    .hv-main { grid-column: 1 / -1; aspect-ratio: 3 / 2; box-shadow: var(--shadow-deep); }
+    .hv-tile { aspect-ratio: 1 / 1.08; }
+    .hero-visual figcaption {
+      position: absolute; left: 12px; bottom: 12px;
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 7px 13px; border-radius: 999px;
+      background: rgba(9,17,31,.82); backdrop-filter: blur(8px);
+      font-size: 13px; font-weight: 600; color: var(--text); letter-spacing: .01em;
+    }
+    .hero-visual figcaption span { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); }
+    .hv-tile figcaption { left: 8px; bottom: 8px; padding: 5px 10px; font-size: 11.5px; }
+    .hero-visual .hv-card {
+      position: absolute; right: 14px; top: 14px; width: 26%; aspect-ratio: 1 / 1;
+      border: 4px solid var(--ink); border-radius: 18px; box-shadow: var(--shadow-card);
+    }
+    .hv-card figcaption { left: 6px; bottom: 6px; padding: 4px 9px; font-size: 10.5px; }
+    .hv-card figcaption span { background: var(--cerulean-light); width: 6px; height: 6px; }
+    @media (max-width: 1000px) {
+      .hero-b2b .hero-inner { grid-template-columns: 1fr; gap: 36px; }
+      .hero-visual { max-width: 560px; justify-self: start; }
+    }
+    @media (max-width: 520px) {
+      .hero-b2b .hero-content-section { padding-top: 24px; padding-bottom: 48px; }
+    }
+
+    /* ─── TITRES : serif classique ─── */
+    :root { --font-serif: 'Cormorant Garamond', 'Times New Roman', serif; }
+    .section-h {
+      font-family: var(--font-serif); font-weight: 600;
+      font-size: clamp(38px, 4.2vw, 62px); letter-spacing: -.01em; line-height: 1.05;
+    }
+    .pillar h3, .service-card h3, .method-step-title, .reas-panel-header h3, .contact-card h3, .eco-card h3 {
+      font-family: var(--font-serif); font-weight: 700; letter-spacing: 0; line-height: 1.12;
+    }
+    .pillar h3, .eco-card h3 { font-size: 22px; }
+    .service-card h3, .reas-panel-header h3, .contact-card h3 { font-size: 27px; }
+    .method-step-title { font-size: 25px; }
+
+    /* ─── LOGO EN-TÊTE ─── */
+    .brand-logo-mark { gap: 14px; }
+    .logo-mark { height: 64px; width: auto; display: block; }
+    .logo-text { display: flex; flex-direction: column; gap: 4px; padding-left: 16px; border-left: 1px solid rgba(255,255,255,.18); }
+    .lt-name { font-family: 'Krona One', var(--font-body), sans-serif; font-size: 15px; letter-spacing: .1em; text-transform: uppercase; color: #25b5c9; line-height: 1; }
+    .lt-trade { font-size: 12px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--text); line-height: 1; }
+    .lt-sub { font-size: 11px; letter-spacing: .06em; color: var(--muted); line-height: 1; white-space: nowrap; }
+    .topbar-nav a { white-space: nowrap; }
+    .topbar-nav { gap: 16px; }
+    @media (max-width: 1560px) { .lt-sub { display: none; } }
+    @media (max-width: 1360px) { .topbar-nav { gap: 16px; } .topbar-nav a { font-size: 13px; } }
+    @media (max-width: 1100px) { .logo-mark { height: 54px; } .lt-sub { display: none; } }
+    @media (max-width: 600px) { .logo-mark { height: 46px; } .lt-name { font-size: 12.5px; } .lt-trade { font-size: 10px; letter-spacing: .14em; } .logo-text { padding-left: 12px; } }
   </style>
 
   <script type="application/ld+json">
@@ -1547,11 +1629,12 @@
     <div class="topbar-inner">
       <div class="topbar-brand">
         <div class="brand-logo-mark">
-          <div class="logo-abc">
-            <span class="letter-a">A</span><span class="letter-b">B</span><span class="letter-c">C</span>
+          <img class="logo-mark" src="/static/logo-abc-mark.svg" alt="ABC" />
+          <div class="logo-text">
+            <span class="lt-name">Peinture Déco</span>
+            <span class="lt-trade">Mur · Sol · Plafond</span>
+            <span class="lt-sub">Pour les professionnels et grands comptes</span>
           </div>
-          <div class="logo-separator"></div>
-          <div class="logo-sub">Peinture Déco<br>Le Mans · Sarthe</div>
         </div>
       </div>
 
@@ -1577,42 +1660,23 @@
   <main>
 
     <!-- ════════════════ HERO ════════════════ -->
-    <section class="hero" aria-label="Logo ABC Peinture Déco en plein écran">
-
-      <div class="hero-bg"></div>
-      <div class="hero-sky"></div>
-
-      <div class="hero-logo">
-        <img src="/static/abc_gris2.webp" alt="ABC Peinture Déco" />
-      </div>
-
-      <div class="hero-overlay" aria-hidden="true"></div>
-
+    <section class="hero hero-b2b" aria-label="ABC Peinture Déco, fourniture et application de peinture pour les professionnels">
       <div class="hero-content-section" aria-labelledby="hero-headline">
         <div class="hero-content-inner hero-inner">
           <div class="hero-text-block">
             <div class="hero-badge reveal">
               <div class="hero-badge-dot" aria-hidden="true"></div>
-              <span class="hero-badge-text">Peinture professionnelle · Sarthe · 72</span>
+              <span class="hero-badge-text">Peinture professionnelle · Le Mans · Sarthe</span>
             </div>
 
             <h1 class="hero-headline reveal reveal-delay-1" id="hero-headline">
-              Entreprise de peinture<br>
-              <em>pour professionnels</em><br>
-              au Mans.
-
-
-
-
-
-
-
-
-              
+              Nous fournissons la peinture.<br>
+              <em>Nous l'appliquons</em><br>
+              chez les professionnels.
             </h1>
 
             <p class="hero-sub reveal reveal-delay-2">
-              ABC Peinture Déco accompagne commerces, enseignes, bureaux, collectivités et particuliers exigeants. Une équipe d'une dizaine de professionnels, basée en Sarthe, capable d'intervenir localement et partout en France.
+              ABC Peinture Déco vend la peinture et l'applique sur vos chantiers : commerces, enseignes, bureaux, entrepôts et collectivités. Un seul interlocuteur, du produit à la finition, en Sarthe et partout en France.
             </p>
 
             <div class="hero-ctas reveal reveal-delay-3">
@@ -1623,13 +1687,34 @@
               <a class="btn btn-outline btn-large" href="#contact">Demander un devis</a>
             </div>
           </div>
+
+          <div class="hero-visual reveal reveal-delay-2">
+            <figure class="hv-main">
+              <img src="/static/chantier-sol.webp" alt="Équipe ABC appliquant un revêtement sur le sol d'un grand entrepôt" loading="eager" />
+              <figcaption><span></span>Application sur chantier</figcaption>
+            </figure>
+            <figure class="hv-tile">
+              <img src="/static/chantier-nacelle.webp" alt="Ouvrier en nacelle sur la structure d'un grand bâtiment" loading="eager" />
+              <figcaption>Travaux en hauteur</figcaption>
+            </figure>
+            <figure class="hv-tile">
+              <img src="/static/chantier-facade.webp" alt="Façade d'un bâtiment industriel repeinte" loading="eager" />
+              <figcaption>Façades</figcaption>
+            </figure>
+            <figure class="hv-tile">
+              <img src="/static/chantier-fini.webp" alt="Grand entrepôt livré, sol fini" loading="eager" />
+              <figcaption>Livré, fini</figcaption>
+            </figure>
+            <figure class="hv-card">
+              <img src="/static/photo-produit.webp" alt="Pot de peinture professionnelle et rouleau" loading="eager" />
+              <figcaption><span></span>Fourniture</figcaption>
+            </figure>
+          </div>
         </div>
       </div>
-
-      <div class="scroll-indicator" aria-hidden="true">↓</div>
     </section>
 
-    <!-- ════════════════ TRUST STRIP ════════════════ -->
+<!-- ════════════════ TRUST STRIP ════════════════ -->
     <div class="trust-strip" aria-label="Réassurance">
       <div class="container">
         <div class="trust-items">
@@ -2450,9 +2535,7 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <div class="footer-logo">
-            <span class="abc">ABC</span> Peinture Déco
-          </div>
+          <div class="footer-logo"><img src="/static/logo-abc.svg" alt="ABC Peinture Déco, pour les professionnels et grands comptes" style="height:120px;width:auto" /></div>
           <p class="footer-desc">Entreprise de peinture et vitrerie professionnelle au Mans et en Sarthe. Locaux professionnels, espaces commerciaux et chantiers résidentiels depuis 2013.</p>
         </div>
 
