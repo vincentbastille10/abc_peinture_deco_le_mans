@@ -394,77 +394,6 @@
       justify-content: flex-start;
     }
 
-    /* ─── HERO BETTY CARD ─── */
-    .hero-betty {
-      width: 100%;
-      max-width: 420px;
-      background: rgba(13,25,41,.88);
-      border: 1px solid rgba(255,255,255,.1);
-      border-radius: var(--radius-xl);
-      overflow: hidden;
-      backdrop-filter: blur(12px);
-      box-shadow: var(--shadow-deep);
-    }
-
-    .betty-wrapper {
-      display: flex;
-      justify-content: center;
-      margin: 0 auto 80px auto;
-      width: 100%;
-    }
-
-    .betty-wrapper > * {
-      max-width: 420px;
-      width: 100%;
-    }
-
-    .betty-wrapper iframe,
-    .betty-wrapper .betty,
-    .betty-wrapper .chatbot {
-      width: 100%;
-      max-width: 420px;
-      height: 520px;
-      border-radius: 16px;
-      box-shadow: 0 15px 50px rgba(0,0,0,0.15);
-    }
-
-    .betty-header {
-      padding: 18px 22px 14px;
-      border-bottom: 1px solid rgba(255,255,255,.07);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .betty-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: #22c55e;
-      box-shadow: 0 0 8px rgba(34,197,94,.5);
-      animation: pulse-dot 2.2s ease-in-out infinite;
-    }
-
-    .betty-label {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text);
-    }
-
-    .betty-sublabel {
-      font-size: 12px;
-      color: var(--muted);
-      margin-left: auto;
-    }
-
-    .betty-frame {
-      display: block;
-      width: 100%;
-      height: 480px;
-      border: none;
-      background: transparent;
-    }
-
     .scroll-indicator {
       position: fixed;
       left: 50%;
@@ -535,13 +464,6 @@
       color: rgba(238,240,245,.94);
       line-height: 1.4;
       margin: 0;
-    }
-
-    .cookie-banner-betty {
-      font-size: 12.5px;
-      color: var(--muted);
-      line-height: 1.35;
-      margin-top: 2px;
     }
 
     .cookie-banner-copy { min-width: 0; }
@@ -1210,7 +1132,6 @@
     @media (max-width: 1100px) {
       .hero-content-inner,
       .hero-inner { grid-template-columns: 1fr; }
-      .hero-betty { margin-top: 30px; }
       .positioning-grid { grid-template-columns: 1fr; gap: 40px; }
       .market-intro { grid-template-columns: 1fr; }
       .services-grid { grid-template-columns: repeat(2, 1fr); }
@@ -1230,16 +1151,11 @@
       .cookie-banner-panel { max-height: 100px; min-height: 88px; flex-direction: column; align-items: stretch; gap: 8px; padding: 10px 12px; }
       .cookie-banner-copy { text-align: center; }
       .cookie-banner-text { font-size: 13px; line-height: 1.35; }
-      .cookie-banner-betty { margin-top: 1px; font-size: 11.5px; }
       .cookie-banner-actions { width: 100%; margin-left: 0; display: grid; grid-template-columns: 1fr; gap: 6px; padding-right: 0; }
       .cookie-btn, .cookie-link { width: 100%; text-align: center; }
       .cookie-btn { height: 33px; }
       .hero-content-section { padding-top: calc(var(--topbar-offset) + 24px); align-items: flex-end; }
       .hero-content-inner { grid-template-columns: 1fr; gap: 24px; }
-      .hero-betty { max-width: 100%; }
-      .betty-wrapper { margin-top: 20px; padding: 0 12px; }
-      .betty-wrapper > * { max-width: 100%; }
-      .betty-wrapper iframe, .betty-wrapper .betty, .betty-wrapper .chatbot { max-width: 100%; height: 60vh; }
       .trust-items { flex-direction: column; gap: 0; }
       .trust-item { width: 100%; border-right: none; border-bottom: 1px solid var(--line); }
       .trust-item:last-child { border-bottom: none; }
@@ -1257,7 +1173,6 @@
       .hero-content-section { min-height: 100vh; padding-bottom: 36px; }
       .hero-ctas { flex-direction: column; }
       .hero-ctas .btn { width: 100%; justify-content: center; }
-      .hero-betty { width: 100%; }
       .market-logos-grid { grid-template-columns: repeat(2, 1fr); }
       .reas-key { flex: 0 0 130px; }
     }
@@ -1713,22 +1628,6 @@
 
       <div class="scroll-indicator" aria-hidden="true">↓</div>
     </section>
-
-    <div class="betty-wrapper reveal reveal-delay-4">
-      <div class="hero-betty">
-        <div class="betty-header">
-          <div class="betty-dot" aria-hidden="true"></div>
-          <span class="betty-label">Betty — Devis rapide</span>
-          <span class="betty-sublabel">Réponse immédiate</span>
-        </div>
-        <iframe
-          src="/chat"
-          class="betty-frame"
-          title="Betty, assistant devis ABC Peinture Déco"
-          loading="lazy">
-        </iframe>
-      </div>
-    </div>
 
     <!-- ════════════════ TRUST STRIP ════════════════ -->
     <div class="trust-strip" aria-label="Réassurance">
@@ -2523,13 +2422,10 @@
 
             <div class="cta-card reveal reveal-delay-4">
               <span class="label-eyebrow" style="margin-bottom:8px;">Devis gratuit</span>
-              <p>Décrivez votre projet à Betty, notre assistant, ou appelez-nous directement. Réponse rapide garantie.</p>
+              <p>Décrivez-nous votre projet ou appelez-nous directement. Réponse rapide garantie.</p>
               <a class="btn btn-gold" href="tel:0243759818">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.62 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9a16 16 0 0 0 6.09 6.09l1.96-1.94a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                 Appeler maintenant
-              </a>
-              <a class="btn btn-outline" href="#" aria-label="Utiliser l'assistant devis Betty" onclick="document.querySelector('.betty-frame').scrollIntoView({behavior:'smooth'}); return false;">
-                Utiliser l'assistant Betty
               </a>
             </div>
           </div>
@@ -2607,7 +2503,6 @@
     <div class="cookie-banner-panel">
       <div class="cookie-banner-copy">
         <p class="cookie-banner-text">Nous utilisons des cookies pour améliorer votre expérience et mesurer l'audience.</p>
-        <p class="cookie-banner-betty" id="cookie-betty-hint" hidden>Besoin de comprendre pourquoi ? Demandez à Betty 🙂</p>
       </div>
       <div class="cookie-banner-actions">
         <button type="button" class="cookie-btn cookie-btn-primary" data-cookie-choice="accepted">Accepter</button>
@@ -2666,7 +2561,6 @@
     // ─── COOKIE CONSENT ───
     const cookieBanner = document.getElementById('cookie-banner');
     const cookieChoiceTriggers = document.querySelectorAll('[data-cookie-choice]');
-    const cookieBettyHint = document.getElementById('cookie-betty-hint');
 
     const hasStoredConsent = () => {
       const currentConsent = window.localStorage.getItem('cookie_consent');
@@ -2686,11 +2580,6 @@
       window.localStorage.setItem('cookie_consent', choice);
       hideCookieBanner();
     };
-
-    if (cookieBettyHint) {
-      const isBettyAvailable = Boolean(document.querySelector('.betty-frame, .betty-wrapper .chatbot, .betty-wrapper iframe'));
-      cookieBettyHint.hidden = !isBettyAvailable;
-    }
 
     cookieChoiceTriggers.forEach((trigger) => {
       trigger.addEventListener('click', () => {
